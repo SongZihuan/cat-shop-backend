@@ -1,0 +1,12 @@
+.idea
+etc
+tmp
+data
+cert
+
+*.exe
+*.out
+
+.DS_Store
+
+testdata
