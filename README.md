@@ -1,6 +1,17 @@
 # 猫猫超市后端
 前端：[github.com/SuperH-0630/cat-shop-front](https://github.com/SuperH-0630/cat-shop-front)
 
+技术栈：Golang + gin + gorm + jwt + yaml
+
+Golang: 作者本人使用`go1.23.2`。
+
+数据库：MySQL 8.0 以上的版本。
+
+## 许可（License）
+本项目使用[MIT LICENSE](./LICENSE)许可证发布。
+
+MIT License: [mit-license.org](https://mit-license.org/)
+
 ## 配置文件
 ```yaml
 mysql:
