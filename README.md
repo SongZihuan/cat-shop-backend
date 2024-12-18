@@ -7,6 +7,8 @@ Golang: 作者本人使用`go1.23.2`。
 
 数据库：MySQL 8.0 以上的版本。
 
+其他细节可见：[go.mod](./go.mod)
+
 ## 许可（License）
 本项目使用[MIT LICENSE](./LICENSE)许可证发布。
 
