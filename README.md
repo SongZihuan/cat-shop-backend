@@ -16,7 +16,7 @@ file:
 http:
   address: # http监听地址 默认：localhost:2689
   debugmsg: # api是否返回调试信息
-  baseapi: # api前缀
+  baseapi: # api前缀 默认：/api （为空则使用默认）
   testapi: # 是否开启测试api
 
 jwt:
