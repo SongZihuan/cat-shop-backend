@@ -71,3 +71,12 @@ go run github.com/SuperH-0630/cat-shop-back/src/cmd/v1 -config ./etc/config.yaml
 ```shell
 go build github.com/SuperH-0630/cat-shop-back/src/cmd/v1
 ```
+
+## 鸣谢
+感谢Jetbrains AI Assistant（中国大陆版）为本项目提供了AI（人工智能）技术支持。
+
+感谢Golang、Gin、Gorm等开源项目为本项目提供了技术支持。
+
+感谢Github平台为本项目提供了代码托管服务。
+
+特别鸣谢本项目所有贡献者和贡献团体对本项目的支持，你可以从PR记录、Commit记录中查看到他们的名字和贡献。
