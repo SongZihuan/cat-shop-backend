@@ -5,6 +5,8 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/class/getclasslst"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/getconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/getxieyi"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/image"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/video"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/wupin/gethotwupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/wupin/getsearch"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/wupin/getwupin"
@@ -82,20 +84,31 @@ func InitRouter(engine *gin.Engine) {
 
 func baseApi(engine *gin.Engine) {
 	api := engine.Group(config.Config().Yaml.Http.BaseAPI)
-	middleware.GlobalUse(api)
 
 	apiV1(api)
 }
 
 func apiV1(baseApi *gin.RouterGroup) {
 	api := baseApi.Group("/v1")
+
 	globalApiV1(api)
 	secretApiV1(api)
-	testAPiV1(api)
+	testApiV1(api)
+	resourceApiV1(api)
+}
+
+func resourceApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/fl")
+	middleware.ResourceUse(api)
+
+	api.GET("/img", image.Handler)
+	api.GET("/vio", video.Handler)
 }
 
 func globalApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/gl")
+	middleware.GlobalUse(api)
+
 	classApiV1(api)
 	configApiV1(api)
 	wupinApiV1(api)
@@ -127,14 +140,14 @@ func xieyiApiV1(apiV1 *gin.RouterGroup) {
 
 func secretApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/sr")
-	api.Use(middleware.MustXTokenMiddleware())
+	middleware.SecretUse(api)
+
 	adminApiV1(api)
 	userApiV1(api)
 }
 
 func userApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/ur")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 	userEditApiV1(api)
 	userBuyRecordApiV1(api)
 	userBagApiV1(api)
@@ -144,7 +157,6 @@ func userApiV1(apiV1 *gin.RouterGroup) {
 
 func userEditApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/ed")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 
 	api.POST("/i", updateuserinfo.Handler)
 	api.POST("/p", updateuserpassword.Handler)
@@ -153,7 +165,6 @@ func userEditApiV1(apiV1 *gin.RouterGroup) {
 
 func userBuyRecordApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/br")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 	userFahuoApiV1(api)
 	userDaohuoApiV1(api)
 	userTuihuoApiV1(api)
@@ -167,7 +178,6 @@ func userBuyRecordApiV1(apiV1 *gin.RouterGroup) {
 
 func userFahuoApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/fho")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 
 	api.POST("/chu", fahuochangeuser.Handler)
 	api.POST("/qx", fahuoquxiaoshenqing.Handler)
@@ -175,14 +185,12 @@ func userFahuoApiV1(apiV1 *gin.RouterGroup) {
 
 func userDaohuoApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/dho")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 
 	api.POST("/cfm", daohuo.Handler)
 }
 
 func userTuihuoApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/dho")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 
 	api.POST("/sq", tuihuoshenqing.Handler)
 	api.POST("/dj", tuihuodengji.Handler)
@@ -190,7 +198,6 @@ func userTuihuoApiV1(apiV1 *gin.RouterGroup) {
 
 func userPayApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/py")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 
 	api.POST("/n", newpay.Handler)
 	api.POST("/b", bagpay.Handler)
@@ -199,7 +206,6 @@ func userPayApiV1(apiV1 *gin.RouterGroup) {
 
 func userBagApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/bg")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 
 	api.POST("/ad", addbag.Handler)
 	api.GET("/lst", getbaglst.Handler)
@@ -356,7 +362,6 @@ func rootAdminApiV1(apiV1 *gin.RouterGroup) {
 
 func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/cfg")
-	api.Use(middleware.MustRotAdminXTokenMiddleware())
 
 	api.POST("/i", admingetconfig.Handler)
 	api.POST("/d", admindeleteconfig.Handler)
@@ -364,27 +369,27 @@ func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/us", adminupdateconfigstring.Handler)
 }
 
-func testAPiV1(apiV1 *gin.RouterGroup) {
+func testApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/ts")
-	api.Use(middleware.TestApiMiddleware())
 
 	testGlobalApi(api)
 	testSecretApiV1(api)
 }
 
 func testGlobalApi(apiV1 *gin.RouterGroup) {
-	_ = apiV1.Group("/gl")
+	api := apiV1.Group("/gl")
+	middleware.TestGlobalUse(api)
 }
 
 func testSecretApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/sr")
-	api.Use(middleware.MustXTokenMiddleware())
+	middleware.TestSecretUse(api)
+
 	testUserApiV1(api)
 }
 
 func testUserApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/ur")
-	api.Use(middleware.MustAdminXTokenMiddleware())
 	testUserPayApiV1(api)
 }
 

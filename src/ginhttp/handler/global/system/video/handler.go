@@ -1,4 +1,4 @@
-package image
+package video
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	tp, ok := model.NameToImageType[query.Type]
+	tp, ok := model.NameToVideoType[query.Type]
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -34,7 +34,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	basePath, ok := cfg.File.Image[tp]
+	basePath, ok := cfg.File.Video[tp]
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -48,7 +48,7 @@ func Handler(c *gin.Context) {
 	}
 
 	mimeTp := mimetype.Detect(dat).String()
-	if !strings.HasPrefix("image/", mimeTp) {
+	if !strings.HasPrefix("video/", mimeTp) {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -56,7 +56,7 @@ func Handler(c *gin.Context) {
 	acceptHeader := c.GetHeader("Accept")
 	if acceptHeader != "" &&
 		!strings.Contains(acceptHeader, "*/*") &&
-		!strings.Contains(acceptHeader, "image/*") &&
+		!strings.Contains(acceptHeader, "video/*") &&
 		!strings.Contains(acceptHeader, mimeTp) {
 		c.AbortWithStatus(http.StatusNotAcceptable)
 		return

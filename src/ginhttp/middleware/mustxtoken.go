@@ -17,7 +17,7 @@ func mustXTokenErrorData(debugMsgLst ...string) data.Data {
 		debugMsg = "Token过期"
 	}
 
-	return data.NewData(data.GlobalErrorCodeXTokenExpire, nil, data.DefaultMsg(data.GlobalErrorCodeXTokenExpire), debugMsg)
+	return data.NewClientTokenExpireError(debugMsg)
 }
 
 func MustXTokenMiddleware() gin.HandlerFunc {

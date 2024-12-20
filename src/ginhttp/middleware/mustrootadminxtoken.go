@@ -17,7 +17,7 @@ func mustRootAdminErrorData(debugMsgLst ...string) data.Data {
 		debugMsg = "重要权限不足"
 	}
 
-	return data.NewData(data.GlobalErrorCodeMustRootAdmin, nil, data.DefaultMsg(data.GlobalErrorCodeMustRootAdmin), debugMsg)
+	return data.NewClientRootAdminError()
 }
 
 func MustRotAdminXTokenMiddleware() gin.HandlerFunc {

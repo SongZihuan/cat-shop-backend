@@ -1,4 +1,4 @@
-package image
+package video
 
 type Query struct {
 	Type string `form:"type"`

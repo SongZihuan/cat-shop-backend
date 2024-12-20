@@ -37,11 +37,25 @@ type Image struct {
 	Time time.Time `gorm:"type:datetime;not null"`
 }
 
-func (img *Image) getUrl() string {
+func (img *Image) GetUrl() string {
 	v := url.Values{}
 	v.Add("type", ImageTypeToName[img.Type])
 	v.Add("hash", img.Hash)
 	v.Add("time", fmt.Sprintf("%d", img.Time.Unix()))
+
+	return GetUrl(img.Type, img.Hash, img.Time.Unix())
+}
+
+func GetUrl(tp ImageType, hash string, time int64) string {
+	v := url.Values{}
+	tpn, ok := ImageTypeToName[tp]
+	if !ok {
+		return ""
+	}
+
+	v.Add("type", tpn)
+	v.Add("hash", hash)
+	v.Add("time", fmt.Sprintf("%d", time))
 
 	return v.Encode()
 }

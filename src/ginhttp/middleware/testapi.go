@@ -17,7 +17,7 @@ func TestApiMiddleware() gin.HandlerFunc {
 		}
 	} else {
 		return func(c *gin.Context) {
-			c.JSON(200, data.NewData(data.GlobalErrorCodeNotTest, nil, "并非处于测试模式", "并非处于测试模式"))
+			c.JSON(200, data.NewClientNotTestError())
 		}
 	}
 }

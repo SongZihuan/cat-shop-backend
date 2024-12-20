@@ -5,6 +5,7 @@ type ConfigStruct struct {
 	yamlHasParser bool
 
 	Yaml YamlConfig
+	File FileLocationConfig
 }
 
 func (c *ConfigStruct) parser() ParserError {
@@ -26,7 +27,7 @@ func (c *ConfigStruct) setDefault() {
 }
 
 func (c *ConfigStruct) check() (err ConfigError) {
-	err = c.Yaml.check()
+	err = c.Yaml.check(&c.File)
 	if err != nil && err.IsError() {
 		return err
 	}

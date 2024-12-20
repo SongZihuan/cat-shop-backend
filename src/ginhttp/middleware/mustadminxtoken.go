@@ -17,7 +17,7 @@ func mustAdminErrorData(debugMsgLst ...string) data.Data {
 		debugMsg = "权限不足"
 	}
 
-	return data.NewData(data.GlobalErrorCodeMustAdmin, nil, data.DefaultMsg(data.GlobalErrorCodeXTokenExpire), debugMsg)
+	return data.NewClientAdminError()
 }
 
 func MustAdminXTokenMiddleware() gin.HandlerFunc {

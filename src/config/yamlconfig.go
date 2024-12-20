@@ -20,13 +20,13 @@ func (y *YamlConfig) setDefault() {
 	y.Jwt.setDefault()
 }
 
-func (y *YamlConfig) check() (err ConfigError) {
+func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
 	err = y.Mysql.check()
 	if err != nil && err.IsError() {
 		return err
 	}
 
-	err = y.File.check()
+	err = y.File.check(fl)
 	if err != nil && err.IsError() {
 		return err
 	}
