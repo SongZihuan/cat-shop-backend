@@ -24,17 +24,17 @@ func MustRotAdminXTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user, ok := c.Value("user").(*model.User)
 		if !ok {
-			c.JSON(200, mustRootAdminErrorData("用户获取失败"))
+			c.JSON(http.StatusOK, mustRootAdminErrorData("用户获取失败"))
 			return
 		}
 
 		if user.Type == model.NormalUserType {
-			c.JSON(200, mustAdminErrorData("普通用户权限不足"))
+			c.JSON(http.StatusOK, mustAdminErrorData("普通用户权限不足"))
 			return
 		}
 
 		if user.Type == model.AdminUserType {
-			c.JSON(200, mustAdminErrorData("普通管理员权限不足"))
+			c.JSON(http.StatusOK, mustAdminErrorData("普通管理员权限不足"))
 			return
 		}
 

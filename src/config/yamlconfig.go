@@ -7,10 +7,11 @@ import (
 )
 
 type YamlConfig struct {
-	Mysql MySQLConfig `yaml:"mysql"`
-	File  FileConfig  `yaml:"file"`
-	Http  HttpConfig  `yaml:"http"`
-	Jwt   JwtConfig   `yaml:"jwt"`
+	Mysql    MySQLConfig    `yaml:"mysql"`
+	File     FileConfig     `yaml:"file"`
+	Http     HttpConfig     `yaml:"http"`
+	Jwt      JwtConfig      `yaml:"jwt"`
+	Password PasswordConfig `yaml:"password"`
 }
 
 func (y *YamlConfig) setDefault() {
@@ -18,6 +19,7 @@ func (y *YamlConfig) setDefault() {
 	y.File.setDefault()
 	y.Http.setDefault()
 	y.Jwt.setDefault()
+	y.Password.setDefault()
 }
 
 func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
@@ -37,6 +39,11 @@ func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
 	}
 
 	err = y.Jwt.check()
+	if err != nil && err.IsError() {
+		return err
+	}
+
+	err = y.Password.check()
 	if err != nil && err.IsError() {
 		return err
 	}

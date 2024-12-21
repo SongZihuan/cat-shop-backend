@@ -28,7 +28,7 @@ func MustXTokenMiddleware() gin.HandlerFunc {
 			if !ok {
 				debugMsg = "未知错误"
 			}
-			c.JSON(200, mustXTokenErrorData(debugMsg))
+			c.JSON(http.StatusOK, mustXTokenErrorData(debugMsg))
 			return
 		}
 

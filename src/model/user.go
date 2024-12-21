@@ -2,40 +2,37 @@ package model
 
 import (
 	"database/sql"
+	"fmt"
+	"github.com/SuperH-0630/cat-shop-back/src/config"
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"gorm.io/gorm"
-)
-
-type UserType int
-
-const (
-	NormalUserType    UserType = 1
-	AdminUserType     UserType = 2
-	RootAdminUserType UserType = 3
-)
-
-type UserStatus int
-
-const (
-	NormalUserStatus UserStatus = 1
-	FreezeUserStatus UserStatus = 2
-	DeleteUserStatus UserStatus = 3
 )
 
 type User struct {
 	gorm.Model
-	Status       UserStatus     `gorm:"type:uint;not null"`
-	Type         UserType       `gorm:"type:uint;not null"`
-	Name         sql.NullString `gorm:"type:varchar(20);"`
-	Phone        string         `gorm:"type:varchar(30);not null"`
-	WeChat       sql.NullString `gorm:"type:varchar(50);"`
-	Email        sql.NullString `gorm:"type:varchar(50);"`
-	Location     sql.NullString `gorm:"type:varchar(200);"`
-	TotalPrice   Total          `gorm:"type:uint;not null"`
-	TotalBuy     Total          `gorm:"type:uint;not null"`
-	TotalGood    Total          `gorm:"type:uint;not null"`
-	TotalJian    Total          `gorm:"type:uint;not null"`
-	TotalShouHuo Total          `gorm:"type:uint;not null"`
-	PasswordHash string         `gorm:"type:char(64);not null"`
+	Status       modeltype.UserStatus `gorm:"type:uint;not null"`
+	Type         modeltype.UserType   `gorm:"type:uint;not null"`
+	Name         sql.NullString       `gorm:"type:varchar(20);"`
+	Phone        string               `gorm:"type:varchar(30);not null"`
+	WeChat       sql.NullString       `gorm:"type:varchar(50);"`
+	Email        sql.NullString       `gorm:"type:varchar(50);"`
+	Location     sql.NullString       `gorm:"type:varchar(200);"`
+	TotalPrice   modeltype.Total      `gorm:"type:uint;not null"`
+	TotalBuy     modeltype.Total      `gorm:"type:uint;not null"`
+	TotalGood    modeltype.Total      `gorm:"type:uint;not null"`
+	TotalJian    modeltype.Total      `gorm:"type:uint;not null"`
+	TotalShouHuo modeltype.Total      `gorm:"type:uint;not null"`
+	PasswordHash string               `gorm:"type:char(64);not null"`
+}
+
+func NewUser(phone string, password string) *User {
+	return &User{
+		Status:       modeltype.NormalUserStatus,
+		Type:         modeltype.NormalUserType,
+		Phone:        phone,
+		PasswordHash: getPasswordHash(password),
+	}
 }
 
 func (u *User) GetName() string {
@@ -47,5 +44,28 @@ func (u *User) GetName() string {
 }
 
 func (u *User) CanLogin() bool {
-	return u.Status == NormalUserStatus
+	return u.Status == modeltype.NormalUserStatus
+}
+
+func (u *User) PasswordCheck(password string) bool {
+	return u.PasswordHash == getPasswordHash(password)
+}
+
+func (u *User) SetNewPassword(password string) bool {
+	newPassword := getPasswordHash(password)
+	if newPassword == u.PasswordHash {
+		return false
+	}
+
+	u.PasswordHash = newPassword
+	return true
+}
+
+func getPasswordHash(password string) string {
+	if !config.IsReady() {
+		panic("config is not ready")
+	}
+
+	ps := fmt.Sprintf("%s:%s", config.Config().Yaml.Password.Backend, password)
+	return utils.SHA256([]byte(ps))
 }

@@ -24,12 +24,12 @@ func MustAdminXTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user, ok := c.Value("user").(*model.User)
 		if !ok {
-			c.JSON(200, mustAdminErrorData("用户获取失败"))
+			c.JSON(http.StatusOK, mustAdminErrorData("用户获取失败"))
 			return
 		}
 
 		if user.Type == model.NormalUserType {
-			c.JSON(200, mustAdminErrorData("普通用户权限不足"))
+			c.JSON(http.StatusOK, mustAdminErrorData("普通用户权限不足"))
 			return
 		}
 

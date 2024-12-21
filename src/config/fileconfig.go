@@ -2,14 +2,14 @@ package config
 
 import (
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/model"
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"path"
 )
 
 type FileLocationConfig struct {
-	Image map[model.ImageType]string
-	Video map[model.VideoType]string
+	Image map[modeltype.ImageType]string
+	Video map[modeltype.VideoType]string
 }
 
 type FileConfig struct {
@@ -23,7 +23,7 @@ func (f *FileConfig) setDefault() {
 }
 
 func (f *FileConfig) check(fl *FileLocationConfig) ConfigError {
-	for tp, name := range model.ImageTypeToName {
+	for tp, name := range modeltype.ImageTypeToName {
 		p := path.Join(f.LocalPath, "image", name)
 		if utils.IsExists(p) {
 			if !utils.IsDir(p) {
@@ -39,7 +39,7 @@ func (f *FileConfig) check(fl *FileLocationConfig) ConfigError {
 		fl.Image[tp] = p
 	}
 
-	for tp, name := range model.VideoTypeToName {
+	for tp, name := range modeltype.VideoTypeToName {
 		p := path.Join(f.LocalPath, "image", name)
 		if utils.IsExists(p) {
 			if !utils.IsDir(p) {

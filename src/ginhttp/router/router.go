@@ -7,6 +7,8 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/getxieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/image"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/system/video"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/user/login"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/user/register"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/wupin/gethotwupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/wupin/getsearch"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/global/wupin/getwupin"
@@ -109,10 +111,16 @@ func globalApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/gl")
 	middleware.GlobalUse(api)
 
+	loginAndRegisterApiV1(api)
 	classApiV1(api)
 	configApiV1(api)
 	wupinApiV1(api)
 	xieyiApiV1(api)
+}
+
+func loginAndRegisterApiV1(api *gin.RouterGroup) {
+	api.GET("/lg", login.Handler)
+	api.GET("/rg", register.Handler)
 }
 
 func configApiV1(apiV1 *gin.RouterGroup) {

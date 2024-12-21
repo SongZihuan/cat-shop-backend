@@ -17,7 +17,7 @@ func TestApiMiddleware() gin.HandlerFunc {
 		}
 	} else {
 		return func(c *gin.Context) {
-			c.JSON(200, data.NewClientNotTestError())
+			c.JSON(http.StatusOK, data.NewClientNotTestError())
 		}
 	}
 }
