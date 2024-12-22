@@ -69,6 +69,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/edit/updateuserinfo"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/edit/updateuserpassword"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/getter/getuserinfo"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/kefu/sendmsg"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/pay/bagpay"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/pay/newpay"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/pay/repay"
@@ -103,8 +104,8 @@ func resourceApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/fl")
 	middleware.ResourceUse(api)
 
-	api.GET("/img", image.Handler)
-	api.GET("/vio", video.Handler)
+	api.GET("/img", image.Handler) // baseApi/v1/fl/img
+	api.GET("/vio", video.Handler) // baseApi/v1/fl/vio
 }
 
 func globalApiV1(apiV1 *gin.RouterGroup) {
@@ -150,8 +151,9 @@ func secretApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/sr")
 	middleware.SecretUse(api)
 
-	adminApiV1(api)
 	userApiV1(api)
+	adminApiV1(api)
+	rootAdminApiV1(api)
 }
 
 func userApiV1(apiV1 *gin.RouterGroup) {
@@ -159,8 +161,15 @@ func userApiV1(apiV1 *gin.RouterGroup) {
 	userEditApiV1(api)
 	userBuyRecordApiV1(api)
 	userBagApiV1(api)
+	userKefuApiV1(api)
 
 	api.GET("/i", getuserinfo.Handler)
+}
+
+func userKefuApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/kf")
+
+	api.POST("/msg", sendmsg.Handler)
 }
 
 func userEditApiV1(apiV1 *gin.RouterGroup) {
@@ -222,7 +231,6 @@ func userBagApiV1(apiV1 *gin.RouterGroup) {
 func adminApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/ad")
 	api.Use(middleware.MustAdminXTokenMiddleware())
-	rootAdminApiV1(api)
 
 	adminUserApiV1(api)
 	adminWupinApiV1(api)

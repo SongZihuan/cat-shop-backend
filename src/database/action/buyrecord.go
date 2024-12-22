@@ -30,7 +30,7 @@ func SetBuyRecordPayFail(record *model.BuyRecord) error {
 	record.Status = modeltype.PayCheckFail
 
 	db := database.DB()
-	err := db.Updates(record).Error
+	err := db.Save(record).Error
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func SetBuyRecordPaySuccess(record *model.BuyRecord) error {
 	record.Status = modeltype.WaitFahuo
 
 	db := database.DB()
-	err := db.Updates(record).Error
+	err := db.Save(record).Error
 	if err != nil {
 		return err
 	}

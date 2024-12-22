@@ -18,10 +18,22 @@ func NewSuccess(success ...bool) Success {
 	}
 }
 
-func NewSuccessData(msg string, debugMsg string) Data {
-	return NewData(GlobalCodeOk, NewSuccess(true), msg, debugMsg)
+func NewSuccessData(msg string, debugMsg ...string) Data {
+	if len(debugMsg) == 0 {
+		return NewData(GlobalCodeOk, NewSuccess(true), msg)
+	} else if len(debugMsg) == 1 {
+		return NewData(GlobalCodeOk, NewSuccess(true), msg, debugMsg[0])
+	} else {
+		panic("too many arguments")
+	}
 }
 
-func NewNotSuccessData(code CodeType, msg string, debugMsg string) Data {
-	return NewData(code, NewSuccess(false), msg, debugMsg)
+func NewNotSuccessData(code CodeType, msg string, debugMsg ...string) Data {
+	if len(debugMsg) == 0 {
+		return NewData(code, NewSuccess(false), msg)
+	} else if len(debugMsg) == 1 {
+		return NewData(code, NewSuccess(false), msg, debugMsg[0])
+	} else {
+		panic("too many arguments")
+	}
 }

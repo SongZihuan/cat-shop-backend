@@ -27,8 +27,7 @@ func Handler(c *gin.Context) {
 	var user *model.User
 	_, err = action.GetUserByPhone(query.Phone)
 	if errors.Is(err, action.ErrNotFound) {
-		user = model.NewUser(query.Phone, query.Password)
-		err := action.CreateUser(user)
+		user, err = action.CreateUser(query.Phone, query.Password)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

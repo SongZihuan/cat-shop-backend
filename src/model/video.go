@@ -2,11 +2,14 @@ package model
 
 import (
 	"fmt"
+	"github.com/SuperH-0630/cat-shop-back/src/config"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"gorm.io/gorm"
 	"net/url"
 	"time"
 )
+
+const VideoPath = "/v1/fl/vio"
 
 type Video struct {
 	gorm.Model
@@ -16,19 +19,23 @@ type Video struct {
 }
 
 func (vid *Video) GetUrl() string {
-	return GetVideoUrl(vid.Type, vid.Hash, vid.Time.Unix())
+	if !config.IsReady() {
+		panic("config is not ready")
+	}
+
+	return config.Config().Yaml.Http.ResourceBaseAPI + VideoPath + vid.GetQuery()
 }
 
-func GetVideoUrl(tp modeltype.VideoType, hash string, time int64) string {
+func (vid *Video) GetQuery() string {
 	v := url.Values{}
-	tpn, ok := modeltype.VideoTypeToName[tp]
+	tpn, ok := modeltype.VideoTypeToName[vid.Type]
 	if !ok {
 		return ""
 	}
 
 	v.Add("type", tpn)
-	v.Add("hash", hash)
-	v.Add("time", fmt.Sprintf("%d", time))
+	v.Add("hash", vid.Hash)
+	v.Add("time", fmt.Sprintf("%d", vid.Time.Unix()))
 
 	return v.Encode()
 }

@@ -24,7 +24,7 @@ func CreateUserToken(user *model.User) (t string, err error) {
 	now := time.Now()
 
 	jti := fmt.Sprintf("%d%d%d", now.UnixNano(), user.ID, utils.Rand().Intn(100))
-	aud := []string{user.GetName()}
+	aud := []string{user.GetLongName()}
 	iat := jwt.NewNumericDate(now)
 	iss := config.Config().Yaml.Jwt.Issuer
 	nbf := jwt.NewNumericDate(now.Add(-1 * time.Second))

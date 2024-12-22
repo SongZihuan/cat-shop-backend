@@ -13,7 +13,7 @@ func Handler(c *gin.Context) {
 	query := Query{}
 	err := c.ShouldBindQuery(&Query{})
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
 		return
 	}
 

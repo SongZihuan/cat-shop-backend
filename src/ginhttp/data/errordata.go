@@ -67,3 +67,7 @@ func NewClientRootAdminError() Data {
 func NewClientNotTestError() Data {
 	return NewClientError(GlobalCodeErrorNotTestMode, "非测试模式")
 }
+
+func NewClientBadRequests(err error) Data {
+	return NewClientError(GlobalCodeErrorNotTestMode, "错误请求", err)
+}

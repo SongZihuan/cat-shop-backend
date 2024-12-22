@@ -10,6 +10,7 @@ const (
 	GlobalCodeErrorNoRootPermission CodeType = 4
 	GlobalCodeErrorNotTestMode      CodeType = 5
 	GlobalCodeErrorDatabase         CodeType = 6
+	GlobalCodeErrorBadRequests      CodeType = 7
 )
 
 var CodeDebugMsg = map[CodeType]string{
@@ -20,6 +21,7 @@ var CodeDebugMsg = map[CodeType]string{
 	GlobalCodeErrorNoRootPermission: "无访问权限（Root Admin）",
 	GlobalCodeErrorNotTestMode:      "非测试模式",
 	GlobalCodeErrorDatabase:         "数据库错误",
+	GlobalCodeErrorBadRequests:      "错误请求",
 }
 
 func GetCodeDebugMsg(code CodeType) string {
