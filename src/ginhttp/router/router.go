@@ -46,6 +46,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/user/adminupdateuserinfo"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/user/adminupdateuserpassword"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/user/adminupdateuserphone"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/wupin/adminaddwupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/wupin/admingetwupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/wupin/admingetwupinlst"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/wupin/adminupdatewupin"
@@ -94,61 +95,58 @@ func baseApi(engine *gin.Engine) {
 func apiV1(baseApi *gin.RouterGroup) {
 	api := baseApi.Group("/v1")
 
+	resourceApiV1(api)
 	globalApiV1(api)
 	secretApiV1(api)
 	testApiV1(api)
-	resourceApiV1(api)
 }
 
 func resourceApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/fl")
+	api := apiV1.Group("/file")
 	middleware.ResourceUse(api)
 
-	api.GET("/img", image.Handler) // baseApi/v1/fl/img
-	api.GET("/vio", video.Handler) // baseApi/v1/fl/vio
+	api.GET("/image", image.Handler) // baseApi/v1/file/image
+	api.GET("/video", video.Handler) // baseApi/v1/file/video
 }
 
 func globalApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/gl")
+	api := apiV1.Group("/global")
 	middleware.GlobalUse(api)
 
 	loginAndRegisterApiV1(api)
-	classApiV1(api)
 	configApiV1(api)
+	classApiV1(api)
 	wupinApiV1(api)
 	xieyiApiV1(api)
 }
 
 func loginAndRegisterApiV1(api *gin.RouterGroup) {
-	api.GET("/lg", login.Handler)
-	api.GET("/rg", register.Handler)
+	api.GET("/login", login.Handler)
+	api.GET("/register", register.Handler)
 }
 
-func configApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/cfg")
-	api.GET("/i", getconfig.Handler)
+func configApiV1(api *gin.RouterGroup) {
+	api.GET("/config", getconfig.Handler)
 }
 
-func classApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/cls")
-	api.GET("/lst", getclasslst.Handler)
+func classApiV1(api *gin.RouterGroup) {
+	api.GET("/class", getclasslst.Handler)
 }
 
 func wupinApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/wp")
-	api.GET("/i", getwupin.Handler)
-	api.GET("/lst", getsearch.Handler)
-	api.GET("/lst/h", gethotwupin.Handler)
-	api.GET("/lst/s", getsearch.Handler)
+	api := apiV1.Group("/wupin")
+	api.GET("/info", getwupin.Handler)
+	api.GET("/list", getsearch.Handler)
+	api.GET("/hot", gethotwupin.Handler)
+	api.GET("/search", getsearch.Handler)
 }
 
-func xieyiApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/xy")
-	api.GET("/i", getxieyi.Handler)
+func xieyiApiV1(api *gin.RouterGroup) {
+	api.GET("/xieyi", getxieyi.Handler)
 }
 
 func secretApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/sr")
+	api := apiV1.Group("/secret")
 	middleware.SecretUse(api)
 
 	userApiV1(api)
@@ -157,260 +155,266 @@ func secretApiV1(apiV1 *gin.RouterGroup) {
 }
 
 func userApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ur")
+	api := apiV1.Group("/user")
 	userEditApiV1(api)
 	userBuyRecordApiV1(api)
 	userBagApiV1(api)
 	userKefuApiV1(api)
 
-	api.GET("/i", getuserinfo.Handler)
+	api.GET("/info", getuserinfo.Handler)
 }
 
 func userKefuApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/kf")
-
-	api.POST("/msg", sendmsg.Handler)
+	api := apiV1.Group("/kefu")
+	api.POST("/sendmsg", sendmsg.Handler)
 }
 
 func userEditApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ed")
+	api := apiV1.Group("/edit")
 
-	api.POST("/i", updateuserinfo.Handler)
-	api.POST("/p", updateuserpassword.Handler)
-	api.POST("/a", updateuseravtar.Handler)
+	api.POST("/info", updateuserinfo.Handler)
+	api.POST("/password", updateuserpassword.Handler)
+	api.POST("/avatar", updateuseravtar.Handler)
 }
 
 func userBuyRecordApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/br")
+	api := apiV1.Group("/buyrecord")
 	userFahuoApiV1(api)
 	userDaohuoApiV1(api)
 	userTuihuoApiV1(api)
 	userPayApiV1(api)
 
-	api.GET("/i", getbuyrecord.Handler)
-	api.GET("/lst", getbuyrecordlst.Handler)
-	api.GET("/lst/i", getbuyrecordlst.Handler)
-	api.GET("/lst/p", getbuyrecordlstbypage.Handler)
+	api.GET("/info", getbuyrecord.Handler)
+	api.GET("/list", getbuyrecordlst.Handler)
+	api.GET("/list/infinite", getbuyrecordlst.Handler)
+	api.GET("/lst/page", getbuyrecordlstbypage.Handler)
 }
 
 func userFahuoApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/fho")
+	api := apiV1.Group("/fahuo")
 
-	api.POST("/chu", fahuochangeuser.Handler)
-	api.POST("/qx", fahuoquxiaoshenqing.Handler)
+	api.POST("/change/user", fahuochangeuser.Handler)
+	api.POST("/quxiao", fahuoquxiaoshenqing.Handler)
 }
 
 func userDaohuoApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/dho")
-
-	api.POST("/cfm", daohuo.Handler)
+	api := apiV1.Group("/daohuo")
+	api.POST("/queren", daohuo.Handler)
 }
 
 func userTuihuoApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/dho")
+	api := apiV1.Group("/tuihuo")
 
-	api.POST("/sq", tuihuoshenqing.Handler)
-	api.POST("/dj", tuihuodengji.Handler)
+	api.POST("/shenqing", tuihuoshenqing.Handler)
+	api.POST("/dengji", tuihuodengji.Handler)
 }
 
 func userPayApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/py")
-
-	api.POST("/n", newpay.Handler)
-	api.POST("/b", bagpay.Handler)
-	api.POST("/r", repay.Handler)
+	api := apiV1.Group("/zhifu")
+	api.POST("/new", newpay.Handler)
+	api.POST("/bag", bagpay.Handler)
+	api.POST("/repay", repay.Handler)
 }
 
 func userBagApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/bg")
+	api := apiV1.Group("/bag")
 
-	api.POST("/ad", addbag.Handler)
-	api.GET("/lst", getbaglst.Handler)
+	api.POST("/add", addbag.Handler)
+	api.GET("/list", getbaglst.Handler)
 }
 
 func adminApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ad")
+	api := apiV1.Group("/admin")
 	api.Use(middleware.MustAdminXTokenMiddleware())
 
+	adminFileUploadApiV1(api)
 	adminUserApiV1(api)
 	adminWupinApiV1(api)
-	adminBagApiV1(api)
-	adminBuyRecordApiV1(api)
-	adminClassApiV1(api)
 	adminClassApiV1(api)
 	adminXieyiApiV1(api)
 	adminMsgApiV1(api)
-	adminFileUploadApiV1(api)
 }
 
 func adminFileUploadApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/fu")
+	api := apiV1.Group("/file/upload")
 
-	api.POST("/img", adminimageupload.Handler)
-	api.POST("/vio", adminvideoupload.Handler)
+	api.POST("/image", adminimageupload.Handler)
+	api.POST("/video", adminvideoupload.Handler)
 }
 
 func adminMsgApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/m")
+	api := apiV1.Group("/kefu/msg")
 
-	api.GET("/lst", admingetmsg.Handler)
+	api.GET("/list", admingetmsg.Handler)
 }
 
 func adminXieyiApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/xy")
+	api := apiV1.Group("/xieyi")
 
-	api.GET("/i", admingetxieyi.Handler)
-	api.GET("/ed", adminupdatexieyi.Handler)
+	api.GET("/info", admingetxieyi.Handler)
+	api.GET("/edit", adminupdatexieyi.Handler)
 }
 
 func adminClassApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/cls")
+	api := apiV1.Group("/class")
 	adminUpdateClassApiV1(api)
 	adminAddClassApiV1(api)
 
-	api.GET("/i", admingetclass.Handler)
-	api.GET("/lst", admingetclasslst.Handler)
+	api.GET("/info", admingetclass.Handler)
+	api.GET("/list", admingetclasslst.Handler)
 }
 
 func adminUpdateClassApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ed")
-	api.POST("/n", adminchangeclassname.Handler)
-	api.POST("/s", adminchangeclassshow.Handler)
-	api.POST("/c", adminupdateclass.Handler)
+	api := apiV1.Group("/edit")
+	api.POST("/name", adminchangeclassname.Handler)
+	api.POST("/show", adminchangeclassshow.Handler)
+	api.POST("/all", adminupdateclass.Handler)
 }
 
 func adminAddClassApiV1(api *gin.RouterGroup) {
-	api.POST("/n", adminaddclass.Handler)
+	api.POST("/add", adminaddclass.Handler)
 }
 
 func adminUserApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ur")
+	api := apiV1.Group("/user")
 	adminUpdateUserApiV1(api)
+	adminUserBagApiV1(api)
+	adminUserBuyRecordApiV1(api)
+	adminUserMsgApiV1(api)
+	adminUBuyRecordApiV1(api)
 
-	api.GET("/i", admingetuserinfo.Handler)
-	api.GET("/lst", admingetuserlst.Handler)
-	api.GET("/m", admingetusermsg.Handler)
+	api.GET("/info", admingetuserinfo.Handler)
+	api.GET("/list", admingetuserlst.Handler)
+	api.POST("/add", adminadduser.Handler)
+}
 
-	api.POST("/n", adminadduser.Handler)
+func adminUBuyRecordApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/buyrecord")
+	api.GET("/list", admingetbuyrecordbypage.Handler)
+}
+
+func adminUserMsgApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/kefu/msg")
+	api.GET("/list", admingetusermsg.Handler)
 }
 
 func adminUpdateUserApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ed")
+	api := apiV1.Group("/edit")
 
-	api.POST("/i", adminupdateuserinfo.Handler)
-	api.POST("/p", adminupdateuserpassword.Handler)
-	api.POST("/a", adminupdateuseravtar.Handler)
-	api.POST("/ph", adminupdateuserphone.Handler)
+	api.POST("/info", adminupdateuserinfo.Handler)
+	api.POST("/password", adminupdateuserpassword.Handler)
+	api.POST("/avatar", adminupdateuseravtar.Handler)
+	api.POST("/phone", adminupdateuserphone.Handler)
 }
 
 func adminWupinApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/wp")
+	api := apiV1.Group("/wupin")
 
-	api.POST("/n", adminadduser.Handler)
-	api.POST("/ed", adminupdatewupin.Handler)
+	api.POST("/add", adminaddwupin.Handler)
+	api.POST("/edit", adminupdatewupin.Handler)
 
-	api.GET("/i", admingetwupin.Handler)
-	api.GET("/lst", admingetwupinlst.Handler)
+	api.GET("/info", admingetwupin.Handler)
+	api.GET("/list", admingetwupinlst.Handler)
 }
 
-func adminBagApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/bg")
+func adminUserBagApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/bag")
 
-	api.POST("/ad", adminaddbag.Handler)
-	api.GET("/lst", admingetbag.Handler)
+	api.POST("/add", adminaddbag.Handler)
+	api.GET("/list", admingetbag.Handler)
 }
 
-func adminBuyRecordApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/br")
+func adminUserBuyRecordApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/buyrecord")
 	adminFahuoApiV1(api)
 	adminDaohuoApiV1(api)
 	adminPayApiV1(api)
 	adminTuihuoApiV1(api)
 
-	api.GET("/i", admingetbuyrecordinfo.Handler)
-	api.GET("/lst", admingetuserbuyrecordlstbypage.Handler)
-	api.GET("/lst/u", admingetuserbuyrecordlstbypage.Handler)
-	api.GET("/lst/a", admingetbuyrecordbypage.Handler)
+	api.GET("/info", admingetbuyrecordinfo.Handler)
+	api.GET("/list", admingetuserbuyrecordlstbypage.Handler)
 }
 
 func adminTuihuoApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/tho")
+	api := apiV1.Group("/tuihuo")
 
-	api.POST("/ac", admintuihuoaccept.Handler)
-	api.POST("/dho", admintuihuodaohuo.Handler)
-	api.POST("/dj", admintuihuodengji.Handler)
-	api.POST("/sq", admintuihuoshenqing.Handler)
+	api.POST("/tongyi", admintuihuoaccept.Handler)
+	api.POST("/daohuo", admintuihuodaohuo.Handler)
+	api.POST("/dengji", admintuihuodengji.Handler)
+	api.POST("/shenqing", admintuihuoshenqing.Handler)
 }
 
 func adminPayApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/py")
+	api := apiV1.Group("/zhifu")
 
-	api.POST("/pp", adminpeoplepay.Handler)
-	api.POST("/qx", adminquxiaopay.Handler)
+	api.POST("/people", adminpeoplepay.Handler)
+	api.POST("/quxiao", adminquxiaopay.Handler)
 }
 
 func adminFahuoApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/fho")
+	api := apiV1.Group("/fahuo")
 	adminFahuoChangeInfoApiV1(api)
 
-	api.POST("/acqx", adminacceptfahuoquxiao.Handler)
-	api.POST("/dj", adminfahuodengji.Handler)
-	api.POST("/qx", adminfahuoquxiao.Handler)
+	api.POST("/quxiao/tongyi", adminacceptfahuoquxiao.Handler)
+	api.POST("/quxiao", adminfahuoquxiao.Handler)
+	api.POST("/dengji", adminfahuodengji.Handler)
 }
 
 func adminFahuoChangeInfoApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ch")
+	api := apiV1.Group("/change")
 
-	api.POST("/ur", adminfahuochuangeuser.Handler)
-	api.POST("/sp", adminfahuochangeshop.Handler)
+	api.POST("/user", adminfahuochuangeuser.Handler)
+	api.POST("/shop", adminfahuochangeshop.Handler)
 }
 
 func adminDaohuoApiV1(apiV1 *gin.RouterGroup) {
-	apiV1.POST("/dho", admindaohuo.Handler)
+	api := apiV1.Group("/daohuo")
+
+	api.POST("/queren", admindaohuo.Handler)
 }
 
 func rootAdminApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/rt")
+	api := apiV1.Group("/root")
 	api.Use(middleware.MustRotAdminXTokenMiddleware())
 
 	rootAdminConfigApiV1(api)
 }
 
 func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/cfg")
+	api := apiV1.Group("/config")
 
-	api.POST("/i", admingetconfig.Handler)
-	api.POST("/d", admindeleteconfig.Handler)
-	api.POST("/up", adminupdateconfigpic.Handler)
-	api.POST("/us", adminupdateconfigstring.Handler)
+	api.POST("/info", admingetconfig.Handler)
+	api.POST("/delete", admindeleteconfig.Handler)
+	api.POST("/update/pic", adminupdateconfigpic.Handler)
+	api.POST("/update/string", adminupdateconfigstring.Handler)
 }
 
 func testApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ts")
+	api := apiV1.Group("/test")
 
 	testGlobalApi(api)
 	testSecretApiV1(api)
 }
 
 func testGlobalApi(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/gl")
+	api := apiV1.Group("/global")
 	middleware.TestGlobalUse(api)
 }
 
 func testSecretApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/sr")
+	api := apiV1.Group("/secret")
 	middleware.TestSecretUse(api)
 
 	testUserApiV1(api)
 }
 
 func testUserApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/ur")
+	api := apiV1.Group("/user")
 	testUserPayApiV1(api)
 }
 
 func testUserPayApiV1(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/py")
+	api := apiV1.Group("/zhifu")
 
-	api.POST("/p", testpay.Handler)
+	api.POST("/try", testpay.Handler)
 }

@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const ImagePath = "/v1/fl/img"
+const ImagePath = "/v1/file/image"
 
 type Image struct {
 	gorm.Model
