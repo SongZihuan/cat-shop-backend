@@ -17,6 +17,7 @@ func Handler(c *gin.Context) {
 	err := db.Model(&model.Class{}).Where("show = true").Limit(ClassListLimit).Find(&list).Error
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
 	}
 
 	c.JSON(http.StatusOK, NewJsonData(list))

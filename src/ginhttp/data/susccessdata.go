@@ -17,3 +17,11 @@ func NewSuccess(success ...bool) Success {
 		panic("too many arguments")
 	}
 }
+
+func NewSuccessData(msg string, debugMsg string) Data {
+	return NewData(GlobalCodeOk, NewSuccess(true), msg, debugMsg)
+}
+
+func NewNotSuccessData(code CodeType, msg string, debugMsg string) Data {
+	return NewData(code, NewSuccess(false), msg, debugMsg)
+}
