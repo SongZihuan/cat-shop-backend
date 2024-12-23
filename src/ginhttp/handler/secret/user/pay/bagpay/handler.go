@@ -43,31 +43,31 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.BagID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBagNotFound, "购物车未找到", "bagID必须大于0"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到", "bagID必须大于0"))
 		return
 	}
 
 	if len(query.UserName) <= 0 {
 		query.UserName = user.Name
 	} else if len(query.UserName) >= 15 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadName, "购买人姓名不对", "购买人姓名太长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadName, "购买人姓名不对", "购买人姓名太长"))
 		return
 	}
 
 	if len(query.UserPhone) <= 0 {
 		query.UserPhone = user.Phone
 	} else if !utils.IsChinaMainlandPhone(query.UserPhone) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadPhone, "购买人联系电话不对"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadPhone, "购买人联系电话不对"))
 		return
 	}
 
 	if len(query.UserLocation) <= 0 || len(query.UserLocation) >= 160 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadLocation, "购买人联系地址不对"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadLocation, "购买人联系地址不对"))
 		return
 	}
 
 	if len(query.UserEmail) > 0 && !utils.IsValidEmail(query.UserEmail) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadEmail, "错误的邮件地址"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadEmail, "错误的邮件地址"))
 		return
 	}
 
@@ -82,7 +82,7 @@ func Handler(c *gin.Context) {
 
 	bag, err := action.GetBagByIDAndUser(user, query.BagID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBagNotFound, "购物车未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -90,7 +90,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if bag.WuPinID <= 0 || bag.WuPin == nil {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWupinNotFound, "购物车未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "购物车未找到"))
 		return
 	}
 

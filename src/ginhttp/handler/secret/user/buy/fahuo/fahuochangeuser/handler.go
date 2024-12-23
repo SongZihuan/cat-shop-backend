@@ -35,31 +35,31 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.ID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "购买记录未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
 		return
 	}
 
 	if len(query.UserName) <= 0 {
 		query.UserName = user.Name
 	} else if len(query.UserName) >= 15 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadName, "购买人姓名不对", "购买人姓名太长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadName, "购买人姓名不对", "购买人姓名太长"))
 		return
 	}
 
 	if len(query.UserPhone) <= 0 {
 		query.UserPhone = user.Phone
 	} else if !utils.IsChinaMainlandPhone(query.UserPhone) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadPhone, "购买人联系电话不对"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadPhone, "购买人联系电话不对"))
 		return
 	}
 
 	if len(query.UserLocation) <= 0 || len(query.UserLocation) >= 160 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadLocation, "购买人联系地址不对"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadLocation, "购买人联系地址不对"))
 		return
 	}
 
 	if len(query.UserEmail) > 0 && !utils.IsValidEmail(query.UserEmail) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBadEmail, "错误的邮件地址"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadEmail, "错误的邮件地址"))
 		return
 	}
 
@@ -69,7 +69,7 @@ func Handler(c *gin.Context) {
 
 	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "购买记录未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -78,12 +78,12 @@ func Handler(c *gin.Context) {
 
 	err = action.BuyRecordChangeUser(user, record, query.UserName, query.UserPhone, query.UserLocation, query.UserWechat, query.UserEmail, query.UserRemark)
 	if _, ok := action.IsBuyRecordStatusError(err); ok {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeStatusError, err.Error()))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeStatusError, err.Error()))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("确认到货成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("确认到货成功"))
 }

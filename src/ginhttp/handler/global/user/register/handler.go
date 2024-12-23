@@ -20,7 +20,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if !utils.IsChinaMainlandPhone(query.Phone) {
-		c.JSON(http.StatusOK, NewMsgError(CodePhoneError, "手机号不正确"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodePhoneError, "手机号不正确"))
 		return
 	}
 
@@ -36,7 +36,7 @@ func Handler(c *gin.Context) {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	} else {
-		c.JSON(http.StatusOK, NewMsgError(CodeUserExists, "改手机号已注册，请直接登录"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeUserExists, "改手机号已注册，请直接登录"))
 		return
 	}
 
@@ -46,6 +46,6 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, NewToken(token))
+	c.JSON(http.StatusOK, NewJsonData(token))
 	return
 }

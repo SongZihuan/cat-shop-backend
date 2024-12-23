@@ -21,13 +21,13 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.ID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWupinNotFound, "未找到商品", "ID应该大于0"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "未找到商品", "ID应该大于0"))
 		return
 	}
 
 	wupin, err := action.GetWupinByIDWithShow(query.ID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWupinNotFound, "未找到商品"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "未找到商品"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))

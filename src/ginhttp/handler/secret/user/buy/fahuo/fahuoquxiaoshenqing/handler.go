@@ -30,13 +30,13 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.ID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "购买记录未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
 		return
 	}
 
 	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "购买记录未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -45,12 +45,12 @@ func Handler(c *gin.Context) {
 
 	err = action.BuyRecordQuXiaoFahuo(user, record)
 	if _, ok := action.IsBuyRecordStatusError(err); ok {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeStatusError, err.Error()))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeStatusError, err.Error()))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("评价成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("评价成功"))
 }

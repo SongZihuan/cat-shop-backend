@@ -26,5 +26,5 @@ func NewData(cfg []model.Config) Data {
 }
 
 func NewJsonData(cfg []model.Config) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(cfg))
+	return data.NewSuccessWithData(NewData(cfg))
 }

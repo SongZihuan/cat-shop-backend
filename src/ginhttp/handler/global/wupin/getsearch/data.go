@@ -96,5 +96,5 @@ func NewData(list []model.WuPin, maxcount int) Data {
 }
 
 func NewJsonData(list []model.WuPin, maxcount int) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(list, maxcount))
+	return data.NewSuccessWithData(NewData(list, maxcount))
 }

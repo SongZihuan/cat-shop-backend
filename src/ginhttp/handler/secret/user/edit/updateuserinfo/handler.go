@@ -32,32 +32,32 @@ func Handler(c *gin.Context) {
 	}
 
 	if len(query.Name) == 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeNameError, "名字必须设定"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeNameError, "名字必须设定"))
 		return
 	}
 
 	if len(query.Name) > 15 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeNameError, "名字过长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeNameError, "名字过长"))
 		return
 	}
 
 	if len(query.Wechat) > 45 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWeChatError, "微信过长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "微信过长"))
 		return
 	}
 
 	if len(query.Email) > 45 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWeChatError, "邮箱过长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "邮箱过长"))
 		return
 	}
 
 	if len(query.Email) != 0 && !utils.IsValidEmail(query.Email) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWeChatError, "邮箱非法"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "邮箱非法"))
 		return
 	}
 
 	if len(query.Location) > 160 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWeChatError, "地址过长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "地址过长"))
 		return
 	}
 
@@ -67,5 +67,5 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("更新成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("更新成功"))
 }

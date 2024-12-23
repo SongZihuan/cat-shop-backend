@@ -177,5 +177,5 @@ func NewData(res []model.BuyRecord) Data {
 }
 
 func NewJsonData(res []model.BuyRecord) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(res))
+	return data.NewSuccessWithData(NewData(res))
 }

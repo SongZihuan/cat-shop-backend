@@ -30,5 +30,5 @@ func NewData(url string) Data {
 }
 
 func NewJsonData(url string) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(url))
+	return data.NewSuccessWithData(NewData(url))
 }

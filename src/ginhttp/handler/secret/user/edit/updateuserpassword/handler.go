@@ -28,7 +28,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if !user.PasswordCheck(query.OldPassword) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodePasswordError, "旧密码错误"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodePasswordError, "旧密码错误"))
 		return
 	}
 
@@ -38,5 +38,5 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("更新成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("更新成功"))
 }

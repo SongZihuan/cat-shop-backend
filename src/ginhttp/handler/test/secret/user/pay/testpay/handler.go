@@ -33,13 +33,13 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.ID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
 		return
 	}
 
 	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -47,7 +47,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if record.Status != modeltype.WaitPayCheck && record.Status != modeltype.PayCheckFail {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeRepeatTransactions, "重复交易", "购物记录状态不正确"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeRepeatTransactions, "重复交易", "购物记录状态不正确"))
 		return
 	}
 
@@ -58,7 +58,7 @@ func Handler(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodePayFail, "支付失败", "支付失败"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodePayFail, "支付失败", "支付失败"))
 		return
 	} else {
 		err := action.SetBuyRecordPaySuccess(user, record)
@@ -67,7 +67,7 @@ func Handler(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, data.NewSuccessData("支付成功", "支付成功"))
+		c.JSON(http.StatusOK, data.NewSuccess("支付成功", "支付成功"))
 		return
 	}
 }

@@ -30,16 +30,6 @@ func NewData(token ...string) Data {
 	}
 }
 
-func NewToken(token string) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(token))
-}
-
-func NewMsgError(code data.CodeType, msg string, debugMsg ...string) data.Data {
-	if len(debugMsg) == 0 {
-		return data.NewData(code, NewData(), msg)
-	} else if len(debugMsg) == 1 {
-		return data.NewData(code, NewData(), msg, debugMsg[0])
-	} else {
-		panic("too many arguments")
-	}
+func NewJsonData(token string) data.Data {
+	return data.NewSuccessWithData(NewData(token))
 }

@@ -42,5 +42,5 @@ func NewData(user *model.User) User {
 }
 
 func NewJsonData(user *model.User) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(user))
+	return data.NewSuccessWithData(NewData(user))
 }

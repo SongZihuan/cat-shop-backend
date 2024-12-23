@@ -41,7 +41,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.File.Size > Size2MB {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeFileTooBig, "文件太大"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeFileTooBig, "文件太大"))
 		return
 	}
 
@@ -59,7 +59,7 @@ func Handler(c *gin.Context) {
 
 	mimeTp := mimetype.Detect(fileData).String()
 	if !strings.HasPrefix("image/", mimeTp) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeNotImage, "非图片"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeNotImage, "非图片"))
 		return
 	}
 
@@ -78,5 +78,5 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("更新成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("更新成功"))
 }

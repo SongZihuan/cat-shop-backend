@@ -3,11 +3,12 @@ package config
 import "strings"
 
 type HttpConfig struct {
-	Address         string `yaml:"address"`
-	DebugMsg        bool   `yaml:"debugmsg"`
-	BaseAPI         string `yaml:"baseapi"`
-	ResourceBaseAPI string `yaml:"resourcebaseapi"`
-	TestApi         bool   `yaml:"testapi"`
+	Address         string      `yaml:"address"`
+	DebugMsg        bool        `yaml:"debugmsg"`
+	BaseAPI         string      `yaml:"baseapi"`
+	ResourceBaseAPI string      `yaml:"resourcebaseapi"`
+	TestApi         bool        `yaml:"testapi"`
+	Proxy           ProxyConfig `yaml:"proxy"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -40,11 +41,18 @@ func (h *HttpConfig) setDefault() {
 			h.ResourceBaseAPI = strings.TrimRight(h.ResourceBaseAPI, "/")
 		}
 	}
+
+	h.Proxy.setDefault()
 }
 
 func (h *HttpConfig) check() ConfigError {
 	if !strings.HasSuffix(h.ResourceBaseAPI, h.BaseAPI) {
 		_ = NewConfigWarning("resource base api has not suffix (base api)")
+	}
+
+	err := h.Proxy.check()
+	if err != nil && err.IsError() {
+		return err
 	}
 
 	return nil

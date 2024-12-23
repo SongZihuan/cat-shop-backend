@@ -179,5 +179,5 @@ func NewData(res []model.BuyRecord, maxcount int) Data {
 }
 
 func NewJsonData(res []model.BuyRecord, maxcount int) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(res, maxcount))
+	return data.NewSuccessWithData(NewData(res, maxcount))
 }

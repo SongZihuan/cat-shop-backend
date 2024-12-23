@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/gin-gonic/gin"
-	"strings"
+	"os"
 )
 
 type GlobalConfig struct {
@@ -11,15 +11,19 @@ type GlobalConfig struct {
 
 func (g *GlobalConfig) setDefault() {
 	if g.Mode == "" {
-		g.Mode = "debug"
+		g.Mode = os.Getenv(gin.EnvGinMode)
 	}
 
-	strings.ToLower(g.Mode)
+	if g.Mode == "" {
+		g.Mode = gin.DebugMode
+	}
+
+	_ = os.Setenv(gin.EnvGinMode, g.Mode)
 	return
 }
 
 func (g *GlobalConfig) check() ConfigError {
-	if g.Mode != "debug" && g.Mode != "release" && g.Mode != "test" {
+	if g.Mode != gin.DebugMode && g.Mode != gin.ReleaseMode && g.Mode != gin.TestMode {
 		return NewConfigError("bad mode")
 	}
 
@@ -27,14 +31,5 @@ func (g *GlobalConfig) check() ConfigError {
 }
 
 func (g *GlobalConfig) GetGinMode() string {
-	switch g.Mode {
-	case "debug":
-		return gin.DebugMode
-	case "release":
-		return gin.ReleaseMode
-	case "test":
-		return gin.TestMode
-	default:
-		return gin.DebugMode
-	}
+	return g.Mode
 }

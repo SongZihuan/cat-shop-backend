@@ -19,13 +19,13 @@ func Handler(c *gin.Context) {
 	}
 
 	if !utils.IsChinaMainlandPhone(query.Phone) {
-		c.JSON(http.StatusOK, NewMsgError(CodePhoneError, "手机号不正确"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodePhoneError, "手机号不正确"))
 		return
 	}
 
 	user, err := action.GetUserByPhone(query.Phone)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, NewMsgError(CodePhoneError, "用户不存在或密码错误", "用户不存在"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodePhoneError, "用户不存在或密码错误", "用户不存在"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -33,7 +33,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if !user.PasswordCheck(query.Password) {
-		c.JSON(http.StatusOK, NewMsgError(CodePasswordError, "用户不存在或密码错误", "密码不匹配"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodePasswordError, "用户不存在或密码错误", "密码不匹配"))
 		return
 	}
 
@@ -43,6 +43,6 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, NewToken(token))
+	c.JSON(http.StatusOK, NewJsonData(token))
 	return
 }

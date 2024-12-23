@@ -72,5 +72,5 @@ func NewData(wp *model.WuPin) Wupin {
 }
 
 func NewJsonData(wp *model.WuPin) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(wp))
+	return data.NewSuccessWithData(NewData(wp))
 }

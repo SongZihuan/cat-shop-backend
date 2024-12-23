@@ -38,7 +38,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.ID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "购买记录未找到", "ID必须大于0"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到", "ID必须大于0"))
 		return
 	}
 
@@ -49,7 +49,7 @@ func Handler(c *gin.Context) {
 
 	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "购买记录未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -57,7 +57,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if record.WuPinID <= 0 || record.WuPin == nil {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWupinNotFound, "购物车未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "购物车未找到"))
 		return
 	}
 

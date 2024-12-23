@@ -29,12 +29,12 @@ func Handler(c *gin.Context) {
 	}
 
 	if len(query.Msg) == 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeMsgMustBeNotEmpty, "消息不能为空"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeMsgMustBeNotEmpty, "消息不能为空"))
 		return
 	}
 
 	if len(query.Msg) > 160 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeMsgLenMustLessThan160, "消息不能超过160个字符"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeMsgLenMustLessThan160, "消息不能超过160个字符"))
 		return
 	}
 
@@ -44,6 +44,6 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("留言发送成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("留言发送成功"))
 	return
 }

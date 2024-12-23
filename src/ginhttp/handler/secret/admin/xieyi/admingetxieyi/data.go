@@ -10,5 +10,5 @@ func NewData() Data {
 }
 
 func NewJsonData() data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData())
+	return data.NewSuccessWithData(NewData())
 }

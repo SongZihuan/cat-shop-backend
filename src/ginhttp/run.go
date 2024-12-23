@@ -19,6 +19,14 @@ func InitGin() error {
 
 	_engine := gin.Default()
 
+	if cfg.Yaml.Http.Proxy.Enable() {
+		_engine.ForwardedByClientIP = true
+		err := _engine.SetTrustedProxies(cfg.Yaml.Http.Proxy.TrustedIPs)
+		if err != nil {
+			return err
+		}
+	}
+
 	router.InitRouter(_engine)
 
 	engine = _engine

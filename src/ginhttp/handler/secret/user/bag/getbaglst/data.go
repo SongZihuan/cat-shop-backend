@@ -113,5 +113,5 @@ func NewData(res []model.Bag) Data {
 }
 
 func NewJsonData(res []model.Bag) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(res))
+	return data.NewSuccessWithData(NewData(res))
 }

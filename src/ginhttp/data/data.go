@@ -7,13 +7,13 @@ type Data struct {
 	DebugMsg string      `json:"debugmsg"`
 }
 
-func NewData(code CodeType, vargs ...interface{}) Data {
+func newData(code CodeType, vargs ...interface{}) Data {
 	if len(vargs) == 0 {
-		return Data{Code: code, Data: nil, Msg: "", DebugMsg: GetCodeDebugMsg(code)}
+		return Data{Code: code, Data: nil, Msg: "", DebugMsg: GetCodeName(code)}
 	} else if len(vargs) == 1 {
-		return Data{Code: code, Data: vargs[0], Msg: "", DebugMsg: GetCodeDebugMsg(code)}
+		return Data{Code: code, Data: vargs[0], Msg: "", DebugMsg: GetCodeName(code)}
 	} else if len(vargs) == 2 {
-		return Data{Code: code, Data: vargs[0], Msg: vargs[1].(string), DebugMsg: GetCodeDebugMsg(code)}
+		return Data{Code: code, Data: vargs[0], Msg: vargs[1].(string), DebugMsg: GetCodeName(code)}
 	} else if len(vargs) == 3 {
 		return Data{Code: code, Data: vargs[0], Msg: vargs[1].(string), DebugMsg: vargs[2].(string)}
 	} else {

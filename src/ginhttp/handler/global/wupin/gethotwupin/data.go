@@ -87,5 +87,5 @@ func NewData(list []model.WuPin) Data {
 }
 
 func NewJsonData(list []model.WuPin) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(list))
+	return data.NewSuccessWithData(NewData(list))
 }

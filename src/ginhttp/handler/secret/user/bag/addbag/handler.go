@@ -29,19 +29,19 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.WuPinID <= 0 {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWBagNotFound, "购物车未找到", "wupinID应该大于0"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到", "wupinID应该大于0"))
 		return
 	}
 
 	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID)
 	if errors.Is(err, action.ErrNotFound) {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWBagNotFound, "购物车未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	} else if !bag.WuPinShow || bag.WuPinID <= 0 || bag.WuPin == nil || !bag.WuPin.IsShow {
-		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeWBagNotFound, "购物车未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return
 	}
 
@@ -51,6 +51,6 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccessData("添加成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("添加成功"))
 	return
 }

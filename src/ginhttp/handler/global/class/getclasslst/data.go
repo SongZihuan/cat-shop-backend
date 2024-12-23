@@ -33,5 +33,5 @@ func NewData(list []model.Class) Data {
 }
 
 func NewJsonData(list []model.Class) data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData(list))
+	return data.NewSuccessWithData(NewData(list))
 }
