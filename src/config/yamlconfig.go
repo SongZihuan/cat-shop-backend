@@ -7,6 +7,7 @@ import (
 )
 
 type YamlConfig struct {
+	Global   GlobalConfig   `yaml:"global"`
 	Mysql    MySQLConfig    `yaml:"mysql"`
 	File     FileConfig     `yaml:"file"`
 	Http     HttpConfig     `yaml:"http"`
@@ -16,6 +17,7 @@ type YamlConfig struct {
 }
 
 func (y *YamlConfig) setDefault() {
+	y.Global.setDefault()
 	y.Mysql.setDefault()
 	y.File.setDefault()
 	y.Http.setDefault()
@@ -25,6 +27,11 @@ func (y *YamlConfig) setDefault() {
 }
 
 func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
+	err = y.Global.check()
+	if err != nil && err.IsError() {
+		return err
+	}
+
 	err = y.Mysql.check()
 	if err != nil && err.IsError() {
 		return err

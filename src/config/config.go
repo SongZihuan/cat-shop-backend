@@ -8,6 +8,14 @@ type ConfigStruct struct {
 	File FileLocationConfig
 }
 
+func (c *ConfigStruct) init() error {
+	err := c.File.init()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *ConfigStruct) parser() ParserError {
 	err := c.Yaml.parser()
 	if err != nil {
@@ -40,11 +48,16 @@ func (c *ConfigStruct) ready() (err ConfigError) {
 		return nil
 	}
 
+	initErr := c.init()
+	if initErr != nil {
+		return NewConfigError("init error: " + initErr.Error())
+	}
+
 	parserErr := c.parser()
 	if parserErr != nil {
-		return NewConfigError("parser yaml error: " + parserErr.Error())
+		return NewConfigError("parser error: " + parserErr.Error())
 	} else if !c.yamlHasParser {
-		return NewConfigError("parser yaml error: unknown")
+		return NewConfigError("parser error: unknown")
 	}
 
 	c.setDefault()

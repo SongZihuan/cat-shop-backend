@@ -60,7 +60,7 @@ func Handler(c *gin.Context) {
 		c.JSON(http.StatusOK, data.NewNotSuccessData(CodePayFail, "支付失败", "支付失败"))
 		return
 	} else {
-		err := action.SetBuyRecordPaySuccess(record)
+		err := action.SetBuyRecordPaySuccess(user, record)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

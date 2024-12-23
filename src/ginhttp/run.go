@@ -13,6 +13,9 @@ func InitGin() error {
 	if !config.IsReady() {
 		panic("config is not ready")
 	}
+	cfg := config.Config()
+
+	gin.SetMode(cfg.Yaml.Global.GetGinMode())
 
 	_engine := gin.Default()
 

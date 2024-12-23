@@ -4,16 +4,15 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"os"
 	"strings"
-	"time"
 )
 
 type JwtConfig struct {
-	Secret     string        `json:"secret"`
-	SecretPath string        `json:"secretpath"`
-	SaveSecret bool          `json:"savesecret"`
-	Hour       time.Duration `json:"hour"`
-	ResetMin   time.Duration `json:"resetmin"`
-	Issuer     string        `json:"issuer"`
+	Secret     string `json:"secret"`
+	SecretPath string `json:"secretpath"`
+	SaveSecret bool   `json:"savesecret"`
+	Hour       int64  `json:"hour"`
+	ResetMin   int64  `json:"resetmin"`
+	Issuer     string `json:"issuer"`
 }
 
 func (j *JwtConfig) setDefault() {

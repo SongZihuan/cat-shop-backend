@@ -7,11 +7,6 @@ import (
 	"path"
 )
 
-type FileLocationConfig struct {
-	Image map[modeltype.ImageType]string
-	Video map[modeltype.VideoType]string
-}
-
 type FileConfig struct {
 	LocalPath string `yaml:"localpath"`
 }

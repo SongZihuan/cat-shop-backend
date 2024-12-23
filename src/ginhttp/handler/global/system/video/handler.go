@@ -22,7 +22,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	tp, ok := modeltype.NameToImageType[query.Type]
+	tp, ok := modeltype.NameToVideoType[query.Type]
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

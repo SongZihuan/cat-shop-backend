@@ -4,6 +4,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/config"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func TestApiMiddleware() gin.HandlerFunc {

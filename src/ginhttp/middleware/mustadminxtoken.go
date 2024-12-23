@@ -3,7 +3,9 @@ package middleware
 import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func mustAdminErrorData(debugMsgLst ...string) data.Data {
@@ -28,7 +30,7 @@ func MustAdminXTokenMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if user.Type == model.NormalUserType {
+		if user.Type == modeltype.NormalUserType {
 			c.JSON(http.StatusOK, mustAdminErrorData("普通用户权限不足"))
 			return
 		}

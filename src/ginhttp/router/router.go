@@ -237,6 +237,7 @@ func adminApiV1(apiV1 *gin.RouterGroup) {
 	adminClassApiV1(api)
 	adminXieyiApiV1(api)
 	adminMsgApiV1(api)
+	adminBuyRecordApiV1(api)
 }
 
 func adminFileUploadApiV1(apiV1 *gin.RouterGroup) {
@@ -285,14 +286,13 @@ func adminUserApiV1(apiV1 *gin.RouterGroup) {
 	adminUserBagApiV1(api)
 	adminUserBuyRecordApiV1(api)
 	adminUserMsgApiV1(api)
-	adminUBuyRecordApiV1(api)
 
 	api.GET("/info", admingetuserinfo.Handler)
 	api.GET("/list", admingetuserlst.Handler)
 	api.POST("/add", adminadduser.Handler)
 }
 
-func adminUBuyRecordApiV1(apiV1 *gin.RouterGroup) {
+func adminBuyRecordApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/buyrecord")
 	api.GET("/list", admingetbuyrecordbypage.Handler)
 }

@@ -26,14 +26,14 @@ func Exit(code ...int) {
 
 func SayHello(msg ...string) {
 	if len(msg) == 1 {
-		fmt.Println(args0, ": ", msg)
+		fmt.Println(args0, ":", msg[0])
 	}
-	fmt.Println(args0, ": start.")
+	fmt.Println(args0, ":", "start")
 }
 
 func SayGoodBy(msg ...string) {
 	if len(msg) == 1 {
-		fmt.Println(args0, ": ", msg)
+		fmt.Println(args0, ":", msg[0])
 	}
-	fmt.Println(args0, ": end.")
+	fmt.Println(args0, ":", "end")
 }

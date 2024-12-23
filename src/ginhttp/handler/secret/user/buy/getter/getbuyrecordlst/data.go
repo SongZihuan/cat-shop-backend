@@ -86,7 +86,7 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 		}
 	} else {
 		class = &Class{
-			ID:   -1,
+			ID:   0,
 			Name: "特殊类别",
 		}
 	}

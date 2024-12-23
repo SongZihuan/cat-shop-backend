@@ -49,7 +49,7 @@ func (img *Image) SavePath() string {
 		return ""
 	}
 
-	basePath, ok := config.Config().File.Image[img.Time]
+	basePath, ok := config.Config().File.Image[img.Type]
 	if !ok {
 		return ""
 	}

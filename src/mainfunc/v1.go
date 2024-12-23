@@ -1,6 +1,7 @@
 package mainfunc
 
 import (
+	"fmt"
 	"github.com/SuperH-0630/cat-shop-back/src/config"
 	"github.com/SuperH-0630/cat-shop-back/src/database"
 	"github.com/SuperH-0630/cat-shop-back/src/database/action"
@@ -52,6 +53,7 @@ func MainV1() int {
 		return 1
 	}
 
+	fmt.Printf("run mode: %s\n", config.Config().Yaml.Global.Mode)
 	err = ginhttp.Run()
 	if err != nil {
 		exitByError(err)
