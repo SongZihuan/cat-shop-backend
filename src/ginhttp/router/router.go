@@ -61,6 +61,8 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/fahuo/daohuo"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/fahuo/fahuochangeuser"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/fahuo/fahuoquxiaoshenqing"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/fahuo/pingjia"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/fahuo/quxiaopay"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/getter/getbuyrecord"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/getter/getbuyrecordlst"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/buy/getter/getbuyrecordlstbypage"
@@ -200,6 +202,7 @@ func userFahuoApiV1(apiV1 *gin.RouterGroup) {
 func userDaohuoApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/daohuo")
 	api.POST("/queren", daohuo.Handler)
+	api.POST("/pingjia", pingjia.Handler)
 }
 
 func userTuihuoApiV1(apiV1 *gin.RouterGroup) {
@@ -214,6 +217,7 @@ func userPayApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/new", newpay.Handler)
 	api.POST("/bag", bagpay.Handler)
 	api.POST("/repay", repay.Handler)
+	api.POST("/quxiao", quxiaopay.Handler)
 }
 
 func userBagApiV1(apiV1 *gin.RouterGroup) {

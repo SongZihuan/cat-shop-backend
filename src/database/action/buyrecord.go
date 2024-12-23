@@ -118,3 +118,68 @@ func NewBagBuyRecord(user *model.User, bag *model.Bag, username, userphone, user
 
 	return record, nil
 }
+
+func BuyRecordChangeUser(user *model.User, record *model.BuyRecord, username, userphone, userlocation, userwechat, useremail, userremark string) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.ChangeUser(username, userphone, userlocation, userwechat, useremail, userremark)
+	if !ok {
+		return fmt.Errorf("dao guo fail")
+	}
+
+	return database.DB().Save(record).Error
+}
+
+func BuyRecordDaoHuo(user *model.User, record *model.BuyRecord) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.DaoHuo()
+	if !ok {
+		return fmt.Errorf("dao guo fail")
+	}
+
+	return database.DB().Save(record).Error
+}
+
+func BuyRecordPingJia(user *model.User, record *model.BuyRecord, isGood bool) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.PingJia(isGood)
+	if !ok {
+		return fmt.Errorf("ping jia fail")
+	}
+
+	return database.DB().Save(record).Error
+}
+
+func BuyRecordQuXiaoFahuo(user *model.User, record *model.BuyRecord) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.QuXiaoFahuo()
+	if !ok {
+		return fmt.Errorf("ping jia fail")
+	}
+
+	return database.DB().Save(record).Error
+}
+
+func BuyRecordQuXiaoPay(user *model.User, record *model.BuyRecord) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.QuXiaoPay()
+	if !ok {
+		return fmt.Errorf("qu xiao pay fail")
+	}
+
+	return database.DB().Save(record).Error
+}

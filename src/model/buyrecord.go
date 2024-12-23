@@ -184,3 +184,60 @@ func (r *BuyRecord) getPayUrlQuery(pft modeltype.PayFromType, pt modeltype.PayTy
 
 	return v.Encode()
 }
+
+func (r *BuyRecord) ChangeUser(username, userphone, userlocation, userwechat, useremail, userremark string) bool {
+	if r.Status == modeltype.WaitShouHuo || r.Status == modeltype.WaitPayCheck || r.Status == modeltype.PayCheckFail {
+		r.UserName = username
+		r.UserPhone = userphone
+		r.UserLocation = userlocation
+		r.UserWeChat = sql.NullString{String: userwechat, Valid: len(userwechat) != 0}
+		r.UserEmail = sql.NullString{String: useremail, Valid: len(useremail) != 0}
+		r.UserRemark = sql.NullString{String: userremark, Valid: len(userremark) != 0}
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) DaoHuo() bool {
+	if r.Status == modeltype.WaitPingJia {
+		return true
+	} else if r.Status == modeltype.WaitShouHuo {
+		r.Status = modeltype.WaitPingJia
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) PingJia(isGood bool) bool {
+	if r.Status == modeltype.YiPingJia {
+		return true
+	} else if r.Status == modeltype.WaitPingJia {
+		r.Status = modeltype.YiPingJia
+		r.IsGood = sql.NullBool{Bool: isGood, Valid: true}
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) QuXiaoFahuo() bool {
+	if r.Status == modeltype.QuXiao {
+		return true
+	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
+		r.Status = modeltype.QuXiao
+		return true
+	} else if r.Status == modeltype.WaitFahuo {
+		r.Status = modeltype.CheckQuXiao
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) QuXiaoPay() bool {
+	if r.Status == modeltype.QuXiao {
+		return true
+	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
+		r.Status = modeltype.QuXiao
+		return true
+	}
+	return false
+}
