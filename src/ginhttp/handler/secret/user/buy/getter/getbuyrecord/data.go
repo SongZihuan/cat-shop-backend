@@ -76,7 +76,10 @@ type BuyRecord struct {
 
 func NewData(record *model.BuyRecord) BuyRecord {
 	var class *Class
-	var wp *Wupin
+
+	if record.WuPinID <= 0 || record.WuPin == nil {
+		panic("wupin is nil")
+	}
 
 	if record.WuPin.ClassID >= 0 && record.WuPin.Class != nil && record.WuPin.Class.Show {
 		class = &Class{
@@ -88,30 +91,6 @@ func NewData(record *model.BuyRecord) BuyRecord {
 			ID:   -1,
 			Name: "特殊类别",
 		}
-	}
-
-	if record.WuPinID >= 0 && record.WuPin != nil {
-		wp = &Wupin{
-			ID:        record.WuPin.ID,
-			Name:      record.WuPin.Name,
-			Pic:       record.WuPin.Pic,
-			ClassID:   class.ID,
-			ClassOf:   class,
-			Tag:       utils.GetSQLNullString(record.WuPin.Tag),
-			HotPrice:  modeltype.GetPrice(record.WuPin.HotPrice),
-			RealPrice: modeltype.GetPrice(record.WuPin.RealPrice),
-			Info:      record.WuPin.Info,
-			Ren:       record.WuPin.Ren,
-			Phone:     record.WuPin.Phone,
-			Email:     utils.GetSQLNullString(record.WuPin.Email),
-			Wechat:    utils.GetSQLNullString(record.WuPin.WeChat),
-			Location:  record.WuPin.Location,
-			BuyTotal:  modeltype.GetTotal(record.WuPin.BuyTotal),
-			BuyDaohuo: modeltype.GetTotal(record.WuPin.BuyDaoHuo),
-			BuyGood:   modeltype.GetTotal(record.WuPin.BuyGood),
-		}
-	} else {
-		panic("wupin is nil")
 	}
 
 	return BuyRecord{
@@ -154,7 +133,25 @@ func NewData(record *model.BuyRecord) BuyRecord {
 			Email:    utils.GetSQLNullString(record.ShopEmail),
 			Remark:   utils.GetSQLNullString(record.ShopRemark),
 		},
-		Wupin: *wp,
+		Wupin: Wupin{
+			ID:        record.WuPin.ID,
+			Name:      record.WuPin.Name,
+			Pic:       record.WuPin.Pic,
+			ClassID:   class.ID,
+			ClassOf:   class,
+			Tag:       utils.GetSQLNullString(record.WuPin.Tag),
+			HotPrice:  modeltype.GetPrice(record.WuPin.HotPrice),
+			RealPrice: modeltype.GetPrice(record.WuPin.RealPrice),
+			Info:      record.WuPin.Info,
+			Ren:       record.WuPin.Ren,
+			Phone:     record.WuPin.Phone,
+			Email:     utils.GetSQLNullString(record.WuPin.Email),
+			Wechat:    utils.GetSQLNullString(record.WuPin.WeChat),
+			Location:  record.WuPin.Location,
+			BuyTotal:  modeltype.GetTotal(record.WuPin.BuyTotal),
+			BuyDaohuo: modeltype.GetTotal(record.WuPin.BuyDaoHuo),
+			BuyGood:   modeltype.GetTotal(record.WuPin.BuyGood),
+		},
 	}
 }
 

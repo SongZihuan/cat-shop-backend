@@ -7,10 +7,6 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 )
 
-const (
-	WupinNotFound data.CodeType = -1
-)
-
 type Query struct {
 	ID uint `form:"id"`
 }
@@ -77,14 +73,4 @@ func NewData(wp *model.WuPin) Wupin {
 
 func NewJsonData(wp *model.WuPin) data.Data {
 	return data.NewData(data.GlobalCodeOk, NewData(wp))
-}
-
-func NewMsgError(code data.CodeType, msg string, debugMsg ...string) data.Data {
-	if len(debugMsg) == 0 {
-		return data.NewData(code, nil, msg)
-	} else if len(debugMsg) == 1 {
-		return data.NewData(code, nil, msg, debugMsg[0])
-	} else {
-		panic("too many arguments")
-	}
 }
