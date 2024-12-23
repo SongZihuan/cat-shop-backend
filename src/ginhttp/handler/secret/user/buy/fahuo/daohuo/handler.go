@@ -12,6 +12,7 @@ import (
 
 const (
 	CodeBuyRecordNotFound data.CodeType = -1
+	CodeStatusError       data.CodeType = -2
 )
 
 func Handler(c *gin.Context) {
@@ -42,8 +43,11 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.BuyRecordChangeUser(user, record, query.UserName, query.UserPhone, query.UserLocation, query.UserWechat, query.UserEmail, query.UserRemark)
-	if err != nil {
+	err = action.BuyRecordDaoHuo(user, record)
+	if _, ok := action.IsBuyRecordStatusError(err); ok {
+		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeStatusError, err.Error()))
+		return
+	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}

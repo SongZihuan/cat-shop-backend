@@ -12,6 +12,7 @@ import (
 
 const (
 	CodeBuyRecordNotFound data.CodeType = -1
+	CodeStatusError       data.CodeType = -2
 )
 
 func Handler(c *gin.Context) {
@@ -43,7 +44,10 @@ func Handler(c *gin.Context) {
 	}
 
 	err = action.BuyRecordPingJia(user, record, query.IsGood)
-	if err != nil {
+	if _, ok := action.IsBuyRecordStatusError(err); ok {
+		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeStatusError, err.Error()))
+		return
+	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}

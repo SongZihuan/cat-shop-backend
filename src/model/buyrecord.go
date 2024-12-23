@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/SuperH-0630/cat-shop-back/src/config"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"gorm.io/gorm"
 	"net/url"
 	"time"
@@ -12,30 +13,31 @@ import (
 
 type BuyRecord struct {
 	gorm.Model
-	Status           modeltype.BuyStatus `gorm:"type:uint;not null;"`
-	UserID           uint                `gorm:"not null"`
-	User             *User               `gorm:"foreignKey:UserID"`
-	WuPinID          uint                `gorm:"not null"`
-	WuPin            *WuPin              `gorm:"foreignKey:WuPinID"`
-	ClassID          uint                `gorm:"not null"`
-	Class            *Class              `gorm:"foreignKey:ClassID"`
-	Num              modeltype.Total     `gorm:"type:uint;not null"`
-	Price            modeltype.Price     `gorm:"type:uint;not null"`
-	TotalPrice       modeltype.Price     `gorm:"type:uint;not null"`
-	XiaDanTime       time.Time           `gorm:"type:datetime;not null"`
-	FuKuanTime       sql.NullTime        `gorm:"type:datetime;"`
-	FaHuoTime        sql.NullTime        `gorm:"type:datetime;"`
-	ShouHuoTime      sql.NullTime        `gorm:"type:datetime;"`
-	PingJiaTime      sql.NullTime        `gorm:"type:datetime;"`
-	DengJiTuiHuoTime sql.NullTime        `gorm:"type:datetime;"`
-	QueRenTuiHuoTime sql.NullTime        `gorm:"type:datetime;"`
-	TuiHuoTime       sql.NullTime        `gorm:"type:datetime;"`
-	QuXiaoTime       sql.NullTime        `gorm:"type:datetime;"`
-	FaHuoKuaiDi      sql.NullString      `gorm:"type:varchar(20);"`
-	FaHuoKuaiDiNum   sql.NullString      `gorm:"type:varchar(50);"`
-	TuiHuoKuaiDi     sql.NullString      `gorm:"type:varchar(20);"`
-	TuiHuoKuaiDiNum  sql.NullString      `gorm:"type:varchar(50);"`
-	IsGood           sql.NullBool        `gorm:"type:boolean;"`
+	Status             modeltype.BuyStatus `gorm:"type:uint;not null;"`
+	UserID             uint                `gorm:"not null"`
+	User               *User               `gorm:"foreignKey:UserID"`
+	WuPinID            uint                `gorm:"not null"`
+	WuPin              *WuPin              `gorm:"foreignKey:WuPinID"`
+	ClassID            uint                `gorm:"not null"`
+	Class              *Class              `gorm:"foreignKey:ClassID"`
+	Num                modeltype.Total     `gorm:"type:uint;not null"`
+	Price              modeltype.Price     `gorm:"type:uint;not null"`
+	TotalPrice         modeltype.Price     `gorm:"type:uint;not null"`
+	XiaDanTime         time.Time           `gorm:"type:datetime;not null"`
+	FuKuanTime         sql.NullTime        `gorm:"type:datetime;"`
+	FaHuoTime          sql.NullTime        `gorm:"type:datetime;"`
+	ShouHuoTime        sql.NullTime        `gorm:"type:datetime;"`
+	PingJiaTime        sql.NullTime        `gorm:"type:datetime;"`
+	TuiHuoShenQingTime sql.NullTime        `gorm:"type:datetime;"`
+	DengJiTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
+	QueRenTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
+	TuiHuoTime         sql.NullTime        `gorm:"type:datetime;"`
+	QuXiaoTime         sql.NullTime        `gorm:"type:datetime;"`
+	FaHuoKuaiDi        sql.NullString      `gorm:"type:varchar(20);"`
+	FaHuoKuaiDiNum     sql.NullString      `gorm:"type:varchar(50);"`
+	TuiHuoKuaiDi       sql.NullString      `gorm:"type:varchar(20);"`
+	TuiHuoKuaiDiNum    sql.NullString      `gorm:"type:varchar(50);"`
+	IsGood             sql.NullBool        `gorm:"type:boolean;"`
 
 	UserName     string         `gorm:"type:varchar(20);not null;"`
 	UserPhone    string         `gorm:"type:varchar(30);not null"`
@@ -203,6 +205,7 @@ func (r *BuyRecord) DaoHuo() bool {
 		return true
 	} else if r.Status == modeltype.WaitShouHuo {
 		r.Status = modeltype.WaitPingJia
+		r.ShouHuoTime = utils.SqlNullNow()
 		return true
 	}
 	return false
@@ -214,6 +217,7 @@ func (r *BuyRecord) PingJia(isGood bool) bool {
 	} else if r.Status == modeltype.WaitPingJia {
 		r.Status = modeltype.YiPingJia
 		r.IsGood = sql.NullBool{Bool: isGood, Valid: true}
+		r.PingJiaTime = utils.SqlNullNow()
 		return true
 	}
 	return false
@@ -227,6 +231,7 @@ func (r *BuyRecord) QuXiaoFahuo() bool {
 		return true
 	} else if r.Status == modeltype.WaitFahuo {
 		r.Status = modeltype.CheckQuXiao
+		r.QuXiaoTime = utils.SqlNullNow()
 		return true
 	}
 	return false
@@ -237,6 +242,38 @@ func (r *BuyRecord) QuXiaoPay() bool {
 		return true
 	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
 		r.Status = modeltype.QuXiao
+		r.QuXiaoTime = utils.SqlNullNow()
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) PaySuccess() bool {
+	if r.Status == modeltype.WaitPayCheck {
+		r.Status = modeltype.WaitFahuo
+		r.FuKuanTime = utils.SqlNullNow()
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) TuiHuoShenQing() bool {
+	if r.Status == modeltype.WaitPingJia || r.Status == modeltype.YiPingJia || r.Status == modeltype.TuiHuoFail {
+		r.Status = modeltype.TuiHuoCheck
+		r.TuiHuoShenQingTime = utils.SqlNullNow()
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) TuiHuoDengJi(kuaidi string, kuaidinum string) bool {
+	if r.Status == modeltype.WaitTuiHuoShouHuo {
+		return true
+	} else if r.Status == modeltype.WaitTuiHuoFahuo {
+		r.Status = modeltype.WaitTuiHuoShouHuo
+		r.DengJiTuiHuoTime = utils.SqlNullNow()
+		r.TuiHuoKuaiDi = sql.NullString{String: kuaidi, Valid: true}
+		r.TuiHuoKuaiDiNum = sql.NullString{String: kuaidinum, Valid: true}
 		return true
 	}
 	return false

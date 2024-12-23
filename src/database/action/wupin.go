@@ -62,7 +62,7 @@ func GetSearchCountWithShow(search string, selectClass []uint) (int, error) {
 	}
 
 	db := database.DB()
-	sql := db.Model(&model.WuPin{}).Select("count(*) as count").Where("is_show = true")
+	sql := db.Model(&model.WuPin{}).Select("COUNT(*) as count").Where("is_show = true")
 
 	if search != "" {
 		sql = sql.Where("name LIKE ?", "%"+search+"%")

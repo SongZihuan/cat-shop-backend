@@ -41,6 +41,58 @@ func GetBuyRecordByIDAndUserID(userID uint, recordID uint) (*model.BuyRecord, er
 	return record, nil
 }
 
+func GetBuyRecordListByUser(user *model.User, limit int, offset int) ([]model.BuyRecord, error) {
+	return GetBuyRecordListByUserID(user.ID, limit, offset)
+}
+
+func GetBuyRecordListByUserID(userID uint, limit int, offset int) ([]model.BuyRecord, error) {
+	var res []model.BuyRecord
+
+	db := database.DB()
+	err := db.Model(model.BuyRecord{}).Joins("Wupin").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func GetBuyRecordListByPageByUser(user *model.User, page int, pagesize int) ([]model.BuyRecord, error) {
+	return GetBuyRecordListByPageByUserID(user.ID, page, pagesize)
+}
+
+func GetBuyRecordListByPageByUserID(userID uint, page int, pagesize int) ([]model.BuyRecord, error) {
+	var res []model.BuyRecord
+
+	db := database.DB()
+	err := db.Model(model.BuyRecord{}).Joins("Wupin").Where("user_id = ?", userID).Limit(pagesize).Offset((page - 1) * pagesize).Find(res).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func GetBuyRecordLCountByPageByUser(user *model.User) (int, error) {
+	return GetBuyRecordCountByPageByUserID(user.ID)
+}
+
+func GetBuyRecordCountByPageByUserID(userID uint) (int, error) {
+	type count struct {
+		count int `gorm:"column:count"`
+	}
+
+	var res count
+
+	db := database.DB()
+	err := db.Model(model.BuyRecord{}).Select("COUNT(*) as count").Where("user_id = ?", userID).Find(&res).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return res.count, nil
+}
+
 func SetBuyRecordPayFail(record *model.BuyRecord) error {
 	record.Status = modeltype.PayCheckFail
 
@@ -55,8 +107,15 @@ func SetBuyRecordPayFail(record *model.BuyRecord) error {
 
 var SetBuyRecordWaitFahuo = SetBuyRecordPaySuccess
 
-func SetBuyRecordPaySuccess(record *model.BuyRecord) error {
-	record.Status = modeltype.WaitFahuo
+func SetBuyRecordPaySuccess(user *model.User, record *model.BuyRecord) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.PaySuccess()
+	if !ok {
+		return fmt.Errorf("pay error")
+	}
 
 	db := database.DB()
 	err := db.Save(record).Error
@@ -82,9 +141,9 @@ func NewBuyRecord(user *model.User, wupin *model.WuPin, num modeltype.Total, use
 func NewRepayRecord(user *model.User, record *model.BuyRecord) error {
 	if record.UserID != user.ID {
 		return fmt.Errorf("bad user")
-	} else {
-		record.Repay()
 	}
+
+	record.Repay()
 
 	db := database.DB()
 	err := db.Create(record).Error
@@ -126,7 +185,7 @@ func BuyRecordChangeUser(user *model.User, record *model.BuyRecord, username, us
 
 	ok := record.ChangeUser(username, userphone, userlocation, userwechat, useremail, userremark)
 	if !ok {
-		return fmt.Errorf("dao guo fail")
+		return NewBuyRecordStatusError("状态错误")
 	}
 
 	return database.DB().Save(record).Error
@@ -139,7 +198,7 @@ func BuyRecordDaoHuo(user *model.User, record *model.BuyRecord) error {
 
 	ok := record.DaoHuo()
 	if !ok {
-		return fmt.Errorf("dao guo fail")
+		return NewBuyRecordStatusError("状态错误")
 	}
 
 	return database.DB().Save(record).Error
@@ -152,7 +211,7 @@ func BuyRecordPingJia(user *model.User, record *model.BuyRecord, isGood bool) er
 
 	ok := record.PingJia(isGood)
 	if !ok {
-		return fmt.Errorf("ping jia fail")
+		return NewBuyRecordStatusError("状态错误")
 	}
 
 	return database.DB().Save(record).Error
@@ -165,7 +224,7 @@ func BuyRecordQuXiaoFahuo(user *model.User, record *model.BuyRecord) error {
 
 	ok := record.QuXiaoFahuo()
 	if !ok {
-		return fmt.Errorf("ping jia fail")
+		return NewBuyRecordStatusError("状态错误")
 	}
 
 	return database.DB().Save(record).Error
@@ -178,7 +237,33 @@ func BuyRecordQuXiaoPay(user *model.User, record *model.BuyRecord) error {
 
 	ok := record.QuXiaoPay()
 	if !ok {
-		return fmt.Errorf("qu xiao pay fail")
+		return NewBuyRecordStatusError("状态错误")
+	}
+
+	return database.DB().Save(record).Error
+}
+
+func BuyRecordTuiHuoShenQing(user *model.User, record *model.BuyRecord) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.TuiHuoShenQing()
+	if !ok {
+		return NewBuyRecordStatusError("状态错误")
+	}
+
+	return database.DB().Save(record).Error
+}
+
+func BuyRecordTuiHuoDengJi(user *model.User, record *model.BuyRecord, kuaidi string, kuaidinum string) error {
+	if record.UserID != user.ID {
+		return fmt.Errorf("bad user")
+	}
+
+	ok := record.TuiHuoDengJi(kuaidi, kuaidinum)
+	if !ok {
+		return NewBuyRecordStatusError("状态错误")
 	}
 
 	return database.DB().Save(record).Error

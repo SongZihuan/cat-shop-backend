@@ -19,12 +19,15 @@ type Query struct {
 }
 
 type Data struct {
+	Url string `json:"url"`
 }
 
-func NewData() Data {
-	return Data{}
+func NewData(url string) Data {
+	return Data{
+		Url: url,
+	}
 }
 
-func NewJsonData() data.Data {
-	return data.NewData(data.GlobalCodeOk, NewData())
+func NewJsonData(url string) data.Data {
+	return data.NewData(data.GlobalCodeOk, NewData(url))
 }

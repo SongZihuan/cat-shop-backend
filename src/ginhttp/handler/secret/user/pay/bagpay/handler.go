@@ -105,4 +105,6 @@ func Handler(c *gin.Context) {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError("支付失败"))
 		return
 	}
+
+	c.JSON(http.StatusOK, NewJsonData(payUrl))
 }
