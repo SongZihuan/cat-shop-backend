@@ -29,6 +29,10 @@ func NewSuccessData(msg string, debugMsg ...string) Data {
 }
 
 func NewNotSuccessData(code CodeType, msg string, debugMsg ...string) Data {
+	if code >= 0 {
+		panic("code must less than 0")
+	}
+
 	if len(debugMsg) == 0 {
 		return NewData(code, NewSuccess(false), msg)
 	} else if len(debugMsg) == 1 {

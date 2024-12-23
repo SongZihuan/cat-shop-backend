@@ -1,6 +1,10 @@
 package data
 
 func NewSystemError(code CodeType, vargs ...interface{}) Data {
+	if code <= 0 {
+		panic("code must more than 0")
+	}
+
 	if len(vargs) == 0 {
 		return NewData(code)
 	} else if len(vargs) == 1 {
@@ -37,6 +41,10 @@ func NewSystemDataBaseError(err error) Data {
 }
 
 func NewClientError(code CodeType, msg string, vargs ...interface{}) Data {
+	if code <= 0 {
+		panic("code must more than 0")
+	}
+
 	if len(vargs) == 0 {
 		return NewData(code, nil, msg)
 	} else if len(vargs) == 1 {
