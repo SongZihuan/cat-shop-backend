@@ -31,11 +31,11 @@ func IsReady() bool {
 	return config.yamlHasParser && config.configReady
 }
 
-func Config() ConfigStruct {
+func Config() *ConfigStruct {
 	if !IsReady() {
 		panic("config not ready")
 	}
-	return config
+	return &config
 }
 
 var config ConfigStruct

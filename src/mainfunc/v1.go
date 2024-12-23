@@ -53,7 +53,7 @@ func MainV1() int {
 		return 1
 	}
 
-	fmt.Printf("run mode: %s\n", config.Config().Yaml.Global.Mode)
+	fmt.Printf("run mode: %s\n", config.Config().Yaml.Global.GetGinMode())
 	err = ginhttp.Run()
 	if err != nil {
 		exitByError(err)
