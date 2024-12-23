@@ -8,6 +8,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 )
 
@@ -25,7 +26,7 @@ func Handler(c *gin.Context) {
 	}
 
 	query := Query{}
-	err := c.ShouldBindQuery(&Query{})
+	err := c.ShouldBindWith(&Query{}, binding.FormMultipart)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
 		return
