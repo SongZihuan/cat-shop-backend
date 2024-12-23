@@ -10,6 +10,7 @@ type YamlConfig struct {
 	Mysql    MySQLConfig    `yaml:"mysql"`
 	File     FileConfig     `yaml:"file"`
 	Http     HttpConfig     `yaml:"http"`
+	Front    FrontConfig    `yaml:"front"`
 	Jwt      JwtConfig      `yaml:"jwt"`
 	Password PasswordConfig `yaml:"password"`
 }
@@ -18,6 +19,7 @@ func (y *YamlConfig) setDefault() {
 	y.Mysql.setDefault()
 	y.File.setDefault()
 	y.Http.setDefault()
+	y.Front.setDefault()
 	y.Jwt.setDefault()
 	y.Password.setDefault()
 }
@@ -34,6 +36,11 @@ func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
 	}
 
 	err = y.Http.check()
+	if err != nil && err.IsError() {
+		return err
+	}
+
+	err = y.Front.check()
 	if err != nil && err.IsError() {
 		return err
 	}

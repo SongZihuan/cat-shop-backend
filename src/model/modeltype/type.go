@@ -1,7 +1,9 @@
 package modeltype
 
+import "database/sql"
+
 type Price int64
-type PriceNull *int64
+type PriceNull sql.Null[Price]
 
 type Total int64
 
@@ -11,10 +13,10 @@ func GetPrice(p interface{}) int64 {
 	} else if pr, ok := p.(Price); ok {
 		return int64(pr)
 	} else if prn, ok := p.(PriceNull); ok {
-		if prn == nil {
-			return 0
+		if prn.Valid {
+			return int64(prn.V)
 		}
-		return *prn
+		return 0
 	} else {
 		panic("not a price")
 	}

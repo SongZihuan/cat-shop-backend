@@ -25,13 +25,13 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
-	res, err := action.GetSearchList(query.Search, query.Select, query.Page, query.PageSize)
+	res, err := action.GetSearchListWithShow(query.Search, query.Select, query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.GetSearchCount(query.Search, query.Select)
+	maxcount, err := action.GetSearchCountWithShow(query.Search, query.Select)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

@@ -62,7 +62,7 @@ func (img *Image) GetUrl() string {
 		panic("config is not ready")
 	}
 
-	return config.Config().Yaml.Http.ResourceBaseAPI + ImagePath + img.GetQuery()
+	return config.Config().Yaml.Http.ResourceBaseAPI + ImagePath + "?" + img.GetQuery()
 }
 
 func (img *Image) GetQuery() string {

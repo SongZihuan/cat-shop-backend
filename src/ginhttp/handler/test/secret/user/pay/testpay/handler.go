@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/SuperH-0630/cat-shop-back/src/database/action"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,12 @@ const (
 )
 
 func Handler(c *gin.Context) {
+	user, ok := c.Value("User").(*model.User)
+	if !ok {
+		c.JSON(http.StatusOK, data.NewSystemUnknownError("用户未找到"))
+		return
+	}
+
 	query := Query{}
 	err := c.ShouldBindQuery(&Query{})
 	if err != nil {
@@ -29,7 +36,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	record, err := action.GetBuyRecordByID(query.ID)
+	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewNotSuccessData(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
 		return

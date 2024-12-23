@@ -23,7 +23,7 @@ func (vid *Video) GetUrl() string {
 		panic("config is not ready")
 	}
 
-	return config.Config().Yaml.Http.ResourceBaseAPI + VideoPath + vid.GetQuery()
+	return config.Config().Yaml.Http.ResourceBaseAPI + VideoPath + "?" + vid.GetQuery()
 }
 
 func (vid *Video) GetQuery() string {

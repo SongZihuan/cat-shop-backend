@@ -8,7 +8,7 @@ import (
 )
 
 func Handler(c *gin.Context) {
-	res, err := action.GetHotWupinList()
+	res, err := action.GetHotWupinListWithShow()
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

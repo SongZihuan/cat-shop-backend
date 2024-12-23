@@ -9,7 +9,7 @@ import (
 
 const HotWupinLimit = 50
 
-func GetWupinByID(wupinID uint) (*model.WuPin, error) {
+func GetWupinByIDWithShow(wupinID uint) (*model.WuPin, error) {
 	var wupin = new(model.WuPin)
 
 	if wupinID <= 0 {
@@ -17,7 +17,7 @@ func GetWupinByID(wupinID uint) (*model.WuPin, error) {
 	}
 
 	db := database.DB()
-	err := db.Model(&model.WuPin{}).Joins("Class").Where("id = ?", wupinID).First(wupin).Error
+	err := db.Model(&model.WuPin{}).Joins("Class").Where("id = ?", wupinID).Where("is_show = true").First(wupin).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -27,18 +27,18 @@ func GetWupinByID(wupinID uint) (*model.WuPin, error) {
 	return wupin, nil
 }
 
-func GetHotWupinList() (res []model.WuPin, err error) {
+func GetHotWupinListWithShow() (res []model.WuPin, err error) {
 	db := database.DB()
-	err = db.Model(&model.WuPin{}).Joins("Class").Limit(HotWupinLimit).Where("is_hot = true").Order("create_at desc").Find(&res).Error
+	err = db.Model(&model.WuPin{}).Joins("Class").Limit(HotWupinLimit).Where("is_hot = true").Where("is_show = true").Order("create_at desc").Find(&res).Error
 	if err != nil {
 		return nil, err
 	}
 	return res, nil
 }
 
-func GetSearchList(search string, selectClass []uint, page int, pagesize int) (res []model.WuPin, err error) {
+func GetSearchListWithShow(search string, selectClass []uint, page int, pagesize int) (res []model.WuPin, err error) {
 	db := database.DB()
-	sql := db.Model(&model.WuPin{}).Joins("Class").Limit(pagesize).Offset((page - 1) * pagesize)
+	sql := db.Model(&model.WuPin{}).Joins("Class").Where("is_show = true").Limit(pagesize).Offset((page - 1) * pagesize)
 
 	if search != "" {
 		sql = sql.Where("name LIKE ?", "%"+search+"%")
@@ -56,13 +56,13 @@ func GetSearchList(search string, selectClass []uint, page int, pagesize int) (r
 	return res, nil
 }
 
-func GetSearchCount(search string, selectClass []uint) (int, error) {
+func GetSearchCountWithShow(search string, selectClass []uint) (int, error) {
 	type count struct {
 		count int `gorm:"column:count"`
 	}
 
 	db := database.DB()
-	sql := db.Model(&model.WuPin{}).Select("count(*) as count")
+	sql := db.Model(&model.WuPin{}).Select("count(*) as count").Where("is_show = true")
 
 	if search != "" {
 		sql = sql.Where("name LIKE ?", "%"+search+"%")

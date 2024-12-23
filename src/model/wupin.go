@@ -28,5 +28,39 @@ type WuPin struct {
 	BuyDaoHuo modeltype.Total `gorm:"type:uint;not null"`
 	BuyGood   modeltype.Total `gorm:"type:uint;not null"`
 
-	IsHot bool `gorm:"type:boolean;not null;"`
+	IsShow bool `gorm:"type:boolean;not null;"`
+	IsHot  bool `gorm:"type:boolean;not null;"`
+}
+
+func (w *WuPin) GetRealPrice() modeltype.Price {
+	if w.RealPrice >= 0 {
+		return w.RealPrice
+	}
+	return 0
+}
+
+func (w *WuPin) GetPrice() modeltype.Price {
+	realPrice := w.GetRealPrice()
+
+	if !w.HotPrice.Valid || w.HotPrice.V < 0 {
+		return realPrice
+	}
+
+	if w.HotPrice.V < realPrice {
+		return w.HotPrice.V
+	}
+
+	return realPrice
+}
+
+func (w *WuPin) GetFacePrice() modeltype.Price {
+	return w.GetPrice()
+}
+
+func (w *WuPin) GetPriceTotal(num modeltype.Total) modeltype.Price {
+	price := w.GetPrice()
+	if price < 0 {
+		return 0
+	}
+	return modeltype.Price(int64(price) * int64(num))
 }

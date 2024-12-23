@@ -16,7 +16,6 @@ func (h *HttpConfig) setDefault() {
 	}
 
 	h.BaseAPI = strings.TrimSpace(h.BaseAPI)
-	h.BaseAPI = strings.ToLower(h.BaseAPI)
 
 	if h.BaseAPI == "" {
 		h.BaseAPI = "/api"
