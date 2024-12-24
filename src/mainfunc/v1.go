@@ -1,19 +1,25 @@
 package mainfunc
 
 import (
+	"errors"
+	"flag"
 	"fmt"
 	"github.com/SuperH-0630/cat-shop-back/src/config"
 	"github.com/SuperH-0630/cat-shop-back/src/database"
 	"github.com/SuperH-0630/cat-shop-back/src/database/action"
 	"github.com/SuperH-0630/cat-shop-back/src/flagparser"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/httpstop"
+	"time"
 )
 
 func MainV1() int {
 	var err error
 
 	err = flagparser.Flag()
-	if err != nil {
+	if errors.Is(err, flag.ErrHelp) {
+		return 0
+	} else if err != nil {
 		exitByError(err)
 		return 1
 	}
@@ -32,6 +38,12 @@ func MainV1() int {
 	if !config.IsReady() {
 		exitByMsg("config parser unknown error")
 		return 1
+	}
+
+	cfg := config.Config()
+
+	if flagparser.Wait() {
+		<-time.Tick(time.Duration(cfg.Yaml.Http.RestartWaitSecond) * time.Second)
 	}
 
 	err = database.ConnectToMySql()
@@ -53,8 +65,35 @@ func MainV1() int {
 		return 1
 	}
 
-	fmt.Printf("run mode: %s\n", config.Config().Yaml.Global.GetGinMode())
-	err = ginhttp.Run()
+	fmt.Printf("run mode: %s\n", cfg.Yaml.Global.GetGinMode())
+
+	ginstop := make(chan bool)
+	ginerror := make(chan error)
+
+	go func() {
+		err = ginhttp.Run()
+		if errors.Is(err, ginhttp.ServerClose) {
+			ginstop <- true
+		} else if err != nil {
+			ginerror <- err
+		} else {
+			ginstop <- true
+		}
+	}()
+
+	select {
+	case <-cfg.GetSignalChan():
+		break
+	case <-httpstop.GetStopChan():
+		break
+	case err := <-ginerror:
+		exitByError(err)
+		return 1
+	case <-ginstop:
+		break
+	}
+
+	err = ginhttp.Stop(time.Duration(cfg.Yaml.Http.StopWaitSecond) * time.Second)
 	if err != nil {
 		exitByError(err)
 		return 1

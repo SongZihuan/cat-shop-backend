@@ -54,6 +54,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/xieyi/adminupdatexieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/admindeleteconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/admingetconfig"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminstopserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminupdateconfigpic"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminupdateconfigstring"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/user/bag/addbag"
@@ -379,6 +380,7 @@ func rootAdminApiV1(apiV1 *gin.RouterGroup) {
 	api.Use(middleware.MustRootAdminXTokenMiddleware())
 
 	rootAdminConfigApiV1(api)
+	rootAdminHttpServer(api)
 }
 
 func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
@@ -388,6 +390,12 @@ func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/delete", admindeleteconfig.Handler)
 	api.POST("/update/pic", adminupdateconfigpic.Handler)
 	api.POST("/update/string", adminupdateconfigstring.Handler)
+}
+
+func rootAdminHttpServer(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/httpserver")
+
+	api.POST("/stop", adminstopserver.Handler)
 }
 
 func testApiV1(apiV1 *gin.RouterGroup) {

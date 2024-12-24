@@ -9,3 +9,7 @@ func Help() bool {
 func ConfigFile() string {
 	return data.ConfigFile()
 }
+
+func Wait() bool {
+	return data.Wait()
+}

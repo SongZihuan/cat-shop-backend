@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
-	"os"
 )
 
 var isReady = false
@@ -12,6 +11,8 @@ var isReady = false
 func IsReady() bool {
 	return data.isReady() && isReady
 }
+
+var ErrHelp = fmt.Errorf("help")
 
 func Flag() (err error) {
 	if isReady {
@@ -29,13 +30,14 @@ func Flag() (err error) {
 
 	flag.BoolVar(&data.help, "help", false, "this help")
 	flag.StringVar(&data.configFile, "config", "config.yaml", "the config file path")
+	flag.BoolVar(&data.wait, "wait", false, "wait 20s to start")
 
 	flag.Parse()
 	data.ready()
 
 	if Help() {
 		flag.Usage()
-		os.Exit(0)
+		return ErrHelp
 	}
 
 	err = checkFlag()

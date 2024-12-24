@@ -24,7 +24,7 @@ func (p *ProxyConfig) check() ConfigError {
 		return NewConfigError("proxy must be enable/disable")
 	}
 
-	if p.Proxy != "enable" {
+	if p.Proxy == "enable" {
 		if len(p.TrustedIPs) == 0 {
 			_ = NewConfigWarning("proxy trusts ips will be ignore because proxy is disabled")
 		} else {

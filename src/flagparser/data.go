@@ -5,6 +5,7 @@ type flagData struct {
 
 	help       bool
 	configFile string
+	wait       bool
 }
 
 func newFlagData() flagData {
@@ -12,6 +13,7 @@ func newFlagData() flagData {
 		flagReady:  false,
 		help:       false,
 		configFile: "",
+		wait:       false,
 	}
 }
 
@@ -37,4 +39,12 @@ func (d *flagData) ConfigFile() string {
 	}
 
 	return d.configFile
+}
+
+func (d *flagData) Wait() bool {
+	if !d.isReady() {
+		panic("flag not ready")
+	}
+
+	return d.wait
 }

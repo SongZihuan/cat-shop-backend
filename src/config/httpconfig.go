@@ -1,14 +1,21 @@
 package config
 
-import "strings"
+import (
+	"fmt"
+	"github.com/SuperH-0630/cat-shop-back/src/utils"
+	"strings"
+)
 
 type HttpConfig struct {
-	Address         string      `yaml:"address"`
-	DebugMsg        bool        `yaml:"debugmsg"`
-	ApiBaseAPI      string      `yaml:"apibaseapi"`
-	ResourceBaseAPI string      `yaml:"resourcebaseapi"`
-	TestApi         bool        `yaml:"testapi"`
-	Proxy           ProxyConfig `yaml:"proxy"`
+	Address           string      `yaml:"address"`
+	DebugMsg          bool        `yaml:"debugmsg"`
+	ApiBaseAPI        string      `yaml:"apibaseapi"`
+	ResourceBaseAPI   string      `yaml:"resourcebaseapi"`
+	TestApi           bool        `yaml:"testapi"`
+	Proxy             ProxyConfig `yaml:"proxy"`
+	StopSecret        string      `yaml:"stopsecret"`
+	StopWaitSecond    int         `yaml:"stopwaitsecond"`
+	RestartWaitSecond int         `yaml:"restartwaitsecond"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -42,6 +49,19 @@ func (h *HttpConfig) setDefault() {
 		}
 	}
 
+	if h.StopSecret == "" {
+		h.StopSecret = utils.RandStr(8)
+		fmt.Printf("Auto set http stop secret %s\n", h.StopSecret)
+	}
+
+	if h.StopWaitSecond <= 0 {
+		h.StopWaitSecond = 10
+	}
+
+	if h.RestartWaitSecond <= 0 {
+		h.StopWaitSecond = 20
+	}
+
 	h.Proxy.setDefault()
 }
 
@@ -51,5 +71,17 @@ func (h *HttpConfig) check() ConfigError {
 		return err
 	}
 
+	if len(h.StopSecret) < 8 {
+		return NewConfigError("StopSecret length less than 8")
+	}
+
+	if h.RestartWaitSecond <= h.StopWaitSecond {
+		_ = NewConfigWarning("RestartWaitSecond is greater than StopWaitSecond")
+	}
+
 	return nil
+}
+
+func (h *HttpConfig) CheckStopSecret(secret string) bool {
+	return h.StopSecret == secret
 }

@@ -1,6 +1,8 @@
 package config
 
-import "github.com/SuperH-0630/cat-shop-back/src/flagparser"
+import (
+	"github.com/SuperH-0630/cat-shop-back/src/flagparser"
+)
 
 func newConfig() ConfigStruct {
 	return ConfigStruct{

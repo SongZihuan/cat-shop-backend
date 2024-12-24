@@ -1,15 +1,24 @@
 package config
 
+import "os"
+
 type ConfigStruct struct {
 	configReady   bool
 	yamlHasParser bool
+	sigChan       chan os.Signal
 
 	Yaml YamlConfig
 	File FileLocationConfig
 }
 
 func (c *ConfigStruct) init() error {
-	err := c.File.init()
+	c.sigChan = make(chan os.Signal)
+	err := initSignal(c.sigChan)
+	if err != nil {
+		return err
+	}
+
+	err = c.File.init()
 	if err != nil {
 		return err
 	}
@@ -68,4 +77,8 @@ func (c *ConfigStruct) ready() (err ConfigError) {
 
 	c.configReady = true
 	return nil
+}
+
+func (c *ConfigStruct) GetSignalChan() chan os.Signal {
+	return c.sigChan
 }
