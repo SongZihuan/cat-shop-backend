@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -23,9 +24,9 @@ func mustXTokenErrorData(debugMsgLst ...string) data.Data {
 
 func MustXTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, ok := c.Value("user").(*model.User)
+		user, ok := c.Value(contextkey.UserKey).(*model.User)
 		if !ok {
-			debugMsg, ok := c.Value(DebugTokenContextKey).(string)
+			debugMsg, ok := c.Value(contextkey.DebugTokenKey).(string)
 			if !ok {
 				debugMsg = "未知错误"
 			}

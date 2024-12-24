@@ -89,23 +89,24 @@ func InitRouter(engine *gin.Engine) {
 }
 
 func baseApi(engine *gin.Engine) {
-	api := engine.Group(config.Config().Yaml.Http.BaseAPI)
+	api := engine.Group(config.Config().Yaml.Http.BaseAPI + "/v1")
+	api.Use(middleware.DBReady(), middleware.MustFormData(), middleware.XTokenMiddleware())
 
+	resourceV1(api)
 	apiV1(api)
 }
 
 func apiV1(baseApi *gin.RouterGroup) {
-	api := baseApi.Group("/v1")
+	api := baseApi.Group("/")
+	api.Use(middleware.MustFormData(), middleware.MustAccept(), middleware.ReturnContentJson())
 
-	resourceApiV1(api)
 	globalApiV1(api)
 	secretApiV1(api)
 	testApiV1(api)
 }
 
-func resourceApiV1(apiV1 *gin.RouterGroup) {
+func resourceV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/file")
-	middleware.ResourceUse(api)
 
 	api.GET("/image", image.Handler) // baseApi/v1/file/image
 	api.GET("/video", video.Handler) // baseApi/v1/file/video
@@ -113,7 +114,6 @@ func resourceApiV1(apiV1 *gin.RouterGroup) {
 
 func globalApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/global")
-	middleware.GlobalUse(api)
 
 	loginAndRegisterApiV1(api)
 	configApiV1(api)
@@ -149,7 +149,7 @@ func xieyiApiV1(api *gin.RouterGroup) {
 
 func secretApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/secret")
-	middleware.SecretUse(api)
+	api.Use(middleware.MustXTokenMiddleware())
 
 	userApiV1(api)
 	adminApiV1(api)
@@ -158,6 +158,7 @@ func secretApiV1(apiV1 *gin.RouterGroup) {
 
 func userApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/user")
+
 	userEditApiV1(api)
 	userBuyRecordApiV1(api)
 	userBagApiV1(api)
@@ -229,7 +230,7 @@ func userBagApiV1(apiV1 *gin.RouterGroup) {
 
 func adminApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/admin")
-	api.Use(middleware.MustAdminXTokenMiddleware())
+	api.Use(middleware.MustAdminXTokenMiddleware(), middleware.AdminUser())
 
 	adminFileUploadApiV1(api)
 	adminUserApiV1(api)
@@ -282,6 +283,8 @@ func adminAddClassApiV1(api *gin.RouterGroup) {
 
 func adminUserApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/user")
+	api.Use(middleware.MustAdminUserMiddleware())
+
 	adminUpdateUserApiV1(api)
 	adminUserBagApiV1(api)
 	adminUserBuyRecordApiV1(api)
@@ -379,7 +382,7 @@ func adminDaohuoApiV1(apiV1 *gin.RouterGroup) {
 
 func rootAdminApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/root")
-	api.Use(middleware.MustRotAdminXTokenMiddleware())
+	api.Use(middleware.MustRootAdminXTokenMiddleware(), middleware.AdminUser())
 
 	rootAdminConfigApiV1(api)
 }
@@ -395,25 +398,26 @@ func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
 
 func testApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/test")
+	api.Use(middleware.TestApiMiddleware())
 
 	testGlobalApi(api)
 	testSecretApiV1(api)
 }
 
 func testGlobalApi(apiV1 *gin.RouterGroup) {
-	api := apiV1.Group("/global")
-	middleware.TestGlobalUse(api)
+	_ = apiV1.Group("/global")
 }
 
 func testSecretApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/secret")
-	middleware.TestSecretUse(api)
+	api.Use(middleware.MustXTokenMiddleware())
 
 	testUserApiV1(api)
 }
 
 func testUserApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/user")
+
 	testUserPayApiV1(api)
 }
 

@@ -84,6 +84,22 @@ func (u *User) SetNewPassword(password string) bool {
 	return true
 }
 
+func (u *User) HasPermission(admin *User) bool {
+	if admin.Type == modeltype.RootAdminUserType {
+		return true
+	} else if admin.Type == modeltype.AdminUserType {
+		if admin.Status == modeltype.NormalUserStatus && (u.Type == modeltype.NormalUserType || u.Type == modeltype.AdminUserType) {
+			return true
+		}
+
+		return true
+	} else if admin.Type == modeltype.NormalUserType {
+		return false
+	} else {
+		panic("error user")
+	}
+}
+
 func getPasswordHash(password string) string {
 	if !config.IsReady() {
 		panic("config is not ready")

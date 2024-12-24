@@ -67,6 +67,24 @@ const (
 	TypePicMust    TypesOfConfigValueType = "pic|must"
 )
 
+var KeyCanDelete = map[TypesOfConfigValueType]bool{
+	TypeString:     true,
+	TypeText:       true,
+	TypePic:        true,
+	TypeStringMust: false,
+	TypeTextMust:   false,
+	TypePicMust:    false,
+}
+
+var KeyIsPic = map[TypesOfConfigValueType]bool{
+	TypeString:     false,
+	TypeText:       false,
+	TypePic:        true,
+	TypeStringMust: false,
+	TypeTextMust:   false,
+	TypePicMust:    true,
+}
+
 var ConfigTypeName = map[TypesOfConfigValueType]string{
 	TypeStringMust: "必选字符串",
 	TypePicMust:    "必选图片",

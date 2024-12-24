@@ -3,21 +3,11 @@ package middleware
 import (
 	"errors"
 	"github.com/SuperH-0630/cat-shop-back/src/database/action"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/contextkey"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/header"
 	"github.com/SuperH-0630/cat-shop-back/src/jwttoken"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-)
-
-const (
-	RequestXTokenHeader = "X-Token"
-)
-
-const (
-	ResponseXTokenHeader = "X-Token"
-)
-
-const (
-	DebugTokenContextKey = "Debug:Token"
 )
 
 type TokenStatus int
@@ -31,23 +21,23 @@ const (
 )
 
 func HandlerToken(c *gin.Context) TokenStatus {
-	token := c.GetHeader(RequestXTokenHeader)
+	token := c.GetHeader(header.RequestXTokenHeader)
 	if token != "" {
 		d, err := jwttoken.ParserUserToken(token)
 		if err != nil {
-			c.Set(DebugTokenContextKey, "Token解析失败: "+err.Error())
+			c.Set(contextkey.DebugTokenKey, "Token解析失败: "+err.Error())
 			return TokenStatusExpired
 		}
 
 		user, err := action.GetUserByID(d.Userid())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.Set(DebugTokenContextKey, "用户未找到")
+			c.Set(contextkey.DebugTokenKey, "用户未找到")
 			return TokenStatusUserNotFound
 		} else if err != nil {
-			c.Set(DebugTokenContextKey, "Token解析失败: "+err.Error())
+			c.Set(contextkey.DebugTokenKey, "Token解析失败: "+err.Error())
 			return TokenStatusUserNotFound
 		} else if !user.CanLogin() {
-			c.Set(DebugTokenContextKey, "用户非正常状态")
+			c.Set(contextkey.DebugTokenKey, "用户非正常状态")
 			return TokenStatusUserNotOk
 		}
 
@@ -56,27 +46,23 @@ func HandlerToken(c *gin.Context) TokenStatus {
 		if d.IsNowReset() {
 			newToken, err = jwttoken.CreateUserToken(user)
 			if err == nil {
-				c.Header(ResponseXTokenHeader, newToken)
+				c.Header(header.ResponseXTokenHeader, newToken)
 			}
 		}
 
-		c.Set("OldToken", token)
-		c.Set("NewToken", newToken)
+		c.Set(contextkey.OldTokenKey, token)
+		c.Set(contextkey.NewTokenKey, newToken)
 		if newToken != "" {
-			c.Set("Token", newToken)
+			c.Set(contextkey.TokenKey, newToken)
 		} else {
-			c.Set("Token", token)
+			c.Set(contextkey.TokenKey, token)
 		}
-		c.Set("UserID", user.ID)
-		c.Set("User", user)
+		c.Set(contextkey.UserIDKey, user.ID)
+		c.Set(contextkey.UserKey, user)
+		c.Set(contextkey.DebugTokenKey, "正常")
 		return TokenStatusHasUser
 	} else {
-		c.Set("OldToken", "")
-		c.Set("NewToken", "")
-		c.Set("Token", "")
-		c.Set("UserID", 0)
-		c.Set("User", nil)
-		c.Set(DebugTokenContextKey, "没有Token")
+		c.Set(contextkey.DebugTokenKey, "没有Token")
 		return TokenStatusNotToken
 	}
 }

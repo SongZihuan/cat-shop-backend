@@ -1,14 +1,11 @@
 package adminupdateconfigpic
 
-import "github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+import (
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"mime/multipart"
+)
 
-type Data struct {
-}
-
-func NewData() Data {
-	return Data{}
-}
-
-func NewJsonData() data.Data {
-	return data.NewSuccessWithData(NewData())
+type Query struct {
+	Key   modeltype.ConfigKeyType `form:"key"`
+	Value *multipart.FileHeader   `form:"value"`
 }

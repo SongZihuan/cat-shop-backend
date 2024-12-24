@@ -79,3 +79,11 @@ func NewClientNotTestError() Data {
 func NewClientBadRequests(err error) Data {
 	return newClientError(GlobalCodeErrorNotTestMode, "错误请求", err)
 }
+
+func NewClientAdminUserNotFound() Data {
+	return newClientError(GlobalCodeErrorAdminApiUserNotFound, "指定操作用户不存在")
+}
+
+func NewClientAdminUserNoPermission() Data {
+	return newClientError(GlobalCodeErrorAdminApiUserNoPermission, "无权操作指定用户")
+}

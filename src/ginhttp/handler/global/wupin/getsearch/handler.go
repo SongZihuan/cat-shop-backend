@@ -11,7 +11,7 @@ const MaxPageSize = 20
 
 func Handler(c *gin.Context) {
 	query := Query{}
-	err := c.ShouldBindQuery(&Query{})
+	err := c.ShouldBindQuery(&query)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
 		return

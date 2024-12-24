@@ -16,7 +16,7 @@ func Handler(c *gin.Context) {
 	cfg := config.Config()
 
 	query := Query{}
-	err := c.ShouldBindQuery(&Query{})
+	err := c.ShouldBindQuery(&query)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

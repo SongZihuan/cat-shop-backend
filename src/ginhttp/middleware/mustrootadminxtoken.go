@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/gin-gonic/gin"
@@ -22,9 +23,9 @@ func mustRootAdminErrorData(debugMsgLst ...string) data.Data {
 	return data.NewClientRootAdminError()
 }
 
-func MustRotAdminXTokenMiddleware() gin.HandlerFunc {
+func MustRootAdminXTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, ok := c.Value("user").(*model.User)
+		user, ok := c.Value(contextkey.UserKey).(*model.User)
 		if !ok {
 			c.JSON(http.StatusOK, mustRootAdminErrorData("用户获取失败"))
 			return
@@ -35,7 +36,7 @@ func MustRotAdminXTokenMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if user.Type == modeltype.AdminUserType {
+		if user.Type != modeltype.RootAdminUserType {
 			c.JSON(http.StatusOK, mustAdminErrorData("普通管理员权限不足"))
 			return
 		}
