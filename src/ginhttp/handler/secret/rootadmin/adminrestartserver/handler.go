@@ -41,7 +41,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = utils.Restart("-wait")
+	_, err = utils.Restart("-wait")
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(err))
 		return

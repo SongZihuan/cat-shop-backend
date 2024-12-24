@@ -54,6 +54,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/admin/xieyi/adminupdatexieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/admindeleteconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/admingetconfig"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminrestartserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminstopserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminupdateconfigpic"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/secret/rootadmin/adminupdateconfigstring"
@@ -396,6 +397,7 @@ func rootAdminHttpServer(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/httpserver")
 
 	api.POST("/stop", adminstopserver.Handler)
+	api.POST("/restart", adminrestartserver.Handler)
 }
 
 func testApiV1(apiV1 *gin.RouterGroup) {
