@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const VideoPath = "/v1/file/video"
+const VideoPath = "/v1/video"
 
 type Video struct {
 	gorm.Model
