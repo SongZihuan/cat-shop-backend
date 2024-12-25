@@ -1,8 +1,8 @@
 package middleware
 
 import (
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/gin-gonic/gin"

@@ -3,7 +3,7 @@ package middleware
 import (
 	"errors"
 	"github.com/SuperH-0630/cat-shop-back/src/database/action"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/contextkey"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/header"
 	"github.com/SuperH-0630/cat-shop-back/src/jwttoken"
 	"github.com/gin-gonic/gin"
