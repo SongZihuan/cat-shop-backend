@@ -2,11 +2,6 @@ package register
 
 import "github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
 
-const (
-	CodePhoneError data.CodeType = -1
-	CodeUserExists data.CodeType = -2
-)
-
 type Query struct {
 	Phone    string `json:"phone"`
 	Password string `json:"password"`

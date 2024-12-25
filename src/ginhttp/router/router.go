@@ -230,6 +230,7 @@ func adminApiV1(apiV1 *gin.RouterGroup) {
 
 	adminFileUploadApiV1(api)
 	adminUserApiV1(api)
+	adminUserListApiV1(api)
 	adminWupinApiV1(api)
 	adminClassApiV1(api)
 	adminXieyiApiV1(api)
@@ -287,8 +288,12 @@ func adminUserApiV1(apiV1 *gin.RouterGroup) {
 	adminUserMsgApiV1(api)
 
 	api.GET("/info", admingetuserinfo.Handler)
-	api.GET("/list", admingetuserlst.Handler)
 	api.POST("/add", adminadduser.Handler)
+}
+
+func adminUserListApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/user")
+	api.GET("/list", admingetuserlst.Handler) // 不需要MustAdmin
 }
 
 func adminBuyRecordApiV1(apiV1 *gin.RouterGroup) {

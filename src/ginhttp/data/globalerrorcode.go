@@ -15,8 +15,8 @@ const (
 var GlobalErrorCodeName = map[CodeType]string{ // 不包含GlobalCodeOK
 	GlobalCodeErrorUnknown:                  "未知错误",
 	GlobalCodeErrorTokenExpire:              "Token过期",
-	GlobalCodeErrorNoPermission:             "无访问权限（Admin）",
-	GlobalCodeErrorNoRootPermission:         "无访问权限（Root Admin）",
+	GlobalCodeErrorNoPermission:             "无访问权限API（Admin）",
+	GlobalCodeErrorNoRootPermission:         "无访问权限API（Root Admin）",
 	GlobalCodeErrorNotTestMode:              "非测试模式",
 	GlobalCodeErrorDatabase:                 "数据库错误",
 	GlobalCodeErrorBadRequests:              "错误请求",

@@ -49,11 +49,67 @@ func (u *User) UpdateInfo(name string, wechat string, email string, location str
 	u.Location = sql.NullString{String: location, Valid: len(location) != 0}
 }
 
+func (u *User) UpdateType(tp modeltype.UserType) bool {
+	if u.Type == modeltype.RootAdminUserType {
+		if tp != modeltype.RootAdminUserType {
+			return false
+		}
+
+		return true
+	} else if tp == modeltype.RootAdminUserType { // 不允许设置更多的根管理员
+		return false
+	} else {
+		u.Type = tp
+		return true
+	}
+}
+
+func (u *User) UpdateStatus(st modeltype.UserStatus, isRoot bool) bool {
+	if st == modeltype.DeleteUserStatus {
+		if u.Status == modeltype.DeleteUserStatus {
+			return true
+		} else if isRoot {
+			u.Status = st
+			return true
+		} else {
+			return false
+		}
+	} else {
+		u.Status = st
+		return true
+	}
+}
+
+func (u *User) UpdatePhone(phone string) {
+	u.Phone = phone
+}
+
 func (u *User) GetLongName() string {
 	return u.Name + " - " + u.Name
 }
 
+func (u *User) IsRootAdmin() bool {
+	u.Status = modeltype.NormalUserStatus // Root必须是Normal
+	return u.Type == modeltype.RootAdminUserType
+}
+
+func (u *User) IsNormalAdmin() bool {
+	return u.Status == modeltype.NormalUserStatus && u.Type == modeltype.AdminUserType
+}
+
+func (u *User) IsAdmin() bool {
+	return u.IsRootAdmin() || u.IsNormalAdmin()
+}
+
+func (u *User) IsNormalUser() bool {
+	return !u.IsAdmin()
+}
+
 func (u *User) CanLogin() bool {
+	if u.IsRootAdmin() {
+		return true
+	}
+
 	return u.Status == modeltype.NormalUserStatus
 }
 
@@ -61,12 +117,16 @@ func (u *User) PasswordCheck(password string) bool {
 	return u.PasswordHash == getPasswordHash(password)
 }
 
-func (u *User) UpdatePassword(oldPassword string, newPassword string) bool {
+func (u *User) UpdatePasswordWithCheck(oldPassword string, newPassword string) bool {
 	if !u.PasswordCheck(oldPassword) {
 		return false
 	}
-	u.PasswordHash = getPasswordHash(newPassword)
+	u.UpdatePassword(newPassword)
 	return true
+}
+
+func (u *User) UpdatePassword(newPassword string) {
+	u.PasswordHash = getPasswordHash(newPassword)
 }
 
 func (u *User) UpdateAvatar(avatarUrl string) bool {

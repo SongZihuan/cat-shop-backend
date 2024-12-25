@@ -17,12 +17,6 @@ type Msg struct {
 	Time   int64  `json:"time"`
 }
 
-type Data struct {
-	List     []Msg `json:"list"`
-	Total    int   `json:"total"`
-	MaxCount int   `json:"maxpage"`
-}
-
 func NewMsg(msg model.Msg) Msg {
 	return Msg{
 		ID:     msg.ID,
@@ -30,6 +24,12 @@ func NewMsg(msg model.Msg) Msg {
 		Msg:    msg.Msg,
 		Time:   msg.Time.Unix(),
 	}
+}
+
+type Data struct {
+	List     []Msg `json:"list"`
+	Total    int   `json:"total"`
+	MaxCount int   `json:"maxpage"`
 }
 
 func NewData(m []model.Msg, maxcount int) Data {

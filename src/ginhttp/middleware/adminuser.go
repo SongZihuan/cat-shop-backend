@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func getAdminUser(c *gin.Context) *model.User {
+func getAdminUser(c *gin.Context, self *model.User) *model.User {
 	type Query struct {
 		UserID uint `form:"userid"`
 	}
@@ -33,7 +33,7 @@ func getAdminUser(c *gin.Context) *model.User {
 		return nil
 	}
 
-	user, err := action.GetUserByID(query.UserID)
+	user, err := action.GetUserByID(query.UserID, self.IsRootAdmin())
 	if errors.Is(err, action.ErrNotFound) {
 		return nil
 	} else if err != nil {
@@ -51,7 +51,7 @@ func AdminUser() gin.HandlerFunc {
 			return
 		}
 
-		user := getAdminUser(c)
+		user := getAdminUser(c, self)
 		if user != nil {
 			if user.HasPermission(self) {
 				c.Set(contextkey.AdminUserIDKey, user.ID)

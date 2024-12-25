@@ -14,10 +14,12 @@ import (
 )
 
 const (
-	CodeBuyRecordNotFound  data.CodeType = 1
-	CodeRepeatTransactions data.CodeType = 2
-	CodePayFail            data.CodeType = 3
+	CodeBuyRecordNotFound  data.CodeType = -1
+	CodeRepeatTransactions data.CodeType = -2
+	CodePayFail            data.CodeType = -3
 )
+
+const DefaultFailRate int = 10
 
 func Handler(c *gin.Context) {
 	user, ok := c.Value(contextkey.UserKey).(*model.User)
@@ -38,6 +40,14 @@ func Handler(c *gin.Context) {
 		return
 	}
 
+	if query.FailRate == -1 {
+		query.FailRate = DefaultFailRate
+	} else if query.FailRate < 0 {
+		query.FailRate = 0
+	} else if query.FailRate > 100 {
+		query.FailRate = 100
+	}
+
 	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
@@ -52,7 +62,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	if utils.Rand().Intn(100) < 10 { // 10%概率支付失败
+	if utils.Rand().Intn(100) < query.FailRate { // 10%概率支付失败
 		err := action.SetBuyRecordPayFail(record)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))

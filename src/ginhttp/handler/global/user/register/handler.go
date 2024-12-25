@@ -11,6 +11,11 @@ import (
 	"net/http"
 )
 
+const (
+	CodePhoneError data.CodeType = -1
+	CodeUserExists data.CodeType = -2
+)
+
 func Handler(c *gin.Context) {
 	query := Query{}
 	err := c.ShouldBindQuery(&query)
@@ -25,7 +30,7 @@ func Handler(c *gin.Context) {
 	}
 
 	var user *model.User
-	_, err = action.GetUserByPhone(query.Phone)
+	_, err = action.GetUserByPhone(query.Phone, false)
 	if errors.Is(err, action.ErrNotFound) {
 		user, err = action.CreateUser(query.Phone, query.Password)
 		if err != nil {
@@ -36,7 +41,7 @@ func Handler(c *gin.Context) {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	} else {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeUserExists, "改手机号已注册，请直接登录"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeUserExists, "该手机号已注册，请直接登录"))
 		return
 	}
 

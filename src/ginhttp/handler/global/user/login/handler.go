@@ -10,6 +10,12 @@ import (
 	"net/http"
 )
 
+const (
+	CodePhoneError    data.CodeType = -1
+	CodePasswordError data.CodeType = -2
+	CodeUserFreeze    data.CodeType = -3
+)
+
 func Handler(c *gin.Context) {
 	query := Query{}
 	err := c.ShouldBindQuery(&query)
@@ -23,12 +29,17 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	user, err := action.GetUserByPhone(query.Phone)
+	user, err := action.GetUserByPhone(query.Phone, false)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodePhoneError, "用户不存在或密码错误", "用户不存在"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
+	}
+
+	if !user.CanLogin() {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeUserFreeze, "用户被冻结"))
 		return
 	}
 

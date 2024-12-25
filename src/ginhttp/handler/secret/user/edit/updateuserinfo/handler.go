@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	CodeNameError     data.CodeType = 1
-	CodeWeChatError   data.CodeType = 2
-	CodeEmailError    data.CodeType = 3
-	CodeLocationError data.CodeType = 4
+	CodeNameError     data.CodeType = -1
+	CodeWeChatError   data.CodeType = -2
+	CodeEmailError    data.CodeType = -3
+	CodeLocationError data.CodeType = -4
 )
 
 func Handler(c *gin.Context) {
@@ -48,17 +48,17 @@ func Handler(c *gin.Context) {
 	}
 
 	if len(query.Email) > 45 {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "邮箱过长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeEmailError, "邮箱过长"))
 		return
 	}
 
 	if len(query.Email) != 0 && !utils.IsValidEmail(query.Email) {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "邮箱非法"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeEmailError, "邮箱非法"))
 		return
 	}
 
 	if len(query.Location) > 160 {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWeChatError, "地址过长"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeLocationError, "地址过长"))
 		return
 	}
 

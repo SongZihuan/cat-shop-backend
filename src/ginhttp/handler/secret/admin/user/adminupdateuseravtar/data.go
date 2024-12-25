@@ -1,14 +1,7 @@
 package adminupdateuseravtar
 
-import "github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+import "mime/multipart"
 
-type Data struct {
-}
-
-func NewData() Data {
-	return Data{}
-}
-
-func NewJsonData() data.Data {
-	return data.NewSuccessWithData(NewData())
+type Query struct {
+	File *multipart.FileHeader `form:"file"`
 }
