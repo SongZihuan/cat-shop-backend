@@ -85,8 +85,10 @@ func GetBuyRecordCountByPageByUserID(userID uint) (int, error) {
 	var res count
 
 	db := database.DB()
-	err := db.Model(model.BuyRecord{}).Select("COUNT(*) as count").Where("user_id = ?", userID).Find(&res).Error
-	if err != nil {
+	err := db.Model(model.BuyRecord{}).Select("COUNT(*) as count").Where("user_id = ?", userID).First(&res).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return 0, nil
+	} else if err != nil {
 		return 0, err
 	}
 

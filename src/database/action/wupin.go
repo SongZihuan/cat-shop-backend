@@ -73,8 +73,10 @@ func GetSearchCountWithShow(search string, selectClass []uint) (int, error) {
 	}
 
 	var res count
-	err := sql.Find(&res).Error
-	if err != nil {
+	err := sql.First(&res).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return 0, nil
+	} else if err != nil {
 		return 0, err
 	}
 

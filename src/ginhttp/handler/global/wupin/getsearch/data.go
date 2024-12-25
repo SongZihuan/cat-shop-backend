@@ -11,7 +11,7 @@ type Query struct {
 	Search   string `form:"search"`
 	Select   []uint `form:"select"`
 	Page     int    `form:"page"`
-	PageSize int    `form:"page_size"`
+	PageSize int    `form:"pagesize"`
 }
 
 type Class struct {
@@ -77,7 +77,7 @@ func NewWupin(wp model.WuPin) Wupin {
 type Data struct {
 	List     []Wupin `json:"list"`
 	Total    int     `json:"total"`
-	MaxCount int     `json:"pagemax"`
+	MaxCount int     `json:"maxpage"`
 }
 
 func NewData(list []model.WuPin, maxcount int) Data {
