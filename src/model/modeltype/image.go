@@ -22,3 +22,10 @@ var ImageTypeToName = map[ImageType]string{
 	ConfigImage: "Config",
 	AvatarImage: "Avatar",
 }
+
+var ImageAlt = map[ImageType]string{
+	XieYiImage:  "协议附图",
+	WuPinImage:  "商品图",
+	ConfigImage: "",
+	AvatarImage: "头像",
+}

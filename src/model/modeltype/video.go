@@ -3,16 +3,16 @@ package modeltype
 type VideoType int
 
 const (
-	XieYiVide VideoType = 1
-	WuPinVide VideoType = 2
+	XieYiVideo VideoType = 1
+	WuPinVideo VideoType = 2
 )
 
 var NameToVideoType = map[string]VideoType{
-	"XieYi": XieYiVide,
-	"WuPin": WuPinVide,
+	"XieYi": XieYiVideo,
+	"WuPin": WuPinVideo,
 }
 
 var VideoTypeToName = map[VideoType]string{
-	XieYiVide: "XieYi",
-	WuPinVide: "WuPin",
+	XieYiVideo: "XieYi",
+	WuPinVideo: "WuPin",
 }
