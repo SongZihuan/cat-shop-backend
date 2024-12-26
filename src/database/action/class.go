@@ -1,7 +1,7 @@
 package action
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/database"
+	"github.com/SuperH-0630/cat-shop-back/src/database/action/internal"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 )
@@ -19,12 +19,12 @@ func GetClassList(limit int, showEmpty bool, showOne bool) ([]model.Class, error
 	var err error
 	if showEmpty {
 		if showOne {
-			err = database.DB().Model(&model.Class{}).Limit(limit).Find(&res).Error
+			err = internal.DB().Model(&model.Class{}).Limit(limit).Find(&res).Error
 		} else {
-			err = database.DB().Model(&model.Class{}).Where("id != ?", modeltype.ClassEmptyID).Limit(limit).Find(&res).Error
+			err = internal.DB().Model(&model.Class{}).Where("id != ?", modeltype.ClassEmptyID).Limit(limit).Find(&res).Error
 		}
 	} else {
-		err = database.DB().Model(&model.Class{}).Where("show = true").Where("id != ?", modeltype.ClassEmptyID).Limit(limit).Find(&res).Error
+		err = internal.DB().Model(&model.Class{}).Where("show = true").Where("id != ?", modeltype.ClassEmptyID).Limit(limit).Find(&res).Error
 	}
 	if err != nil {
 		return nil, err

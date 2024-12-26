@@ -3,7 +3,7 @@ package action
 import (
 	"errors"
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/database"
+	"github.com/SuperH-0630/cat-shop-back/src/database/action/internal"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"gorm.io/gorm"
 )
@@ -19,7 +19,7 @@ func GetBagByID(userID uint, bagID uint) (*model.Bag, error) {
 		return nil, ErrNotFound
 	}
 
-	db := database.DB()
+	db := internal.DB()
 	err := db.Model(model.Bag{}).Joins("Wupin").Where("id = ?", bagID).Where("user_id = ?", userID).First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
@@ -41,7 +41,7 @@ func GetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, error) {
 		return nil, ErrNotFound
 	}
 
-	db := database.DB()
+	db := internal.DB()
 	err := db.Model(model.Bag{}).Joins("Wupin").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Order("time desc").First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
@@ -60,7 +60,7 @@ func GetBagListByUserID(userID uint, limit int, offset int, isAdmin bool) ([]mod
 	var res []model.Bag
 	var err error
 
-	db := database.DB()
+	db := internal.DB()
 	if isAdmin {
 		err = db.Model(model.Bag{}).Joins("Wupin").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
 	} else {
@@ -80,7 +80,7 @@ func AddBag(user *model.User, bag *model.Bag, num int) (bool, error) {
 
 	isNotEmpty := bag.Add(num)
 
-	db := database.DB()
+	db := internal.DB()
 	err := db.Save(bag).Error
 	if err != nil {
 		return false, err

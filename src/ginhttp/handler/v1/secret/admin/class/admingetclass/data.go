@@ -3,11 +3,13 @@ package admingetclass
 import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 )
 
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
+	Show bool   `json:"show"`
 }
 
 type Data struct {
@@ -19,10 +21,19 @@ func NewData(list []model.Class) Data {
 	res := make([]Class, 0, len(list))
 	for _, v := range list {
 		if v.Show {
-			res = append(res, Class{
-				ID:   v.ID,
-				Name: v.Name,
-			})
+			if v.ID == modeltype.ClassEmptyID {
+				res = append(res, Class{
+					ID:   modeltype.ClassEmptyID,
+					Name: modeltype.ClassEmptyName,
+					Show: modeltype.ClassEmptyShow,
+				})
+			} else {
+				res = append(res, Class{
+					ID:   v.ID,
+					Name: v.Name,
+					Show: v.Show,
+				})
+			}
 		}
 	}
 

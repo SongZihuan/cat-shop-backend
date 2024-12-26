@@ -46,7 +46,7 @@ func MainV1() int {
 		<-time.Tick(time.Duration(cfg.Yaml.Http.RestartWaitSecond) * time.Second)
 	}
 
-	err = database.ConnectToMySql()
+	err = database.ConnectToMysql()
 	if err != nil {
 		exitByError(err)
 		return 1

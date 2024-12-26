@@ -2,13 +2,13 @@ package action
 
 import (
 	"errors"
-	"github.com/SuperH-0630/cat-shop-back/src/database"
+	"github.com/SuperH-0630/cat-shop-back/src/database/action/internal"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"gorm.io/gorm"
 )
 
 func GetMsgByPage(page int, pagesize int) (res []model.Msg, err error) {
-	db := database.DB()
+	db := internal.DB()
 	err = db.Model(&model.Msg{}).Joins("User").Limit(pagesize).Offset((page - 1) * pagesize).Order("create_at desc").Find(&res).Error
 	if err != nil {
 		return nil, err
@@ -23,7 +23,7 @@ func GetMsgCount() (int, error) {
 	}
 
 	var res count
-	db := database.DB()
+	db := internal.DB()
 	err := db.Model(&model.Msg{}).Select("COUNT(*) as count").First(&res).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, nil
@@ -43,7 +43,7 @@ func GetMsgCountWithUser(user *model.User) (int, error) {
 }
 
 func GetMsgByPageAndUserID(userID uint, page int, pagesize int) (res []model.Msg, err error) {
-	db := database.DB()
+	db := internal.DB()
 	err = db.Model(&model.Msg{}).Joins("User").Where("user_id = ?", userID).Limit(pagesize).Offset((page - 1) * pagesize).Order("create_at desc").Find(&res).Error
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func GetMsgCountWithUserID(userID uint) (int, error) {
 	}
 
 	var res count
-	db := database.DB()
+	db := internal.DB()
 	err := db.Model(&model.Msg{}).Select("COUNT(*) as count").Where("user_id = ?", userID).First(&res).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, nil

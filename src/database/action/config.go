@@ -2,14 +2,14 @@ package action
 
 import (
 	"errors"
-	"github.com/SuperH-0630/cat-shop-back/src/database"
+	"github.com/SuperH-0630/cat-shop-back/src/database/action/internal"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"gorm.io/gorm"
 )
 
 func GetConfigLst() (res []model.Config, err error) {
-	db := database.DB()
+	db := internal.DB()
 	err = db.Model(&model.Config{}).Where("key in ?", modeltype.ConfigKey).Limit(len(modeltype.ConfigKey)).Order("create_at desc").Find(&res).Error
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func UpdateConfigPic(key modeltype.ConfigKeyType, img *model.Image) error {
 }
 
 func UpdateConfig(key modeltype.ConfigKeyType, value modeltype.ConfigValueType) error {
-	return database.DB().Transaction(func(tx *gorm.DB) error {
+	return internal.DB().Transaction(func(tx *gorm.DB) error {
 		var cfg = new(model.Config)
 		err := tx.Model(&model.Config{}).Where("key = ?", key).Order("create_at desc").First(cfg).Error
 		if errors.Is(err, gorm.ErrRecordNotFound) {

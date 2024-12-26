@@ -83,7 +83,7 @@ import (
 )
 
 func Api(api *gin.RouterGroup) {
-	api.Use(middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.AdminUser(), middleware.MustAccept(), middleware.ReturnContentJson())
+	api.Use(middleware.DBReady(), middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.AdminUser(), middleware.MustAccept(), middleware.ReturnContentJson())
 
 	globalApiV1(api)
 	secretApiV1(api)
