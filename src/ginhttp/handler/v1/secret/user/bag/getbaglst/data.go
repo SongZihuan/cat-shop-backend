@@ -15,6 +15,7 @@ type Query struct {
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
+	Show bool   `json:"show"`
 }
 
 type Wupin struct {
@@ -58,11 +59,13 @@ func NewBag(bag *model.Bag) Bag {
 		class = &Class{
 			ID:   bag.WuPin.ClassID,
 			Name: bag.WuPin.Class.Name,
+			Show: bag.WuPin.Class.Show,
 		}
 	} else {
 		class = &Class{
-			ID:   0,
-			Name: "特殊类别",
+			ID:   modeltype.ClassEmptyID,
+			Name: modeltype.ClassEmptyName,
+			Show: modeltype.ClassEmptyShow,
 		}
 	}
 

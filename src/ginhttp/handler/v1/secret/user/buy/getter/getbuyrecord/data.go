@@ -14,6 +14,7 @@ type Query struct {
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
+	Show bool   `json:"show"`
 }
 
 type Wupin struct {
@@ -85,11 +86,13 @@ func NewData(record *model.BuyRecord) BuyRecord {
 		class = &Class{
 			ID:   record.WuPin.ClassID,
 			Name: record.WuPin.Class.Name,
+			Show: record.WuPin.Class.Show,
 		}
 	} else {
 		class = &Class{
-			ID:   0,
-			Name: "特殊类别",
+			ID:   modeltype.ClassEmptyID,
+			Name: modeltype.ClassEmptyName,
+			Show: modeltype.ClassEmptyShow,
 		}
 	}
 

@@ -8,9 +8,15 @@ import (
 var args0 = ""
 
 func init() {
+	var err error
 	if len(os.Args) > 0 {
-		args0 = os.Args[0]
-	} else {
+		args0, err = os.Executable()
+		if err != nil {
+			args0 = os.Args[0]
+		}
+	}
+
+	if args0 == "" {
 		panic("args was empty")
 	}
 }

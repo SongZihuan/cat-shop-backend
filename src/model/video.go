@@ -21,6 +21,10 @@ type Video struct {
 	Time time.Time           `gorm:"type:datetime;not null"`
 }
 
+func (*Video) TableName() string {
+	return "video"
+}
+
 func NewVideo(tp modeltype.VideoType, file []byte) (*Video, error) {
 	vid := &Video{
 		Type: tp,

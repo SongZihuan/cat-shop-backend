@@ -45,8 +45,8 @@ func NewData(wp *model.WuPin) Wupin {
 		}
 	} else {
 		class = &Class{
-			ID:   0,
-			Name: "特殊类别",
+			ID:   modeltype.ClassEmptyID,
+			Name: modeltype.ClassEmptyName,
 		}
 	}
 

@@ -22,6 +22,7 @@ const (
 	CodeBadPhone           data.CodeType = -5
 	CodeBadLocation        data.CodeType = -6
 	CodeBadEmail           data.CodeType = -7
+	CodeWupinNotShort      data.CodeType = -8
 )
 
 func Handler(c *gin.Context) {
@@ -92,6 +93,9 @@ func Handler(c *gin.Context) {
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
+	} else if !wupin.IsShow {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "商品未找到", "商品不再出售"))
 		return
 	}
 

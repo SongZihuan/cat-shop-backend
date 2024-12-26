@@ -6,12 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type WuPin struct {
+type WuPinM struct {
 	gorm.Model
 	Name    string         `gorm:"type:varchar(20);not null"`
 	Pic     string         `gorm:"type:varchar(150);not null"`
 	ClassID uint           `gorm:"not null"`
-	Class   *Class         `gorm:"foreignKey:ClassID"`
 	Tag     sql.NullString `gorm:"type:varchar(20)"`
 
 	HotPrice  modeltype.PriceNull `gorm:"type:uint;"`
@@ -32,39 +31,12 @@ type WuPin struct {
 	IsHot  bool `gorm:"type:boolean;not null;"`
 }
 
-func (*WuPin) TableName() string {
+func (*WuPinM) TableName() string {
 	return "wupin"
 }
 
-func (w *WuPin) GetRealPrice() modeltype.Price {
-	if w.RealPrice >= 0 {
-		return w.RealPrice
+func init() {
+	if !modelTest[WuPin, WuPinM]() {
+		panic("database error")
 	}
-	return 0
-}
-
-func (w *WuPin) GetPrice() modeltype.Price {
-	realPrice := w.GetRealPrice()
-
-	if !w.HotPrice.Valid || w.HotPrice.V < 0 {
-		return realPrice
-	}
-
-	if w.HotPrice.V < realPrice {
-		return w.HotPrice.V
-	}
-
-	return realPrice
-}
-
-func (w *WuPin) GetFacePrice() modeltype.Price {
-	return w.GetPrice()
-}
-
-func (w *WuPin) GetPriceTotal(num modeltype.Total) modeltype.Price {
-	price := w.GetPrice()
-	if price < 0 {
-		return 0
-	}
-	return modeltype.Price(int64(price) * int64(num))
 }

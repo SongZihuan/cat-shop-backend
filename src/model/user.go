@@ -28,6 +28,10 @@ type User struct {
 	PasswordHash string               `gorm:"type:char(64);not null"`
 }
 
+func (*User) TableName() string {
+	return "user"
+}
+
 func NewUser(phone string, password string) *User {
 	return &User{
 		Status:       modeltype.NormalUserStatus,

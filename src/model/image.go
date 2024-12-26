@@ -21,6 +21,10 @@ type Image struct {
 	Time time.Time           `gorm:"type:datetime;not null"`
 }
 
+func (*Image) TableName() string {
+	return "image"
+}
+
 func NewImage(tp modeltype.ImageType, file []byte) (*Image, error) {
 	img := &Image{
 		Type: tp,

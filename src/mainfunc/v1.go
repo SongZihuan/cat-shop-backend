@@ -59,6 +59,12 @@ func MainV1() int {
 		return 1
 	}
 
+	err = action.CreateEmptyClass()
+	if err != nil {
+		exitByError(err)
+		return 1
+	}
+
 	err = ginhttp.InitGin()
 	if err != nil {
 		exitByError(err)

@@ -52,15 +52,20 @@ func GetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, error) {
 	return bag, nil
 }
 
-func GetBagListByUser(user *model.User, limit int, offset int) ([]model.Bag, error) {
-	return GetBagListByUserID(user.ID, limit, offset)
+func GetBagListByUser(user *model.User, limit int, offset int, isAdmin bool) ([]model.Bag, error) {
+	return GetBagListByUserID(user.ID, limit, offset, isAdmin)
 }
 
-func GetBagListByUserID(userID uint, limit int, offset int) ([]model.Bag, error) {
+func GetBagListByUserID(userID uint, limit int, offset int, isAdmin bool) ([]model.Bag, error) {
 	var res []model.Bag
+	var err error
 
 	db := database.DB()
-	err := db.Model(model.Bag{}).Joins("Wupin").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
+	if isAdmin {
+		err = db.Model(model.Bag{}).Joins("Wupin").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
+	} else {
+		err = db.Model(model.Bag{}).Joins("Wupin").Where("user_id = ?", userID).Where("wu_pin_show = true").Limit(limit).Offset(offset).Find(&res).Error
+	}
 	if err != nil {
 		return nil, err
 	}

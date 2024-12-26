@@ -37,7 +37,9 @@ func Config() *ConfigStruct {
 	if !IsReady() {
 		panic("config not ready")
 	}
-	return &config
+
+	tmp := config
+	return &tmp
 }
 
 var config ConfigStruct

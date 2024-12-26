@@ -17,6 +17,7 @@ const (
 	CodeBuyRecordNotFound  data.CodeType = -1
 	CodeRepeatTransactions data.CodeType = -2
 	CodePayFail            data.CodeType = -3
+	CodeWupinNotShort      data.CodeType = -4
 )
 
 const DefaultFailRate int = 10
@@ -59,6 +60,9 @@ func Handler(c *gin.Context) {
 
 	if record.Status != modeltype.WaitPayCheck && record.Status != modeltype.PayCheckFail {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeRepeatTransactions, "重复交易", "购物记录状态不正确"))
+		return
+	} else if !record.WuPin.IsShow {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "商户拒绝了此次交易", "商品不再出售"))
 		return
 	}
 
