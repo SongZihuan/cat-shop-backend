@@ -10,10 +10,13 @@ type BagM struct {
 	gorm.Model
 	UserID    uint            `gorm:"not null"`
 	WuPinID   uint            `gorm:"not null"`
-	WuPinShow bool            `gorm:"not null"`
 	ClassID   uint            `gorm:"not null"`
 	Num       modeltype.Total `gorm:"type:uint;not null"`
 	Time      time.Time       `gorm:"type:datetime;not null"`
+	WuPinShow bool            `gorm:"type:boolean;not null"`
+	WupinHot  bool            `gorm:"type:boolean;not null"`
+	ClassShow bool            `gorm:"type:boolean;not null;"`
+	ClassDown bool            `gorm:"type:boolean;not null;"`
 }
 
 func (*BagM) TableName() string {

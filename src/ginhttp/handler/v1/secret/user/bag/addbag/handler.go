@@ -41,7 +41,7 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if !bag.WuPinShow || bag.WuPinID <= 0 || bag.WuPin == nil || !bag.WuPin.IsShow {
+	} else if !bag.WuPinShow || bag.WuPinID <= 0 || bag.WuPin == nil || !bag.WuPin.Show {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return
 	}

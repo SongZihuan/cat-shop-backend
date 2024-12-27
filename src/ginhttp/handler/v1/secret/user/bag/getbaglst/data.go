@@ -15,7 +15,6 @@ type Query struct {
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
-	Show bool   `json:"show"`
 }
 
 type Wupin struct {
@@ -45,11 +44,12 @@ type Bag struct {
 	ClassID uint            `json:"classid"`
 	Num     modeltype.Total `json:"num"`
 	Time    int64           `json:"time"`
-	Wupin   Wupin           `json:"wupin"`
+	Wupin   *Wupin          `json:"wupin"`
 }
 
 func NewBag(bag *model.Bag) Bag {
 	var class *Class
+	var wp *Wupin
 
 	if bag.WuPinID <= 0 || bag.WuPin == nil {
 		panic("wupin is nil")
@@ -59,24 +59,16 @@ func NewBag(bag *model.Bag) Bag {
 		class = &Class{
 			ID:   bag.WuPin.ClassID,
 			Name: bag.WuPin.Class.Name,
-			Show: bag.WuPin.Class.Show,
 		}
 	} else {
 		class = &Class{
 			ID:   modeltype.ClassEmptyID,
 			Name: modeltype.ClassEmptyName,
-			Show: modeltype.ClassEmptyShow,
 		}
 	}
 
-	return Bag{
-		ID:      bag.ID,
-		UserID:  bag.UserID,
-		WupinID: bag.WuPinID,
-		ClassID: bag.ClassID,
-		Num:     bag.Num,
-		Time:    bag.Time.Unix(),
-		Wupin: Wupin{
+	if bag.WuPinID > 0 || bag.WuPin != nil {
+		wp = &Wupin{
 			ID:        bag.WuPin.ID,
 			Name:      bag.WuPin.Name,
 			Pic:       bag.WuPin.Pic,
@@ -94,7 +86,21 @@ func NewBag(bag *model.Bag) Bag {
 			BuyTotal:  modeltype.GetTotal(bag.WuPin.BuyTotal),
 			BuyDaohuo: modeltype.GetTotal(bag.WuPin.BuyDaoHuo),
 			BuyGood:   modeltype.GetTotal(bag.WuPin.BuyGood),
-		},
+		}
+	} else {
+		wp = &Wupin{
+			ID: modeltype.WupinEmptyID,
+		}
+	}
+
+	return Bag{
+		ID:      bag.ID,
+		UserID:  bag.UserID,
+		WupinID: bag.WuPinID,
+		ClassID: bag.ClassID,
+		Num:     bag.Num,
+		Time:    bag.Time.Unix(),
+		Wupin:   wp,
 	}
 }
 

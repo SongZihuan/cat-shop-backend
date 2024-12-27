@@ -16,3 +16,5 @@ var VideoTypeToName = map[VideoType]string{
 	XieYiVideo: "XieYi",
 	WuPinVideo: "WuPin",
 }
+
+const VideoPath = "/v1/video"

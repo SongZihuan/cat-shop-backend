@@ -45,6 +45,32 @@ type BuyRecordM struct {
 	ShopEmail    sql.NullString `gorm:"type:varchar(50);"`
 	ShopLocation string         `gorm:"type:varchar(200);not null;"`
 	ShopRemark   sql.NullString `gorm:"type:varchar(200);"`
+
+	WupinName    string         `gorm:"type:varchar(20);not null"`
+	WupinPic     string         `gorm:"type:varchar(150);not null"`
+	WupinClassID uint           `gorm:"not null"`
+	WupinClass   *Class         `gorm:"foreignKey:ClassID"`
+	WupinTag     sql.NullString `gorm:"type:varchar(20)"`
+
+	WupinHotPrice  modeltype.PriceNull `gorm:"type:uint;"`
+	WupinRealPrice modeltype.Price     `gorm:"type:uint;not null;"`
+
+	WupinInfo     string         `gorm:"type:text;not null"`
+	WupinRen      string         `gorm:"type:varchar(20);not null"`
+	WupinPhone    string         `gorm:"type:varchar(30);not null"`
+	WupinWeChat   sql.NullString `gorm:"type:varchar(50);"`
+	WupinEmail    sql.NullString `gorm:"type:varchar(50);"`
+	WupinLocation string         `gorm:"type:varchar(200);not null"`
+
+	WupinBuyTotal  modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyDaoHuo modeltype.Total `gorm:"type:uint;not null"`
+	WupinPingJia   modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyGood   modeltype.Total `gorm:"type:uint;not null"`
+
+	WuPinShow bool `gorm:"type:boolean;not null"`
+	WupinHot  bool `gorm:"type:boolean;not null"`
+	ClassShow bool `gorm:"type:boolean;not null;"`
+	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 
 func (*BuyRecordM) TableName() string {

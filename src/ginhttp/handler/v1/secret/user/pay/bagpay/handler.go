@@ -89,7 +89,7 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if !bag.WuPinShow || !bag.WuPin.IsShow {
+	} else if !bag.WuPinShow || !bag.WuPin.Show {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "购物车未找到", "商品不再出售"))
 		return
 	}

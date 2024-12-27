@@ -15,10 +15,9 @@ type Query struct {
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
-	Show bool   `json:"show"`
 }
 
-type Wupin struct {
+type _wp struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`
 	Pic       string `json:"pic"`
@@ -37,6 +36,9 @@ type Wupin struct {
 	BuyDaohuo int64  `json:"buydaohuo"`
 	BuyGood   int64  `json:"buygood"`
 }
+
+type NowWupin _wp
+type Wupin _wp
 
 type LocationForUser struct {
 	Name     string `form:"name"`
@@ -73,29 +75,49 @@ type BuyRecord struct {
 	IsGood             bool                `json:"isgood"`
 	User               LocationForUser     `json:"user"`
 	Shop               LocationForUser     `json:"shop"`
-	Wupin              Wupin               `json:"wupin"`
+	Wupin              *Wupin              `json:"wupin"`
+	NowWupin           *NowWupin           `json:"nowwupin"`
 }
 
 func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 	var class *Class
+	var nwp *NowWupin
 	var wp *Wupin
 
 	if record.WuPin.ClassID >= 0 && record.WuPin.Class != nil && record.WuPin.Class.Show {
 		class = &Class{
 			ID:   record.WuPin.ClassID,
 			Name: record.WuPin.Class.Name,
-			Show: record.WuPin.Class.Show,
 		}
 	} else {
 		class = &Class{
 			ID:   modeltype.ClassEmptyID,
 			Name: modeltype.ClassEmptyName,
-			Show: modeltype.ClassEmptyShow,
 		}
 	}
 
-	if record.WuPinID >= 0 && record.WuPin != nil {
-		wp = &Wupin{
+	wp = &Wupin{
+		ID:        record.WuPin.ID,
+		Name:      record.WupinName,
+		Pic:       record.WupinPic,
+		ClassID:   class.ID,
+		ClassOf:   class,
+		Tag:       utils.GetSQLNullString(record.WupinTag),
+		HotPrice:  modeltype.GetPrice(record.WupinHotPrice),
+		RealPrice: modeltype.GetPrice(record.WupinRealPrice),
+		Info:      record.WupinInfo,
+		Ren:       record.WupinRen,
+		Phone:     record.WupinPhone,
+		Email:     utils.GetSQLNullString(record.WupinEmail),
+		Wechat:    utils.GetSQLNullString(record.WupinWeChat),
+		Location:  record.WupinLocation,
+		BuyTotal:  modeltype.GetTotal(record.WupinBuyTotal),
+		BuyDaohuo: modeltype.GetTotal(record.WupinBuyDaoHuo),
+		BuyGood:   modeltype.GetTotal(record.WupinBuyGood),
+	}
+
+	if record.WuPinID > 0 && record.WuPin != nil {
+		nwp = &NowWupin{
 			ID:        record.WuPin.ID,
 			Name:      record.WuPin.Name,
 			Pic:       record.WuPin.Pic,
@@ -115,7 +137,9 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 			BuyGood:   modeltype.GetTotal(record.WuPin.BuyGood),
 		}
 	} else {
-		panic("wupin is nil")
+		nwp = &NowWupin{
+			ID: modeltype.WupinEmptyID,
+		}
 	}
 
 	return BuyRecord{
@@ -158,7 +182,8 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 			Email:    utils.GetSQLNullString(record.ShopEmail),
 			Remark:   utils.GetSQLNullString(record.ShopRemark),
 		},
-		Wupin: *wp,
+		Wupin:    wp,
+		NowWupin: nwp,
 	}
 }
 

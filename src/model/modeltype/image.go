@@ -29,3 +29,5 @@ var ImageAlt = map[ImageType]string{
 	ConfigImage: "",
 	AvatarImage: "头像",
 }
+
+const ImagePath = "/v1/image"

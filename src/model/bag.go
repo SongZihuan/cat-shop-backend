@@ -11,12 +11,15 @@ type Bag struct {
 	UserID    uint            `gorm:"not null"`
 	User      *User           `gorm:"foreignKey:UserID"`
 	WuPinID   uint            `gorm:"not null"`
-	WuPinShow bool            `gorm:"not null"`
 	WuPin     *WuPin          `gorm:"foreignKey:WuPinID"`
 	ClassID   uint            `gorm:"not null"`
 	Class     *Class          `gorm:"foreignKey:ClassID"`
 	Num       modeltype.Total `gorm:"type:uint;not null"`
 	Time      time.Time       `gorm:"type:datetime;not null"`
+	WuPinShow bool            `gorm:"type:boolean;not null"`
+	WupinHot  bool            `gorm:"type:boolean;not null"`
+	ClassShow bool            `gorm:"type:boolean;not null;"`
+	ClassDown bool            `gorm:"type:boolean;not null;"`
 }
 
 func (*Bag) TableName() string {

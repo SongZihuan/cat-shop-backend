@@ -75,7 +75,7 @@ type Data struct {
 func NewData(list []model.WuPin) Data {
 	res := make([]Wupin, 0, len(list))
 	for _, v := range list {
-		if v.IsHot {
+		if v.Hot {
 			res = append(res, NewWupin(v))
 		}
 	}

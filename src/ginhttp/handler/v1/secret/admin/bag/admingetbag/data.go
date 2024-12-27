@@ -16,6 +16,7 @@ type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
 	Show bool   `json:"show"`
+	Down bool   `json:"down"`
 }
 
 type Wupin struct {
@@ -60,12 +61,14 @@ func NewBag(bag *model.Bag) Bag {
 			ID:   bag.WuPin.ClassID,
 			Name: bag.WuPin.Class.Name,
 			Show: bag.WuPin.Class.Show,
+			Down: bag.WuPin.Class.Down,
 		}
 	} else {
 		class = &Class{
 			ID:   modeltype.ClassEmptyID,
 			Name: modeltype.ClassEmptyName,
 			Show: modeltype.ClassEmptyShow,
+			Down: modeltype.ClassEmptyDown,
 		}
 	}
 

@@ -12,8 +12,6 @@ import (
 	"time"
 )
 
-const ImagePath = "/v1/image"
-
 type Image struct {
 	gorm.Model
 	Type modeltype.ImageType `gorm:"type:uint;not null"`
@@ -66,7 +64,7 @@ func (img *Image) GetUrl() string {
 		panic("config is not ready")
 	}
 
-	return config.Config().Yaml.Http.ResourceBaseAPI + ImagePath + "?" + img.GetQuery()
+	return config.Config().Yaml.Http.ResourceBaseAPI + modeltype.ImagePath + "?" + img.GetQuery()
 }
 
 func (img *Image) GetQuery() string {

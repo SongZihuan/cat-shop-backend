@@ -10,7 +10,7 @@ import (
 const ClassListLimit = 100
 
 func Handler(c *gin.Context) {
-	res, err := action.GetClassList(ClassListLimit, true, true)
+	res, err := action.GetClassList(ClassListLimit, true, false, true)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

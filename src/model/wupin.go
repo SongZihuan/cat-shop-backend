@@ -24,12 +24,15 @@ type WuPin struct {
 	Email    sql.NullString `gorm:"type:varchar(50);"`
 	Location string         `gorm:"type:varchar(200);not null"`
 
-	BuyTotal  modeltype.Total `gorm:"type:uint;not null"`
-	BuyDaoHuo modeltype.Total `gorm:"type:uint;not null"`
-	BuyGood   modeltype.Total `gorm:"type:uint;not null"`
+	BuyTotal   modeltype.Total `gorm:"type:uint;not null"`
+	BuyDaoHuo  modeltype.Total `gorm:"type:uint;not null"`
+	BuyPingjia modeltype.Total `gorm:"type:uint;not null"`
+	BuyGood    modeltype.Total `gorm:"type:uint;not null"`
 
-	IsShow bool `gorm:"type:boolean;not null;"`
-	IsHot  bool `gorm:"type:boolean;not null;"`
+	Hot       bool `gorm:"type:boolean;not null;"`
+	Show      bool `gorm:"type:boolean;not null;"`
+	ClassShow bool `gorm:"type:boolean;not null;"`
+	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 
 func (*WuPin) TableName() string {

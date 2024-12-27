@@ -8,7 +8,8 @@ import (
 type Class struct {
 	gorm.Model
 	Name string `gorm:"type:varchar(20);not null"`
-	Show bool   `gorm:"type:boolean;not null"`
+	Show bool   `gorm:"type:boolean;not null"` // 仅不展示
+	Down bool   `gorm:"type:boolean;not null"` // 下架所有商品
 }
 
 func (*Class) TableName() string {

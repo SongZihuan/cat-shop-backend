@@ -10,6 +10,7 @@ type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
 	Show bool   `json:"show"`
+	Down bool   `json:"down"`
 }
 
 type Data struct {
@@ -26,12 +27,14 @@ func NewData(list []model.Class) Data {
 					ID:   modeltype.ClassEmptyID,
 					Name: modeltype.ClassEmptyName,
 					Show: modeltype.ClassEmptyShow,
+					Down: modeltype.ClassEmptyDown,
 				})
 			} else {
 				res = append(res, Class{
 					ID:   v.ID,
 					Name: v.Name,
 					Show: v.Show,
+					Down: v.Down,
 				})
 			}
 		}
