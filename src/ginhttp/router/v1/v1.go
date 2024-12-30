@@ -59,6 +59,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminupdateconfigstring"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/addbag"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/getbaglst"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/getbaglstbypage"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/buy/fahuo/daohuo"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/buy/fahuo/fahuochangeuser"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/buy/fahuo/fahuoquxiaoshenqing"
@@ -209,6 +210,8 @@ func userBagApiV1(apiV1 *gin.RouterGroup) {
 
 	api.POST("/add", addbag.Handler)
 	api.GET("/list", getbaglst.Handler)
+	api.GET("/list/infinite", getbaglst.Handler)
+	api.GET("/list/page", getbaglstbypage.Handler)
 }
 
 func adminApiV1(apiV1 *gin.RouterGroup) {

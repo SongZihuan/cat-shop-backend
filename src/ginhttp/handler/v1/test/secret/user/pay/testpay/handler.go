@@ -67,7 +67,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if utils.Rand().Intn(100) < query.FailRate { // 10%概率支付失败
-		err := action.SetBuyRecordPayFail(record)
+		err := action.SetBuyRecordPayFail(user, record)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

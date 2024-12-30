@@ -19,7 +19,7 @@ type User struct {
 	Email        sql.NullString       `gorm:"type:varchar(50);"`
 	Location     sql.NullString       `gorm:"type:varchar(200);"`
 	Avatar       sql.NullString       `gorm:"type:varchar(200);"`
-	TotalPrice   modeltype.Total      `gorm:"type:uint;not null"`
+	TotalPrice   modeltype.Price      `gorm:"type:uint;not null"`
 	TotalBuy     modeltype.Total      `gorm:"type:uint;not null"`
 	TotalGood    modeltype.Total      `gorm:"type:uint;not null"`
 	TotalJian    modeltype.Total      `gorm:"type:uint;not null"`
@@ -69,6 +69,7 @@ func (u *User) UpdateType(tp modeltype.UserType) bool {
 }
 
 func (u *User) UpdateStatus(st modeltype.UserStatus, isRoot bool) bool {
+	// 只有root可以设置delete
 	if st == modeltype.DeleteUserStatus {
 		if u.Status == modeltype.DeleteUserStatus {
 			return true
@@ -148,15 +149,17 @@ func (u *User) SetNewPassword(password string) bool {
 	return true
 }
 
+func (u *User) IsDeleteUser() bool {
+	return u.Status == modeltype.DeleteUserStatus
+}
+
 func (u *User) HasPermission(admin *User) bool {
 	if admin.Type == modeltype.RootAdminUserType {
 		return true
+	} else if u.IsDeleteUser() {
+		return false
 	} else if admin.Type == modeltype.AdminUserType {
-		if admin.Status == modeltype.NormalUserStatus && (u.Type == modeltype.NormalUserType || u.Type == modeltype.AdminUserType) {
-			return true
-		}
-
-		return true
+		return u.Type == modeltype.AdminUserType
 	} else if admin.Type == modeltype.NormalUserType {
 		return false
 	} else {
@@ -171,4 +174,61 @@ func getPasswordHash(password string) string {
 
 	ps := fmt.Sprintf("%s:%s", config.Config().Yaml.Password.Backend, password)
 	return utils.SHA256([]byte(ps))
+}
+
+func (u *User) BuyNow(r *BuyRecord) bool {
+	if r.UserID != u.ID || r.User == nil || r.User.ID != u.ID {
+		return false
+	}
+
+	u.TotalPrice += r.TotalPrice
+	u.TotalBuy += 1
+	u.TotalJian += r.Num
+	return true
+}
+
+func (u *User) BackPayNow(r *BuyRecord) bool {
+	if r.UserID != u.ID || r.User == nil || r.User.ID != u.ID {
+		return false
+	}
+
+	u.TotalPrice -= r.TotalPrice
+	u.TotalBuy -= 1
+	u.TotalJian -= r.Num
+
+	if u.TotalPrice <= 0 {
+		u.TotalPrice = 0
+	}
+
+	if u.TotalBuy <= 0 {
+		u.TotalBuy = 0
+	}
+
+	if u.TotalJian <= 0 {
+		u.TotalJian = 0
+	}
+
+	return true
+}
+
+func (u *User) Daohuo(r *BuyRecord) bool {
+	if r.WuPinID != u.ID || r.WuPin == nil || r.WuPin.ID != u.ID {
+		return true
+	}
+	u.TotalShouHuo += 1
+	return false
+}
+
+func (u *User) PingJia(r *BuyRecord, isGood bool) bool {
+	if r.WuPinID != u.ID || r.WuPin == nil || r.WuPin.ID != u.ID {
+		return true
+	}
+
+	u.TotalPingJia += 1
+
+	if isGood {
+		u.TotalGood += 1
+	}
+
+	return false
 }

@@ -45,3 +45,11 @@ func (cls *Class) IsEmptyWithCheck() bool {
 
 	return cls.Show == modeltype.ClassEmptyShow && cls.Name == modeltype.ClassEmptyName
 }
+
+func (cls *Class) IsClassDown() bool {
+	return !cls.IsEmpty() && cls.Down
+}
+
+func (cls *Class) IsClassDownOrNotShow() bool {
+	return cls.IsEmpty() || !cls.Show || cls.IsClassDown()
+}

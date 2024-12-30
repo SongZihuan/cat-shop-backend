@@ -13,7 +13,7 @@ import (
 
 func getAdminUser(c *gin.Context, self *model.User) *model.User {
 	type Query struct {
-		UserID uint `form:"userid"`
+		UserID uint `form:"userId"`
 	}
 
 	var err error
@@ -53,7 +53,7 @@ func AdminUser() gin.HandlerFunc {
 
 		user := getAdminUser(c, self)
 		if user != nil {
-			if user.HasPermission(self) {
+			if c.Request.Method == http.MethodGet || user.HasPermission(self) {
 				c.Set(contextkey.AdminUserIDKey, user.ID)
 				c.Set(contextkey.AdminUserKey, user)
 			} else {

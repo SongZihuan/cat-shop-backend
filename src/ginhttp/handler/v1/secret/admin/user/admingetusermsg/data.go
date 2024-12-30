@@ -12,7 +12,7 @@ type Query struct {
 
 type Msg struct {
 	ID     uint   `json:"id"`
-	UserID uint   `json:"userid"`
+	UserID uint   `json:"userId"`
 	Msg    string `json:"msg"`
 	Time   int64  `json:"time"`
 }

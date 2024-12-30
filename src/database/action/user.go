@@ -65,7 +65,7 @@ func UpdateUser(user *model.User, name string, wechat string, email string, loca
 	return internal.DB().Save(user).Error
 }
 
-func AdminCreateUser(user *model.User, name string, wechat string, email string, location string, status modeltype.UserStatus, tp modeltype.UserType, isRoot bool) (error, error, error) {
+func AdminUpdateUser(user *model.User, name string, wechat string, email string, location string, status modeltype.UserStatus, tp modeltype.UserType, isRoot bool) (error, error, error) {
 	user.UpdateInfo(name, wechat, email, location)
 	ok := user.UpdateType(tp)
 	if !ok {

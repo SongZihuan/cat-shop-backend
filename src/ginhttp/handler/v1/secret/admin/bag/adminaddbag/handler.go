@@ -34,7 +34,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID)
+	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID, true)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return

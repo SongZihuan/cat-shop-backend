@@ -8,7 +8,7 @@ import (
 type Query struct {
 	Type       modeltype.PayFromType `form:"type"`
 	RedirectTo string                `form:"redirectto"`
-	WupinID    uint                  `form:"wupinid"`
+	WupinID    uint                  `form:"wupinId"`
 	Num        modeltype.Total       `form:"num"`
 
 	UserName     string `form:"username"`

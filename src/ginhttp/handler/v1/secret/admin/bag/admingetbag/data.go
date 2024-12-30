@@ -23,7 +23,7 @@ type Wupin struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`
 	Pic       string `json:"pic"`
-	ClassID   uint   `json:"classid"`
+	ClassID   uint   `json:"classId"`
 	ClassOf   *Class `json:"classOf"`
 	Tag       string `json:"tag,omitempty"`
 	HotPrice  int64  `json:"hotPrice,omitempty"`
@@ -41,12 +41,13 @@ type Wupin struct {
 
 type Bag struct {
 	ID      uint            `json:"id"`
-	UserID  uint            `json:"userid"`
-	WupinID uint            `json:"wupinid"`
-	ClassID uint            `json:"classid"`
+	UserID  uint            `json:"userId"`
+	WupinID uint            `json:"wupinId"`
+	ClassID uint            `json:"classId"`
 	Num     modeltype.Total `json:"num"`
 	Time    int64           `json:"time"`
 	Wupin   Wupin           `json:"wupin"`
+	Down    bool            `json:"down"`
 }
 
 func NewBag(bag *model.Bag) Bag {
@@ -98,6 +99,7 @@ func NewBag(bag *model.Bag) Bag {
 			BuyDaohuo: modeltype.GetTotal(bag.WuPin.BuyDaoHuo),
 			BuyGood:   modeltype.GetTotal(bag.WuPin.BuyGood),
 		},
+		Down: bag.IsBagDown(),
 	}
 }
 

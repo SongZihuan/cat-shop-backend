@@ -20,7 +20,7 @@ type _wp struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`
 	Pic       string `json:"pic"`
-	ClassID   uint   `json:"classid"`
+	ClassID   uint   `json:"classId"`
 	ClassOf   *Class `json:"classOf"`
 	Tag       string `json:"tag,omitempty"`
 	HotPrice  int64  `json:"hotPrice,omitempty"`
@@ -83,15 +83,15 @@ func NewData(record *model.BuyRecord) BuyRecord {
 	var nwp *NowWupin
 	var wp *Wupin
 
-	if record.WuPin.ClassID >= 0 && record.WuPin.Class != nil && record.WuPin.Class.Show {
-		class = &Class{
-			ID:   record.WuPin.ClassID,
-			Name: record.WuPin.Class.Name,
-		}
-	} else {
+	if record.IsClassDownOrNotShow() {
 		class = &Class{
 			ID:   modeltype.ClassEmptyID,
 			Name: modeltype.ClassEmptyName,
+		}
+	} else {
+		class = &Class{
+			ID:   record.WuPin.Class.ID,
+			Name: record.WuPin.Class.Name,
 		}
 	}
 

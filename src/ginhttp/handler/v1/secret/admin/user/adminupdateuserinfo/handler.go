@@ -18,6 +18,7 @@ const (
 	CodeLocationError data.CodeType = -6
 	CodeTypeError     data.CodeType = -7
 	CodeStatusError   data.CodeType = -8
+	CodeUserIsDelete  data.CodeType = -9
 )
 
 func Handler(c *gin.Context) {
@@ -30,6 +31,11 @@ func Handler(c *gin.Context) {
 	self, ok := c.Value(contextkey.UserKey).(*model.User)
 	if !ok {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError("用户未找到"))
+		return
+	}
+
+	if user.IsDeleteUser() {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeUserIsDelete, "用户已经被删除")) // 已经删除是用户无法执行操作
 		return
 	}
 
@@ -70,7 +76,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	errType, errStatus, errDB := action.AdminCreateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type, self.IsRootAdmin())
+	errType, errStatus, errDB := action.AdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type, self.IsRootAdmin())
 	if errType != nil {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeTypeError, "用户类型错误"))
 		return

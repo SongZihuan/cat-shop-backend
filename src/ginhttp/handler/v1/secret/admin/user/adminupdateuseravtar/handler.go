@@ -18,8 +18,9 @@ const Size3MB = 3 * 1024 * 1024
 const Size2MB = 2 * 1024 * 1024
 
 const (
-	CodeFileTooBig data.CodeType = -1
-	CodeNotImage   data.CodeType = -2
+	CodeFileTooBig   data.CodeType = -1
+	CodeNotImage     data.CodeType = -2
+	CodeUserIsDelete data.CodeType = -3
 )
 
 func Handler(c *gin.Context) {
@@ -29,14 +30,13 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	self, ok := c.Value(contextkey.UserKey).(*model.User)
-	if !ok {
-		c.JSON(http.StatusOK, data.NewSystemUnknownError("用户未找到"))
+	if err := c.Request.ParseMultipartForm(Size3MB); err != nil { // 32MB限制
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	if user.IsRootAdmin() && !self.IsRootAdmin() {
-		c.JSON(http.StatusOK, data.NewClientAdminUserNoPermission())
+	if user.IsDeleteUser() {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeUserIsDelete, "用户已经被删除")) // 已经删除是用户无法执行操作
 		return
 	}
 

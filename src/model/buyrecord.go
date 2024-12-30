@@ -181,6 +181,14 @@ func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, us
 	}
 }
 
+func (r *BuyRecord) BindUser(u *User) {
+	if r.UserID != u.ID {
+		panic("bad user id")
+	} else if r.User == nil {
+		r.User = u
+	}
+}
+
 func (r *BuyRecord) Repay() {
 	if r.Status == modeltype.PayCheckFail {
 		r.Status = modeltype.WaitPayCheck
@@ -255,6 +263,39 @@ func (r *BuyRecord) getPayUrlQuery(pft modeltype.PayFromType, pt modeltype.PayTy
 	return v.Encode()
 }
 
+func (r *BuyRecord) PaySuccess() bool {
+	if r.WuPinID <= 0 || r.WuPin == nil {
+		return false
+	} else if r.UserID <= 0 || r.User == nil {
+		return false
+	}
+
+	if r.Status == modeltype.WaitPayCheck {
+		ok := r.WuPin.BuyNow(r)
+		if !ok {
+			return false
+		}
+
+		ok = r.User.BuyNow(r)
+		if !ok {
+			return false
+		}
+
+		r.Status = modeltype.WaitFahuo
+		r.FuKuanTime = utils.SqlNullNow()
+		return true
+	}
+	return false
+}
+
+func (r *BuyRecord) PayFail() bool {
+	if r.Status == modeltype.WaitPayCheck {
+		r.Status = modeltype.PayCheckFail
+		return false
+	}
+	return false
+}
+
 func (r *BuyRecord) ChangeUser(username, userphone, userlocation, userwechat, useremail, userremark string) bool {
 	if r.Status == modeltype.WaitShouHuo || r.Status == modeltype.WaitPayCheck || r.Status == modeltype.PayCheckFail {
 		r.UserName = username
@@ -269,9 +310,25 @@ func (r *BuyRecord) ChangeUser(username, userphone, userlocation, userwechat, us
 }
 
 func (r *BuyRecord) DaoHuo() bool {
+	if r.WuPinID <= 0 || r.WuPin == nil {
+		return false
+	} else if r.UserID <= 0 || r.User == nil {
+		return false
+	}
+
 	if r.Status == modeltype.WaitPingJia {
 		return true
 	} else if r.Status == modeltype.WaitShouHuo {
+		ok := r.WuPin.Daohuo(r)
+		if !ok {
+			return false
+		}
+
+		ok = r.User.Daohuo(r)
+		if !ok {
+			return false
+		}
+
 		r.Status = modeltype.WaitPingJia
 		r.ShouHuoTime = utils.SqlNullNow()
 		return true
@@ -280,9 +337,25 @@ func (r *BuyRecord) DaoHuo() bool {
 }
 
 func (r *BuyRecord) PingJia(isGood bool) bool {
+	if r.WuPinID <= 0 || r.WuPin == nil {
+		return false
+	} else if r.UserID <= 0 || r.User == nil {
+		return false
+	}
+
 	if r.Status == modeltype.YiPingJia {
 		return true
 	} else if r.Status == modeltype.WaitPingJia {
+		ok := r.WuPin.PingJia(r, isGood)
+		if !ok {
+			return false
+		}
+
+		ok = r.User.PingJia(r, isGood)
+		if !ok {
+			return false
+		}
+
 		r.Status = modeltype.YiPingJia
 		r.IsGood = sql.NullBool{Bool: isGood, Valid: true}
 		r.PingJiaTime = utils.SqlNullNow()
@@ -292,10 +365,15 @@ func (r *BuyRecord) PingJia(isGood bool) bool {
 }
 
 func (r *BuyRecord) QuXiaoFahuo() bool {
+	if r.WuPinID <= 0 || r.WuPin == nil {
+		return false
+	}
+
 	if r.Status == modeltype.QuXiao {
 		return true
 	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
 		r.Status = modeltype.QuXiao
+		r.QuXiaoTime = utils.SqlNullNow()
 		return true
 	} else if r.Status == modeltype.WaitFahuo {
 		r.Status = modeltype.CheckQuXiao
@@ -311,15 +389,6 @@ func (r *BuyRecord) QuXiaoPay() bool {
 	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
 		r.Status = modeltype.QuXiao
 		r.QuXiaoTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) PaySuccess() bool {
-	if r.Status == modeltype.WaitPayCheck {
-		r.Status = modeltype.WaitFahuo
-		r.FuKuanTime = utils.SqlNullNow()
 		return true
 	}
 	return false
@@ -344,5 +413,53 @@ func (r *BuyRecord) TuiHuoDengJi(kuaidi string, kuaidinum string) bool {
 		r.TuiHuoKuaiDiNum = sql.NullString{String: kuaidinum, Valid: true}
 		return true
 	}
+	return false
+}
+
+func (r *BuyRecord) IsClassDownOrNotShow() bool {
+	if r.WuPin == nil {
+		if r.ClassDown {
+			return true // 下架状态 均返回fakse
+		} else {
+			if r.ClassShow {
+				return false // 非下架状态，Show为true表示展示
+			} else {
+				return true // 非下架状态，Show为false表示隐藏
+			}
+		}
+	} else {
+		if r.WuPin.ID != r.WuPinID {
+			panic("wupin id not equal")
+		}
+
+		return r.WuPin.IsClassDownOrNotShow()
+	}
+}
+
+func (r *BuyRecord) IsClassDown() bool {
+	if r.WuPin == nil {
+		return r.ClassDown
+	} else {
+		if r.WuPin.ID != r.WuPinID {
+			panic("wupin id not equal")
+		}
+
+		return r.WuPin.IsClassDown()
+	}
+}
+
+func (r *BuyRecord) IsWupinDown() bool {
+	if r.WuPin == nil {
+		return !r.WuPinShow || r.ClassShow
+	} else {
+		if r.WuPinID != r.WuPin.ID {
+			panic("wupin id not equal")
+		}
+
+		return !r.WuPin.IsWupinDown()
+	}
+}
+
+func (*BuyRecord) IsBuyRecordDown() bool {
 	return false
 }

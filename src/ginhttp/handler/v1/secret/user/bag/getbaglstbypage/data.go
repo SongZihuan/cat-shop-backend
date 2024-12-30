@@ -1,4 +1,4 @@
-package getbaglst
+package getbaglstbypage
 
 import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"

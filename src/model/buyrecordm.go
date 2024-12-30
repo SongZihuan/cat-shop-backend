@@ -49,7 +49,6 @@ type BuyRecordM struct {
 	WupinName    string         `gorm:"type:varchar(20);not null"`
 	WupinPic     string         `gorm:"type:varchar(150);not null"`
 	WupinClassID uint           `gorm:"not null"`
-	WupinClass   *Class         `gorm:"foreignKey:ClassID"`
 	WupinTag     sql.NullString `gorm:"type:varchar(20)"`
 
 	WupinHotPrice  modeltype.PriceNull `gorm:"type:uint;"`

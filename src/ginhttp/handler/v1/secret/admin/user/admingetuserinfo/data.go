@@ -17,7 +17,7 @@ type User struct {
 	Location     string               `json:"location"`
 	Avatar       string               `json:"avatar"`
 	Phone        string               `json:"phone"`
-	TotalPrice   modeltype.Total      `json:"totalPrice"`
+	TotalPrice   modeltype.Price      `json:"totalPrice"`
 	TotalBuy     modeltype.Total      `json:"totalBuy"`
 	TotalGood    modeltype.Total      `json:"totalGood"`
 	TotalJian    modeltype.Total      `json:"totalJian"`

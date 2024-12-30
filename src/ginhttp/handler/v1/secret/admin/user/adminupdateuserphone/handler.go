@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	CodePasswordError data.CodeType = -3
-	CodePhoneExist    data.CodeType = -4
-	CodePhoneError    data.CodeType = -5
+	CodeUserIsDelete data.CodeType = -3
+	CodePhoneExist   data.CodeType = -4
+	CodePhoneError   data.CodeType = -5
 )
 
 func Handler(c *gin.Context) {
@@ -25,14 +25,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	self, ok := c.Value(contextkey.UserKey).(*model.User)
-	if !ok {
-		c.JSON(http.StatusOK, data.NewSystemUnknownError("用户未找到"))
-		return
-	}
-
-	if user.IsRootAdmin() && !self.IsRootAdmin() {
-		c.JSON(http.StatusOK, data.NewClientAdminUserNoPermission())
+	if user.IsDeleteUser() {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeUserIsDelete, "用户已经被删除")) // 已经删除是用户无法执行操作
 		return
 	}
 

@@ -25,6 +25,10 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
+	if query.Select <= 0 {
+		query.Select = 0
+	}
+
 	res, err := action.GetSearchListWithShow(query.Search, query.Select, query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))

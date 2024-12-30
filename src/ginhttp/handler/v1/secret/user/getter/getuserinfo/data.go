@@ -15,12 +15,12 @@ type User struct {
 	Location     string             `json:"location"`
 	Avatar       string             `json:"avatar"`
 	Phone        string             `json:"phone"`
-	TotalPrice   modeltype.Total    `json:"totalPrice"`
-	TotalBuy     modeltype.Total    `json:"totalBuy"`
-	TotalGood    modeltype.Total    `json:"totalGood"`
-	TotalJian    modeltype.Total    `json:"totalJian"`
-	TotalShouHuo modeltype.Total    `json:"totalShouHuo"`
-	TotalPingJia modeltype.Total    `json:"totalPingJia"`
+	TotalPrice   modeltype.Price    `json:"totalprice"`
+	TotalBuy     modeltype.Total    `json:"totalbuy"`
+	TotalGood    modeltype.Total    `json:"totalgood"`
+	TotalJian    modeltype.Total    `json:"totaljian"`
+	TotalShouHuo modeltype.Total    `json:"totalshouhuo"`
+	TotalPingJia modeltype.Total    `json:"totalpingjia"`
 }
 
 func NewData(user *model.User) User {

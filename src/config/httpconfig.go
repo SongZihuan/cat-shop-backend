@@ -16,6 +16,7 @@ type HttpConfig struct {
 	StopSecret        string      `yaml:"stopsecret"`
 	StopWaitSecond    int         `yaml:"stopwaitsecond"`
 	RestartWaitSecond int         `yaml:"restartwaitsecond"`
+	WaitStartSecond   int         `yaml:"waitstartsecond"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -60,6 +61,10 @@ func (h *HttpConfig) setDefault() {
 
 	if h.RestartWaitSecond <= 0 {
 		h.StopWaitSecond = 20
+	}
+
+	if h.WaitStartSecond <= 0 {
+		h.WaitStartSecond = 20
 	}
 
 	h.Proxy.setDefault()
