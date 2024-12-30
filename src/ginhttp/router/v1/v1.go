@@ -50,13 +50,13 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/wupin/admingetwupinlst"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/wupin/adminupdatewupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/xieyi/admingetxieyi"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/xieyi/adminupdatexieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/admindeleteconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/admingetconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminrestartserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminstopserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminupdateconfigpic"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminupdateconfigstring"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/xieyi/adminupdatexieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/addbag"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/getbaglst"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/getbaglstbypage"
@@ -245,7 +245,6 @@ func adminXieyiApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/xieyi")
 
 	api.GET("/info", admingetxieyi.Handler)
-	api.GET("/edit", adminupdatexieyi.Handler)
 }
 
 func adminClassApiV1(apiV1 *gin.RouterGroup) {
@@ -377,6 +376,13 @@ func rootAdminApiV1(apiV1 *gin.RouterGroup) {
 
 	rootAdminConfigApiV1(api)
 	rootAdminHttpServer(api)
+	rootAdminXieyiApiV1(api)
+}
+
+func rootAdminXieyiApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/xieyi")
+
+	api.GET("/edit", adminupdatexieyi.Handler)
 }
 
 func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
