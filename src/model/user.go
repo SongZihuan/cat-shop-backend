@@ -159,7 +159,7 @@ func (u *User) HasPermission(admin *User) bool {
 	} else if u.IsDeleteUser() {
 		return false
 	} else if admin.Type == modeltype.AdminUserType {
-		return u.Type == modeltype.AdminUserType
+		return u.Type == modeltype.NormalUserType
 	} else if admin.Type == modeltype.NormalUserType {
 		return false
 	} else {
