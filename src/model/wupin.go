@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type WuPin struct {
+type Wupin struct {
 	gorm.Model
 	Name    string         `gorm:"type:varchar(20);not null"`
 	Pic     string         `gorm:"type:varchar(150);not null"`
@@ -37,12 +37,12 @@ type WuPin struct {
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 
-func (*WuPin) TableName() string {
+func (*Wupin) TableName() string {
 	return "wupin"
 }
 
-func (w *WuPin) BuyNow(r *BuyRecord) bool {
-	if r.WuPinID != w.ID || r.WuPin == nil || r.WuPin.ID != w.ID {
+func (w *Wupin) BuyNow(r *BuyRecord) bool {
+	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
 		return false
 	}
 
@@ -52,8 +52,8 @@ func (w *WuPin) BuyNow(r *BuyRecord) bool {
 	return true
 }
 
-func (w *WuPin) BackPayNow(r *BuyRecord) bool {
-	if r.WuPinID != w.ID || r.WuPin == nil || r.WuPin.ID != w.ID {
+func (w *Wupin) BackPayNow(r *BuyRecord) bool {
+	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
 		return false
 	}
 
@@ -76,16 +76,16 @@ func (w *WuPin) BackPayNow(r *BuyRecord) bool {
 	return true
 }
 
-func (w *WuPin) Daohuo(r *BuyRecord) bool {
-	if r.WuPinID != w.ID || r.WuPin == nil || r.WuPin.ID != w.ID {
+func (w *Wupin) Daohuo(r *BuyRecord) bool {
+	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
 		return true
 	}
 	w.BuyDaoHuo += 1
 	return false
 }
 
-func (w *WuPin) PingJia(r *BuyRecord, isGood bool) bool {
-	if r.WuPinID != w.ID || r.WuPin == nil || r.WuPin.ID != w.ID {
+func (w *Wupin) PingJia(r *BuyRecord, isGood bool) bool {
+	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
 		return true
 	}
 
@@ -98,14 +98,14 @@ func (w *WuPin) PingJia(r *BuyRecord, isGood bool) bool {
 	return false
 }
 
-func (w *WuPin) GetRealPrice() modeltype.Price {
+func (w *Wupin) GetRealPrice() modeltype.Price {
 	if w.RealPrice >= 0 {
 		return w.RealPrice
 	}
 	return 0
 }
 
-func (w *WuPin) GetPrice() modeltype.Price {
+func (w *Wupin) GetPrice() modeltype.Price {
 	realPrice := w.GetRealPrice()
 
 	if !w.HotPrice.Valid || w.HotPrice.V < 0 {
@@ -119,11 +119,11 @@ func (w *WuPin) GetPrice() modeltype.Price {
 	return realPrice
 }
 
-func (w *WuPin) GetFacePrice() modeltype.Price {
+func (w *Wupin) GetFacePrice() modeltype.Price {
 	return w.GetPrice()
 }
 
-func (w *WuPin) GetPriceTotal(num modeltype.Total) modeltype.Price {
+func (w *Wupin) GetPriceTotal(num modeltype.Total) modeltype.Price {
 	price := w.GetPrice()
 	if price < 0 {
 		return 0
@@ -131,7 +131,7 @@ func (w *WuPin) GetPriceTotal(num modeltype.Total) modeltype.Price {
 	return modeltype.Price(int64(price) * int64(num))
 }
 
-func (w *WuPin) IsClassDownOrNotShow() bool {
+func (w *Wupin) IsClassDownOrNotShow() bool {
 	if w.Class == nil {
 		if w.ClassDown {
 			return true // 下架状态 均返回fakse
@@ -151,7 +151,7 @@ func (w *WuPin) IsClassDownOrNotShow() bool {
 	}
 }
 
-func (w *WuPin) IsClassDown() bool {
+func (w *Wupin) IsClassDown() bool {
 	if w.Class == nil {
 		return w.ClassDown
 	} else {
@@ -163,7 +163,7 @@ func (w *WuPin) IsClassDown() bool {
 	}
 }
 
-func (w *WuPin) IsWupinDown() bool {
+func (w *Wupin) IsWupinDown() bool {
 	if w.Class == nil && w.ClassID != w.Class.ID {
 		panic("class id not equal")
 	}

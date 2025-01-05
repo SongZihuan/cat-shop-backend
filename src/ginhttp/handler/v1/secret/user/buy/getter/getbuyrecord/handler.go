@@ -42,7 +42,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	if record.WuPinID <= 0 || record.WuPin == nil {
+	if record.WupinID <= 0 || record.Wupin == nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError("WuPin为nil"))
 	}
 

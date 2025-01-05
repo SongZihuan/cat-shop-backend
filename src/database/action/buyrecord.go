@@ -34,8 +34,8 @@ func GetBuyRecordByIDAndUserID(userID uint, recordID uint) (*model.BuyRecord, er
 		return nil, err
 	}
 
-	if record.ClassID > 0 && record.WuPin.ClassID > 0 && record.ClassID == record.WuPin.ClassID {
-		record.Class = record.WuPin.Class
+	if record.ClassID > 0 && record.Wupin.ClassID > 0 && record.ClassID == record.Wupin.ClassID {
+		record.Class = record.Wupin.Class
 	}
 
 	return record, nil
@@ -125,7 +125,7 @@ func SetBuyRecordPaySuccess(user *model.User, record *model.BuyRecord) error {
 		record.BindUser(user)
 	}
 
-	if record.WuPinID <= 0 || record.WuPin == nil {
+	if record.WupinID <= 0 || record.Wupin == nil {
 		return fmt.Errorf("bad user")
 	}
 
@@ -140,7 +140,7 @@ func SetBuyRecordPaySuccess(user *model.User, record *model.BuyRecord) error {
 			return err
 		}
 
-		err = tx.Save(record.WuPin).Error
+		err = tx.Save(record.Wupin).Error
 		if err != nil {
 			return err
 		}
@@ -149,7 +149,7 @@ func SetBuyRecordPaySuccess(user *model.User, record *model.BuyRecord) error {
 	})
 }
 
-func NewBuyRecord(user *model.User, wupin *model.WuPin, num modeltype.Total, username, userphone, userlocation, userwechat, useremail, userremark string) (*model.BuyRecord, error) {
+func NewBuyRecord(user *model.User, wupin *model.Wupin, num modeltype.Total, username, userphone, userlocation, userwechat, useremail, userremark string) (*model.BuyRecord, error) {
 	record := model.NewBuyRecord(user, wupin, num, username, userphone, userlocation, userwechat, useremail, userremark)
 
 	db := internal.DB()
@@ -223,7 +223,7 @@ func BuyRecordDaoHuo(user *model.User, record *model.BuyRecord) error {
 
 	db := internal.DB()
 
-	if record.WuPinID <= 0 || record.WuPin == nil {
+	if record.WupinID <= 0 || record.Wupin == nil {
 		return fmt.Errorf("bad user")
 	}
 
@@ -238,7 +238,7 @@ func BuyRecordDaoHuo(user *model.User, record *model.BuyRecord) error {
 			return err
 		}
 
-		err = tx.Save(record.WuPin).Error
+		err = tx.Save(record.Wupin).Error
 		if err != nil {
 			return err
 		}
@@ -256,7 +256,7 @@ func BuyRecordPingJia(user *model.User, record *model.BuyRecord, isGood bool) er
 
 	db := internal.DB()
 
-	if record.WuPinID <= 0 || record.WuPin == nil {
+	if record.WupinID <= 0 || record.Wupin == nil {
 		return fmt.Errorf("bad user")
 	}
 
@@ -271,7 +271,7 @@ func BuyRecordPingJia(user *model.User, record *model.BuyRecord, isGood bool) er
 			return err
 		}
 
-		err = tx.Save(record.WuPin).Error
+		err = tx.Save(record.Wupin).Error
 		if err != nil {
 			return err
 		}

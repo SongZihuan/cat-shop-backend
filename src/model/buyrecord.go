@@ -16,8 +16,8 @@ type BuyRecord struct {
 	Status             modeltype.BuyStatus `gorm:"type:uint;not null;"`
 	UserID             uint                `gorm:"not null"`
 	User               *User               `gorm:"foreignKey:UserID"`
-	WuPinID            uint                `gorm:"not null"`
-	WuPin              *WuPin              `gorm:"foreignKey:WuPinID"`
+	WupinID            uint                `gorm:"not null"`
+	Wupin              *Wupin              `gorm:"foreignKey:WupinID"`
 	ClassID            uint                `gorm:"not null"`
 	Class              *Class              `gorm:"foreignKey:ClassID"`
 	Num                modeltype.Total     `gorm:"type:uint;not null"`
@@ -80,11 +80,11 @@ type BuyRecord struct {
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 
-func NewBuyRecord(user *User, wupin *WuPin, num modeltype.Total, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
+func NewBuyRecord(user *User, wupin *Wupin, num modeltype.Total, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
 	return &BuyRecord{
 		Status:     modeltype.WaitPayCheck,
 		UserID:     user.ID,
-		WuPinID:    wupin.ID,
+		WupinID:    wupin.ID,
 		ClassID:    wupin.ClassID,
 		Num:        num,
 		Price:      wupin.GetPrice(),
@@ -129,7 +129,7 @@ func NewBuyRecord(user *User, wupin *WuPin, num modeltype.Total, username, userp
 }
 
 func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
-	wupin := bag.WuPin
+	wupin := bag.Wupin
 	if wupin == nil {
 		panic("wupin is nil")
 	}
@@ -137,7 +137,7 @@ func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, us
 	return &BuyRecord{
 		Status:     modeltype.WaitPayCheck,
 		UserID:     user.ID,
-		WuPinID:    wupin.ID,
+		WupinID:    wupin.ID,
 		ClassID:    wupin.ClassID,
 		Num:        bag.Num,
 		Price:      wupin.GetPrice(),
@@ -264,14 +264,14 @@ func (r *BuyRecord) getPayUrlQuery(pft modeltype.PayFromType, pt modeltype.PayTy
 }
 
 func (r *BuyRecord) PaySuccess() bool {
-	if r.WuPinID <= 0 || r.WuPin == nil {
+	if r.WupinID <= 0 || r.Wupin == nil {
 		return false
 	} else if r.UserID <= 0 || r.User == nil {
 		return false
 	}
 
 	if r.Status == modeltype.WaitPayCheck {
-		ok := r.WuPin.BuyNow(r)
+		ok := r.Wupin.BuyNow(r)
 		if !ok {
 			return false
 		}
@@ -310,7 +310,7 @@ func (r *BuyRecord) ChangeUser(username, userphone, userlocation, userwechat, us
 }
 
 func (r *BuyRecord) DaoHuo() bool {
-	if r.WuPinID <= 0 || r.WuPin == nil {
+	if r.WupinID <= 0 || r.Wupin == nil {
 		return false
 	} else if r.UserID <= 0 || r.User == nil {
 		return false
@@ -319,7 +319,7 @@ func (r *BuyRecord) DaoHuo() bool {
 	if r.Status == modeltype.WaitPingJia {
 		return true
 	} else if r.Status == modeltype.WaitShouHuo {
-		ok := r.WuPin.Daohuo(r)
+		ok := r.Wupin.Daohuo(r)
 		if !ok {
 			return false
 		}
@@ -337,7 +337,7 @@ func (r *BuyRecord) DaoHuo() bool {
 }
 
 func (r *BuyRecord) PingJia(isGood bool) bool {
-	if r.WuPinID <= 0 || r.WuPin == nil {
+	if r.WupinID <= 0 || r.Wupin == nil {
 		return false
 	} else if r.UserID <= 0 || r.User == nil {
 		return false
@@ -346,7 +346,7 @@ func (r *BuyRecord) PingJia(isGood bool) bool {
 	if r.Status == modeltype.YiPingJia {
 		return true
 	} else if r.Status == modeltype.WaitPingJia {
-		ok := r.WuPin.PingJia(r, isGood)
+		ok := r.Wupin.PingJia(r, isGood)
 		if !ok {
 			return false
 		}
@@ -365,7 +365,7 @@ func (r *BuyRecord) PingJia(isGood bool) bool {
 }
 
 func (r *BuyRecord) QuXiaoFahuo() bool {
-	if r.WuPinID <= 0 || r.WuPin == nil {
+	if r.WupinID <= 0 || r.Wupin == nil {
 		return false
 	}
 
@@ -417,7 +417,7 @@ func (r *BuyRecord) TuiHuoDengJi(kuaidi string, kuaidinum string) bool {
 }
 
 func (r *BuyRecord) IsClassDownOrNotShow() bool {
-	if r.WuPin == nil {
+	if r.Wupin == nil {
 		if r.ClassDown {
 			return true // 下架状态 均返回fakse
 		} else {
@@ -428,11 +428,11 @@ func (r *BuyRecord) IsClassDownOrNotShow() bool {
 			}
 		}
 	} else {
-		if r.WuPin.ID != r.WuPinID {
+		if r.Wupin.ID != r.WupinID {
 			panic("wupin id not equal")
 		}
 
-		return r.WuPin.IsClassDownOrNotShow()
+		return r.Wupin.IsClassDownOrNotShow()
 	}
 }
 
@@ -449,14 +449,14 @@ func (r *BuyRecord) IsClassDown() bool {
 }
 
 func (r *BuyRecord) IsWupinDown() bool {
-	if r.WuPin == nil {
+	if r.Wupin == nil {
 		return r.WupinDown || r.ClassDown
 	} else {
-		if r.WuPinID != r.WuPin.ID {
+		if r.WupinID != r.Wupin.ID {
 			panic("wupin id not equal")
 		}
 
-		return r.WuPin.IsWupinDown()
+		return r.Wupin.IsWupinDown()
 	}
 }
 

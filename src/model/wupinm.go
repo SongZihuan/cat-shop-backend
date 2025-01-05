@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type WuPinM struct {
+type WupinM struct {
 	gorm.Model
 	Name    string         `gorm:"type:varchar(20);not null"`
 	Pic     string         `gorm:"type:varchar(150);not null"`
@@ -37,12 +37,12 @@ type WuPinM struct {
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 
-func (*WuPinM) TableName() string {
+func (*WupinM) TableName() string {
 	return "wupin"
 }
 
 func init() {
-	if !modelTest[WuPin, WuPinM]() {
+	if !modelTest[Wupin, WupinM]() {
 		panic("database error")
 	}
 }

@@ -1,10 +1,14 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"gorm.io/gorm"
+)
 
 type XieyiM struct {
 	gorm.Model
-	Data string `gorm:"type:TEXT;not null"`
+	Type modeltype.XieYiType `gorm:"type:VARCHAR(20);not null"`
+	Data string              `gorm:"type:TEXT;not null"`
 }
 
 func (*XieyiM) TableName() string {

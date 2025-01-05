@@ -39,7 +39,7 @@ type Wupin struct {
 	BuyGood    modeltype.Total `json:"buygood"`
 }
 
-func NewData(wp *model.WuPin) Wupin {
+func NewData(wp *model.Wupin) Wupin {
 	var class *Class
 	if wp.IsClassDownOrNotShow() {
 		class = &Class{
@@ -77,6 +77,6 @@ func NewData(wp *model.WuPin) Wupin {
 	}
 }
 
-func NewJsonData(wp *model.WuPin) data.Data {
+func NewJsonData(wp *model.Wupin) data.Data {
 	return data.NewSuccessWithData(NewData(wp))
 }

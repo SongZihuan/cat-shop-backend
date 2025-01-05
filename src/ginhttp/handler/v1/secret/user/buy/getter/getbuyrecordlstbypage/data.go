@@ -91,13 +91,13 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 		}
 	} else {
 		class = &Class{
-			ID:   record.WuPin.Class.ID,
-			Name: record.WuPin.Class.Name,
+			ID:   record.Wupin.Class.ID,
+			Name: record.Wupin.Class.Name,
 		}
 	}
 
 	wp = &Wupin{
-		ID:        record.WuPin.ID,
+		ID:        record.Wupin.ID,
 		Name:      record.WupinName,
 		Pic:       record.WupinPic,
 		ClassID:   class.ID,
@@ -116,25 +116,25 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 		BuyGood:   modeltype.GetTotal(record.WupinBuyGood),
 	}
 
-	if record.WuPinID > 0 && record.WuPin != nil {
+	if record.WupinID > 0 && record.Wupin != nil {
 		nwp = &NowWupin{
-			ID:        record.WuPin.ID,
-			Name:      record.WuPin.Name,
-			Pic:       record.WuPin.Pic,
+			ID:        record.Wupin.ID,
+			Name:      record.Wupin.Name,
+			Pic:       record.Wupin.Pic,
 			ClassID:   class.ID,
 			ClassOf:   class,
-			Tag:       utils.GetSQLNullString(record.WuPin.Tag),
-			HotPrice:  modeltype.GetPrice(record.WuPin.HotPrice),
-			RealPrice: modeltype.GetPrice(record.WuPin.RealPrice),
-			Info:      record.WuPin.Info,
-			Ren:       record.WuPin.Ren,
-			Phone:     record.WuPin.Phone,
-			Email:     utils.GetSQLNullString(record.WuPin.Email),
-			Wechat:    utils.GetSQLNullString(record.WuPin.WeChat),
-			Location:  record.WuPin.Location,
-			BuyTotal:  modeltype.GetTotal(record.WuPin.BuyTotal),
-			BuyDaohuo: modeltype.GetTotal(record.WuPin.BuyDaoHuo),
-			BuyGood:   modeltype.GetTotal(record.WuPin.BuyGood),
+			Tag:       utils.GetSQLNullString(record.Wupin.Tag),
+			HotPrice:  modeltype.GetPrice(record.Wupin.HotPrice),
+			RealPrice: modeltype.GetPrice(record.Wupin.RealPrice),
+			Info:      record.Wupin.Info,
+			Ren:       record.Wupin.Ren,
+			Phone:     record.Wupin.Phone,
+			Email:     utils.GetSQLNullString(record.Wupin.Email),
+			Wechat:    utils.GetSQLNullString(record.Wupin.WeChat),
+			Location:  record.Wupin.Location,
+			BuyTotal:  modeltype.GetTotal(record.Wupin.BuyTotal),
+			BuyDaohuo: modeltype.GetTotal(record.Wupin.BuyDaoHuo),
+			BuyGood:   modeltype.GetTotal(record.Wupin.BuyGood),
 		}
 	} else {
 		nwp = &NowWupin{
@@ -145,7 +145,7 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 	return BuyRecord{
 		ID:                 record.ID,
 		UserID:             record.UserID,
-		WupinID:            record.WuPinID,
+		WupinID:            record.WupinID,
 		ClassID:            record.ClassID,
 		Num:                record.Num,
 		Price:              record.Price,

@@ -44,7 +44,7 @@ func GetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, error) {
 	}
 
 	db := internal.DB()
-	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").Order("time desc").First(bag).Error
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wupin_id = ?", wupinID).Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").Order("time desc").First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -67,7 +67,7 @@ func AdminGetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, erro
 	}
 
 	db := internal.DB()
-	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Order("time desc").First(bag).Error
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wupin_id = ?", wupinID).Where("user_id = ?", userID).Order("time desc").First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {

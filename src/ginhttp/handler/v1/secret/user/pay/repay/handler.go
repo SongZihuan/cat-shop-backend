@@ -56,12 +56,12 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if !record.WuPin.IsWupinDown() {
+	} else if !record.Wupin.IsWupinDown() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "购买记录未找到", "商品不再出售"))
 		return
 	}
 
-	if record.WuPinID <= 0 || record.WuPin == nil {
+	if record.WupinID <= 0 || record.Wupin == nil {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "购物车未找到"))
 		return
 	}

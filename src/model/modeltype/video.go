@@ -4,17 +4,17 @@ type VideoType int
 
 const (
 	XieYiVideo VideoType = 1
-	WuPinVideo VideoType = 2
+	WupinVideo VideoType = 2
 )
 
 var NameToVideoType = map[string]VideoType{
 	"XieYi": XieYiVideo,
-	"WuPin": WuPinVideo,
+	"WuPin": WupinVideo,
 }
 
 var VideoTypeToName = map[VideoType]string{
 	XieYiVideo: "XieYi",
-	WuPinVideo: "WuPin",
+	WupinVideo: "WuPin",
 }
 
 const VideoPath = "/v1/video"

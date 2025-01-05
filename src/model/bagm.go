@@ -9,7 +9,7 @@ import (
 type BagM struct {
 	gorm.Model
 	UserID    uint            `gorm:"not null"`
-	WuPinID   uint            `gorm:"not null"`
+	WupinID   uint            `gorm:"not null"`
 	ClassID   uint            `gorm:"not null"`
 	Num       modeltype.Total `gorm:"type:uint;not null"`
 	Time      time.Time       `gorm:"type:datetime;not null"`

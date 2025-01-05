@@ -214,7 +214,7 @@ func (u *User) BackPayNow(r *BuyRecord) bool {
 }
 
 func (u *User) Daohuo(r *BuyRecord) bool {
-	if r.WuPinID != u.ID || r.WuPin == nil || r.WuPin.ID != u.ID {
+	if r.WupinID != u.ID || r.Wupin == nil || r.Wupin.ID != u.ID {
 		return true
 	}
 	u.TotalShouHuo += 1
@@ -222,7 +222,7 @@ func (u *User) Daohuo(r *BuyRecord) bool {
 }
 
 func (u *User) PingJia(r *BuyRecord, isGood bool) bool {
-	if r.WuPinID != u.ID || r.WuPin == nil || r.WuPin.ID != u.ID {
+	if r.WupinID != u.ID || r.Wupin == nil || r.Wupin.ID != u.ID {
 		return true
 	}
 

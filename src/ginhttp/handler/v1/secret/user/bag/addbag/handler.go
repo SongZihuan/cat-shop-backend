@@ -29,12 +29,12 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	if query.WuPinID <= 0 {
+	if query.WupinID <= 0 {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到", "wupinID应该大于0"))
 		return
 	}
 
-	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID)
+	bag, err := action.GetBagByWupinIDWithUser(user, query.WupinID)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return

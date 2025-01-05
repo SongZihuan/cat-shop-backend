@@ -31,7 +31,7 @@ func Handler(c *gin.Context) {
 	if query.Type == FileTypeXieyi {
 		fileType = modeltype.XieYiVideo
 	} else if query.Type == FileTypeWupin {
-		fileType = modeltype.WuPinVideo
+		fileType = modeltype.WupinVideo
 	} else {
 		c.JSON(http.StatusOK, NewError("文件类型错误"))
 		return

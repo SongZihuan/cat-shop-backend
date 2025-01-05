@@ -91,6 +91,6 @@ var AutoCreateModelList = []interface{}{
 	&ImageM{},
 	&MsgM{},
 	&UserM{},
-	&WuPinM{},
+	&WupinM{},
 	XieyiM{},
 }

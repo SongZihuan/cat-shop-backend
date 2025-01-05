@@ -51,14 +51,14 @@ func NewBag(bag *model.Bag) Bag {
 	var class *Class
 	var wp *Wupin
 
-	if bag.WuPinID <= 0 || bag.WuPin == nil {
+	if bag.WupinID <= 0 || bag.Wupin == nil {
 		panic("wupin is nil")
 	}
 
-	if bag.WuPin.ClassID >= 0 && bag.WuPin.Class != nil && bag.WuPin.Class.Show {
+	if bag.Wupin.ClassID >= 0 && bag.Wupin.Class != nil && bag.Wupin.Class.Show {
 		class = &Class{
-			ID:   bag.WuPin.ClassID,
-			Name: bag.WuPin.Class.Name,
+			ID:   bag.Wupin.ClassID,
+			Name: bag.Wupin.Class.Name,
 		}
 	} else {
 		class = &Class{
@@ -67,25 +67,25 @@ func NewBag(bag *model.Bag) Bag {
 		}
 	}
 
-	if bag.WuPinID > 0 || bag.WuPin != nil {
+	if bag.WupinID > 0 || bag.Wupin != nil {
 		wp = &Wupin{
-			ID:        bag.WuPin.ID,
-			Name:      bag.WuPin.Name,
-			Pic:       bag.WuPin.Pic,
+			ID:        bag.Wupin.ID,
+			Name:      bag.Wupin.Name,
+			Pic:       bag.Wupin.Pic,
 			ClassID:   class.ID,
 			ClassOf:   class,
-			Tag:       utils.GetSQLNullString(bag.WuPin.Tag),
-			HotPrice:  modeltype.GetPrice(bag.WuPin.HotPrice),
-			RealPrice: modeltype.GetPrice(bag.WuPin.RealPrice),
-			Info:      bag.WuPin.Info,
-			Ren:       bag.WuPin.Ren,
-			Phone:     bag.WuPin.Phone,
-			Email:     utils.GetSQLNullString(bag.WuPin.Email),
-			Wechat:    utils.GetSQLNullString(bag.WuPin.WeChat),
-			Location:  bag.WuPin.Location,
-			BuyTotal:  modeltype.GetTotal(bag.WuPin.BuyTotal),
-			BuyDaohuo: modeltype.GetTotal(bag.WuPin.BuyDaoHuo),
-			BuyGood:   modeltype.GetTotal(bag.WuPin.BuyGood),
+			Tag:       utils.GetSQLNullString(bag.Wupin.Tag),
+			HotPrice:  modeltype.GetPrice(bag.Wupin.HotPrice),
+			RealPrice: modeltype.GetPrice(bag.Wupin.RealPrice),
+			Info:      bag.Wupin.Info,
+			Ren:       bag.Wupin.Ren,
+			Phone:     bag.Wupin.Phone,
+			Email:     utils.GetSQLNullString(bag.Wupin.Email),
+			Wechat:    utils.GetSQLNullString(bag.Wupin.WeChat),
+			Location:  bag.Wupin.Location,
+			BuyTotal:  modeltype.GetTotal(bag.Wupin.BuyTotal),
+			BuyDaohuo: modeltype.GetTotal(bag.Wupin.BuyDaoHuo),
+			BuyGood:   modeltype.GetTotal(bag.Wupin.BuyGood),
 		}
 	} else {
 		wp = &Wupin{
@@ -96,7 +96,7 @@ func NewBag(bag *model.Bag) Bag {
 	return Bag{
 		ID:      bag.ID,
 		UserID:  bag.UserID,
-		WupinID: bag.WuPinID,
+		WupinID: bag.WupinID,
 		ClassID: bag.ClassID,
 		Num:     bag.Num,
 		Time:    bag.Time.Unix(),

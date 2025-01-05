@@ -29,19 +29,19 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	if query.WuPinID <= 0 {
+	if query.WupinID <= 0 {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到", "wupinID应该大于0"))
 		return
 	}
 
-	bag, err := action.AdminGetBagByWupinIDWithUser(user, query.WuPinID)
+	bag, err := action.AdminGetBagByWupinIDWithUser(user, query.WupinID)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if bag.WupinDown || bag.WuPinID <= 0 || (bag.WuPin != nil && bag.WuPin.IsWupinDown()) || (bag.Class != nil && bag.Class.IsClassDown()) {
+	} else if bag.WupinDown || bag.WupinID <= 0 || (bag.Wupin != nil && bag.Wupin.IsWupinDown()) || (bag.Class != nil && bag.Class.IsClassDown()) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return
 	}

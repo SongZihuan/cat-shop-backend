@@ -10,8 +10,8 @@ type Bag struct {
 	gorm.Model
 	UserID    uint            `gorm:"not null"`
 	User      *User           `gorm:"foreignKey:UserID"`
-	WuPinID   uint            `gorm:"not null"`
-	WuPin     *WuPin          `gorm:"foreignKey:WuPinID"`
+	WupinID   uint            `gorm:"not null"`
+	Wupin     *Wupin          `gorm:"foreignKey:WupinID"`
 	ClassID   uint            `gorm:"not null"`
 	Class     *Class          `gorm:"foreignKey:ClassID"`
 	Num       modeltype.Total `gorm:"type:uint;not null"`
@@ -44,14 +44,14 @@ func (bag *Bag) IsClassDown() bool {
 }
 
 func (bag *Bag) IsWupinDown() bool {
-	if bag.WuPin == nil {
+	if bag.Wupin == nil {
 		return bag.WupinDown || bag.ClassShow
 	} else {
-		if bag.WuPinID != bag.WuPin.ID {
+		if bag.WupinID != bag.Wupin.ID {
 			panic("wupin id not equal")
 		}
 
-		return bag.WuPin.IsWupinDown()
+		return bag.Wupin.IsWupinDown()
 	}
 }
 

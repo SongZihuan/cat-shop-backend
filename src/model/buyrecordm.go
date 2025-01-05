@@ -11,7 +11,7 @@ type BuyRecordM struct {
 	gorm.Model
 	Status             modeltype.BuyStatus `gorm:"type:uint;not null;"`
 	UserID             uint                `gorm:"not null"`
-	WuPinID            uint                `gorm:"not null"`
+	WupinID            uint                `gorm:"not null"`
 	ClassID            uint                `gorm:"not null"`
 	Num                modeltype.Total     `gorm:"type:uint;not null"`
 	Price              modeltype.Price     `gorm:"type:uint;not null"`
@@ -66,8 +66,8 @@ type BuyRecordM struct {
 	WupinPingJia   modeltype.Total `gorm:"type:uint;not null"`
 	WupinBuyGood   modeltype.Total `gorm:"type:uint;not null"`
 
-	WuPinShow bool `gorm:"type:boolean;not null"`
 	WupinHot  bool `gorm:"type:boolean;not null"`
+	WupinDown bool `gorm:"type:boolean;not null"`
 	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
