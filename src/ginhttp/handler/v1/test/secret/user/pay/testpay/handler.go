@@ -61,7 +61,7 @@ func Handler(c *gin.Context) {
 	if record.Status != modeltype.WaitPayCheck && record.Status != modeltype.PayCheckFail {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeRepeatTransactions, "重复交易", "购物记录状态不正确"))
 		return
-	} else if !record.WuPin.Show {
+	} else if !record.IsBuyRecordCanPay() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "商户拒绝了此次交易", "商品不再出售"))
 		return
 	}

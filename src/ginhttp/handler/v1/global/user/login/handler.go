@@ -29,7 +29,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	user, err := action.GetUserByPhone(query.Phone, false)
+	user, err := action.GetUserByPhone(query.Phone)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodePhoneError, "用户不存在或密码错误", "用户不存在"))
 		return

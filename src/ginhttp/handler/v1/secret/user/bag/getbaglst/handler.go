@@ -38,7 +38,7 @@ func Handler(c *gin.Context) {
 		query.Offset = 0
 	}
 
-	res, err := action.GetBagListByUser(user, query.Limit, query.Offset, false)
+	res, err := action.GetBagListByUser(user, query.Limit, query.Offset)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

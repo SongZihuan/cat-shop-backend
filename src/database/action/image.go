@@ -19,3 +19,7 @@ func NewImage(tp modeltype.ImageType, file []byte) (*model.Image, error, error) 
 
 	return img, nil, nil
 }
+
+func AdminNewImage(tp modeltype.ImageType, file []byte) (*model.Image, error, error) {
+	return NewImage(tp, file)
+}

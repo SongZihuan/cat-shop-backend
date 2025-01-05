@@ -30,7 +30,7 @@ func Flag() (err error) {
 
 	flag.BoolVar(&data.help, "help", false, "this help")
 	flag.StringVar(&data.configFile, "config", "config.yaml", "the config file path")
-	flag.BoolVar(&data.wait, "wait", false, "wait 20s to start")
+	flag.UintVar(&data.wait, "wait", MinWaitSec, "wait second to start")
 
 	flag.Parse()
 	data.ready()

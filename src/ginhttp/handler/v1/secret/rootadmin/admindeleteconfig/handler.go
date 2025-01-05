@@ -44,7 +44,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.DeleteConfig(query.Key)
+	err = action.AdminDeleteConfig(query.Key)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

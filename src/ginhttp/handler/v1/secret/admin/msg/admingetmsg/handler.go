@@ -25,13 +25,13 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
-	res, err := action.GetMsgByPage(query.Page, query.PageSize)
+	res, err := action.AdminGetMsgByPage(query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.GetMsgCount()
+	maxcount, err := action.AdminGetMsgCount()
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

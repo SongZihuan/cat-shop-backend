@@ -33,7 +33,12 @@ func getAdminUser(c *gin.Context, self *model.User) *model.User {
 		return nil
 	}
 
-	user, err := action.GetUserByID(query.UserID, self.IsRootAdmin())
+	var user *model.User
+	if self.IsRootAdmin() {
+		user, err = action.RootAdminGetUserByID(query.UserID)
+	} else {
+		user, err = action.AdminGetUserByID(query.UserID)
+	}
 	if errors.Is(err, action.ErrNotFound) {
 		return nil
 	} else if err != nil {

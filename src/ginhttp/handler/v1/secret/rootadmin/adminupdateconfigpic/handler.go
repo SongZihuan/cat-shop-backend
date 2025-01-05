@@ -55,7 +55,7 @@ func Handler(c *gin.Context) {
 		}
 
 		if canDelete {
-			err := action.DeleteConfig(query.Key)
+			err := action.AdminDeleteConfig(query.Key)
 			if err != nil {
 				c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 				return
@@ -100,7 +100,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.NewImage(modeltype.AvatarImage, fileData)
+	img, errDB, errImg := action.AdminNewImage(modeltype.AvatarImage, fileData)
 	if errImg != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(errImg))
 		return
@@ -109,7 +109,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateConfigPic(query.Key, img)
+	err = action.AdminUpdateConfigPic(query.Key, img)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

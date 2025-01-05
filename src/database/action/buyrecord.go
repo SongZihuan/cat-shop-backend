@@ -27,7 +27,7 @@ func GetBuyRecordByIDAndUserID(userID uint, recordID uint) (*model.BuyRecord, er
 	}
 
 	db := internal.DB()
-	err := db.Model(model.BuyRecord{}).Joins("Wupin").Where("id = ?", recordID).Where("user_id = ?", userID).First(record).Error
+	err := db.Model(model.BuyRecord{}).Joins("Wupin").Joins("Class").Where("id = ?", recordID).Where("user_id = ?", userID).First(record).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -49,7 +49,7 @@ func GetBuyRecordListByUserID(userID uint, limit int, offset int) ([]model.BuyRe
 	var res []model.BuyRecord
 
 	db := internal.DB()
-	err := db.Model(model.BuyRecord{}).Joins("Wupin").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
+	err := db.Model(model.BuyRecord{}).Joins("Wupin").Joins("Class").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func GetBuyRecordListByPageByUserID(userID uint, page int, pagesize int) ([]mode
 	var res []model.BuyRecord
 
 	db := internal.DB()
-	err := db.Model(model.BuyRecord{}).Joins("Wupin").Where("user_id = ?", userID).Limit(pagesize).Offset((page - 1) * pagesize).Find(res).Error
+	err := db.Model(model.BuyRecord{}).Joins("Wupin").Joins("Class").Where("user_id = ?", userID).Limit(pagesize).Offset((page - 1) * pagesize).Find(res).Error
 	if err != nil {
 		return nil, err
 	}

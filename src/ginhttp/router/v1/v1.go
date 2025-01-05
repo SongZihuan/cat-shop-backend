@@ -11,6 +11,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/global/wupin/gethotwupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/global/wupin/getsearch"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/global/wupin/getwupin"
+	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/admingetconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/bag/adminaddbag"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/bag/admingetbag"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/buy/daohuo/admindaohuo"
@@ -29,8 +30,6 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/buy/tuihuo/admintuihuodengji"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/buy/tuihuo/admintuihuoshenqing"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/class/adminaddclass"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/class/adminchangeclassname"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/class/adminchangeclassshow"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/class/admingetclass"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/class/admingetclasslst"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/class/adminupdateclass"
@@ -51,7 +50,6 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/wupin/adminupdatewupin"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/admin/xieyi/admingetxieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/admindeleteconfig"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/admingetconfig"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminrestartserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminstopserver"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/adminupdateconfigpic"
@@ -59,7 +57,6 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/rootadmin/xieyi/adminupdatexieyi"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/addbag"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/getbaglst"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/bag/getbaglstbypage"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/buy/fahuo/daohuo"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/buy/fahuo/fahuochangeuser"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/handler/v1/secret/user/buy/fahuo/fahuoquxiaoshenqing"
@@ -211,7 +208,6 @@ func userBagApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/add", addbag.Handler)
 	api.GET("/list", getbaglst.Handler)
 	api.GET("/list/infinite", getbaglst.Handler)
-	api.GET("/list/page", getbaglstbypage.Handler)
 }
 
 func adminApiV1(apiV1 *gin.RouterGroup) {
@@ -226,6 +222,12 @@ func adminApiV1(apiV1 *gin.RouterGroup) {
 	adminXieyiApiV1(api)
 	adminMsgApiV1(api)
 	adminBuyRecordApiV1(api)
+	adminConfigApiV1(api)
+}
+
+func adminConfigApiV1(apiV1 *gin.RouterGroup) {
+	api := apiV1.Group("/config")
+	api.POST("/info", admingetconfig.Handler)
 }
 
 func adminFileUploadApiV1(apiV1 *gin.RouterGroup) {
@@ -258,8 +260,6 @@ func adminClassApiV1(apiV1 *gin.RouterGroup) {
 
 func adminUpdateClassApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/edit")
-	api.POST("/name", adminchangeclassname.Handler)
-	api.POST("/show", adminchangeclassshow.Handler)
 	api.POST("/all", adminupdateclass.Handler)
 }
 
@@ -388,7 +388,6 @@ func rootAdminXieyiApiV1(apiV1 *gin.RouterGroup) {
 func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/config")
 
-	api.POST("/info", admingetconfig.Handler)
 	api.POST("/delete", admindeleteconfig.Handler)
 	api.POST("/update/pic", adminupdateconfigpic.Handler)
 	api.POST("/update/string", adminupdateconfigstring.Handler)

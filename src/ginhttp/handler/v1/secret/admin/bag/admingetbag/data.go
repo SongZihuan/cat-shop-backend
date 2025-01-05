@@ -57,7 +57,18 @@ func NewBag(bag *model.Bag) Bag {
 		panic("wupin is nil")
 	}
 
-	if bag.WuPin.ClassID >= 0 && bag.WuPin.Class != nil && bag.WuPin.Class.Show {
+	if bag.ClassID != bag.WuPin.ClassID {
+		panic("class id not equal")
+	}
+
+	if bag.ClassID == modeltype.ClassEmptyID {
+		class = &Class{
+			ID:   modeltype.ClassEmptyID,
+			Name: modeltype.ClassEmptyName,
+			Show: modeltype.ClassEmptyShow,
+			Down: modeltype.ClassEmptyDown,
+		}
+	} else if bag.ClassID >= 0 && bag.Class != nil {
 		class = &Class{
 			ID:   bag.WuPin.ClassID,
 			Name: bag.WuPin.Class.Name,
@@ -65,12 +76,7 @@ func NewBag(bag *model.Bag) Bag {
 			Down: bag.WuPin.Class.Down,
 		}
 	} else {
-		class = &Class{
-			ID:   modeltype.ClassEmptyID,
-			Name: modeltype.ClassEmptyName,
-			Show: modeltype.ClassEmptyShow,
-			Down: modeltype.ClassEmptyDown,
-		}
+		panic("class is nil")
 	}
 
 	return Bag{

@@ -6,6 +6,11 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 )
 
+type Query struct {
+	Page     int `form:"page"`
+	PageSize int `form:"pagesize"`
+}
+
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
@@ -14,11 +19,12 @@ type Class struct {
 }
 
 type Data struct {
-	List  []Class `json:"list"`
-	Total int     `json:"total"`
+	List     []Class `json:"list"`
+	Total    int     `json:"total"`
+	MaxCount int     `json:"maxpage"`
 }
 
-func NewData(list []model.Class) Data {
+func NewData(list []model.Class, maxcount int) Data {
 	res := make([]Class, 0, len(list))
 	for _, v := range list {
 		if v.Show {
@@ -41,11 +47,12 @@ func NewData(list []model.Class) Data {
 	}
 
 	return Data{
-		List:  res,
-		Total: len(list),
+		List:     res,
+		Total:    len(list),
+		MaxCount: maxcount,
 	}
 }
 
-func NewJsonData(list []model.Class) data.Data {
-	return data.NewSuccessWithData(NewData(list))
+func NewJsonData(list []model.Class, maxcount int) data.Data {
+	return data.NewSuccessWithData(NewData(list, maxcount))
 }

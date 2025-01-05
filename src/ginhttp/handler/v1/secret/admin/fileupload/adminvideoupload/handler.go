@@ -65,7 +65,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	vid, errDB, errVid := action.NewVideo(fileType, fileData)
+	vid, errDB, errVid := action.AdminNewVideo(fileType, fileData)
 	if errVid != nil || errDB != nil {
 		c.JSON(http.StatusOK, NewError("系统错误"))
 		return

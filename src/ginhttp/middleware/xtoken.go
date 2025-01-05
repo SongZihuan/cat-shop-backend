@@ -29,7 +29,7 @@ func HandlerToken(c *gin.Context) TokenStatus {
 			return TokenStatusExpired
 		}
 
-		user, err := action.GetUserByID(d.Userid(), false)
+		user, err := action.MiddlewareGetUserByID(d.Userid())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.Set(contextkey.DebugTokenKey, "用户未找到")
 			return TokenStatusUserNotFound

@@ -33,7 +33,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateUserPassword(user, query.NewPassword)
+	err = action.AdminUpdateUserPassword(user, query.NewPassword)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

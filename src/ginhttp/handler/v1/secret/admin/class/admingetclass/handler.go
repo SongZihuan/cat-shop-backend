@@ -7,14 +7,35 @@ import (
 	"net/http"
 )
 
-const ClassListLimit = 100
+const MaxPageSize = 20
 
 func Handler(c *gin.Context) {
-	res, err := action.GetClassList(ClassListLimit, true, false, true)
+	query := Query{}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
+		return
+	}
+
+	if query.PageSize > MaxPageSize || query.PageSize <= 0 {
+		query.PageSize = MaxPageSize
+	}
+
+	if query.Page <= 0 {
+		query.Page = 1
+	}
+
+	res, err := action.AdminGetClassListByPage(query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, NewJsonData(res))
+	maxcount, err := action.AdminGetClassCount()
+	if err != nil {
+		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, NewJsonData(res, maxcount))
 }

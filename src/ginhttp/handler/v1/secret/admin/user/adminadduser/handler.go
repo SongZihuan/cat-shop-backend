@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/SuperH-0630/cat-shop-back/src/database/action"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -27,9 +28,9 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	_, err = action.GetUserByPhone(query.Phone, false)
-	if errors.Is(err, action.ErrNotFound) {
-		_, err = action.CreateUser(query.Phone, query.Password)
+	u, err := action.AdminGetUserByPhone(query.Phone)
+	if errors.Is(err, action.ErrNotFound) || u == nil || u.Status == modeltype.DeleteUserStatus {
+		_, err = action.AdminCreateUser(query.Phone, query.Password)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

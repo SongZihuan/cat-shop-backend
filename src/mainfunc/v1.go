@@ -42,8 +42,9 @@ func MainV1() int {
 
 	cfg := config.Config()
 
-	if flagparser.Wait() {
-		<-time.Tick(time.Duration(cfg.Yaml.Http.RestartWaitSecond) * time.Second)
+	waitsec := flagparser.WaitSec()
+	if waitsec > 0 {
+		time.Sleep(waitsec)
 	}
 
 	err = database.ConnectToMysql()

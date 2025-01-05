@@ -6,6 +6,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
 	"github.com/SuperH-0630/cat-shop-back/src/model"
+	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 	"github.com/SuperH-0630/cat-shop-back/src/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -42,8 +43,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	_, err = action.GetUserByPhone(query.NewPhone, false)
-	if errors.Is(err, action.ErrNotFound) {
+	u, err := action.AdminGetUserByPhone(query.NewPhone)
+	if errors.Is(err, action.ErrNotFound) || u == nil || u.Status == modeltype.DeleteUserStatus {
 		err := action.AdminUpdateUserPhone(user, query.NewPhone)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))

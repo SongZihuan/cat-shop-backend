@@ -34,19 +34,19 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID, true)
+	bag, err := action.AdminGetBagByWupinIDWithUser(user, query.WuPinID)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if !bag.WuPinShow || bag.WuPinID <= 0 || bag.WuPin == nil || !bag.WuPin.Show {
+	} else if bag.WupinDown || bag.WuPinID <= 0 || (bag.WuPin != nil && bag.WuPin.IsWupinDown()) || (bag.Class != nil && bag.Class.IsClassDown()) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return
 	}
 
-	_, err = action.AddBag(user, bag, query.Num)
+	_, err = action.AdminAddBag(user, bag, query.Num)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

@@ -76,7 +76,13 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	errType, errStatus, errDB := action.AdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type, self.IsRootAdmin())
+	var errType, errStatus, errDB error
+
+	if self.IsRootAdmin() {
+		errType, errStatus, errDB = action.RootAdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type)
+	} else {
+		errType, errStatus, errDB = action.AdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type)
+	}
 	if errType != nil {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeTypeError, "用户类型错误"))
 		return

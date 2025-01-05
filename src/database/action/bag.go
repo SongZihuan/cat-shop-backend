@@ -8,11 +8,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetBagByIDAndUser(user *model.User, bagID uint, isAdmin bool) (*model.Bag, error) {
-	return GetBagByID(user.ID, bagID, isAdmin)
+func GetBagByIDAndUser(user *model.User, bagID uint) (*model.Bag, error) {
+	return GetBagByID(user.ID, bagID)
 }
 
-func GetBagByID(userID uint, bagID uint, isAmdin bool) (*model.Bag, error) {
+func GetBagByID(userID uint, bagID uint) (*model.Bag, error) {
 	var bag = new(model.Bag)
 	var err error
 
@@ -21,11 +21,7 @@ func GetBagByID(userID uint, bagID uint, isAmdin bool) (*model.Bag, error) {
 	}
 
 	db := internal.DB()
-	if isAmdin {
-		err = db.Model(model.Bag{}).Joins("Wupin").Where("id = ?", bagID).Where("user_id = ?", userID).First(bag).Error
-	} else {
-		err = db.Model(model.Bag{}).Joins("Wupin").Where("id = ?", bagID).Where("user_id = ?", userID).Where("class_down = false").Where("wu_pin_show = true").First(bag).Error
-	}
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("id = ?", bagID).Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -35,11 +31,11 @@ func GetBagByID(userID uint, bagID uint, isAmdin bool) (*model.Bag, error) {
 	return bag, nil
 }
 
-func GetBagByWupinIDWithUser(user *model.User, wupinID uint, isAdmin bool) (*model.Bag, error) {
-	return GetBagByWupinIDWithUserID(user.ID, wupinID, isAdmin)
+func GetBagByWupinIDWithUser(user *model.User, wupinID uint) (*model.Bag, error) {
+	return GetBagByWupinIDWithUserID(user.ID, wupinID)
 }
 
-func GetBagByWupinIDWithUserID(userID uint, wupinID uint, isAdmin bool) (*model.Bag, error) {
+func GetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, error) {
 	var bag = new(model.Bag)
 	var err error
 
@@ -48,11 +44,7 @@ func GetBagByWupinIDWithUserID(userID uint, wupinID uint, isAdmin bool) (*model.
 	}
 
 	db := internal.DB()
-	if isAdmin {
-		err = db.Model(model.Bag{}).Joins("Wupin").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Order("time desc").First(bag).Error
-	} else {
-		err = db.Model(model.Bag{}).Joins("Wupin").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Where("class_down = false").Where("wu_pin_show = true").Order("time desc").First(bag).Error
-	}
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").Order("time desc").First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -62,25 +54,65 @@ func GetBagByWupinIDWithUserID(userID uint, wupinID uint, isAdmin bool) (*model.
 	return bag, nil
 }
 
-func GetBagListByUser(user *model.User, limit int, offset int, isAdmin bool) ([]model.Bag, error) {
-	return GetBagListByUserID(user.ID, limit, offset, isAdmin)
+func AdminGetBagByWupinIDWithUser(user *model.User, wupinID uint) (*model.Bag, error) {
+	return AdminGetBagByWupinIDWithUserID(user.ID, wupinID)
 }
 
-func GetBagListByUserID(userID uint, limit int, offset int, isAdmin bool) ([]model.Bag, error) {
+func AdminGetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, error) {
+	var bag = new(model.Bag)
+	var err error
+
+	if wupinID <= 0 {
+		return nil, ErrNotFound
+	}
+
+	db := internal.DB()
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wu_pin_id = ?", wupinID).Where("user_id = ?", userID).Order("time desc").First(bag).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, ErrNotFound
+	} else if err != nil {
+		return nil, err
+	}
+
+	return bag, nil
+}
+
+func GetBagListByUser(user *model.User, limit int, offset int) ([]model.Bag, error) {
+	return GetBagListByUserID(user.ID, limit, offset)
+}
+
+func GetBagListByUserID(userID uint, limit int, offset int) ([]model.Bag, error) {
 	var res []model.Bag
 	var err error
 
 	db := internal.DB()
-	if isAdmin {
-		err = db.Model(model.Bag{}).Joins("Wupin").Where("user_id = ?", userID).Limit(limit).Offset(offset).Find(&res).Error
-	} else {
-		err = db.Model(model.Bag{}).Joins("Wupin").Where("user_id = ?", userID).Where("wu_pin_show = true").Where("class_down = false").Where("wu_pin_show = true").Limit(limit).Offset(offset).Find(&res).Error
-	}
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Joins("Class").Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").Where("num > ?", 0).Limit(limit).Offset(offset).Find(&res).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return res, nil
+}
+
+func AdminGetBagListByUser(user *model.User, limit int, offset int) ([]model.Bag, error) {
+	return AdminGetBagListByUserID(user.ID, limit, offset)
+}
+
+func AdminGetBagListByUserID(userID uint, limit int, offset int) ([]model.Bag, error) {
+	var res []model.Bag
+	var err error
+
+	db := internal.DB()
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Joins("Class").Where("user_id = ?", userID).Where("num > ?", 0).Limit(limit).Offset(offset).Find(&res).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func AdminAddBag(user *model.User, bag *model.Bag, num int) (bool, error) {
+	return AddBag(user, bag, num)
 }
 
 func AddBag(user *model.User, bag *model.Bag, num int) (bool, error) {

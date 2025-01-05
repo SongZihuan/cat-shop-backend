@@ -112,7 +112,7 @@ type Data struct {
 func NewData(res []model.Bag) Data {
 	list := make([]Bag, len(res))
 	for _, v := range res {
-		if !v.IsBagDown() {
+		if v.IsBagShow() {
 			list = append(list, NewBag(&v))
 		}
 	}

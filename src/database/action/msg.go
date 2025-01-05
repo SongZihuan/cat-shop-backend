@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetMsgByPage(page int, pagesize int) (res []model.Msg, err error) {
+func AdminGetMsgByPage(page int, pagesize int) (res []model.Msg, err error) {
 	db := internal.DB()
 	err = db.Model(&model.Msg{}).Joins("User").Limit(pagesize).Offset((page - 1) * pagesize).Order("create_at desc").Find(&res).Error
 	if err != nil {
@@ -17,7 +17,7 @@ func GetMsgByPage(page int, pagesize int) (res []model.Msg, err error) {
 	return res, nil
 }
 
-func GetMsgCount() (int, error) {
+func AdminGetMsgCount() (int, error) {
 	type count struct {
 		count int `gorm:"column:count"`
 	}
@@ -34,11 +34,11 @@ func GetMsgCount() (int, error) {
 	return res.count, nil
 }
 
-func GetMsgByPageAndUser(user *model.User, page int, pagesize int) (res []model.Msg, err error) {
+func AdminGetMsgByPageAndUser(user *model.User, page int, pagesize int) (res []model.Msg, err error) {
 	return GetMsgByPageAndUserID(user.ID, page, pagesize)
 }
 
-func GetMsgCountWithUser(user *model.User) (int, error) {
+func AdminGetMsgCountWithUser(user *model.User) (int, error) {
 	return GetMsgCountWithUserID(user.ID)
 }
 

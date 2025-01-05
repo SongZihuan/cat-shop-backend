@@ -56,7 +56,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateConfigString(query.Key, query.Value)
+	err = action.AdminUpdateConfigString(query.Key, query.Value)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

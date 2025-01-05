@@ -34,14 +34,14 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID, false)
+	bag, err := action.GetBagByWupinIDWithUser(user, query.WuPinID)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if !bag.IsBagDownNotBecauseNum() {
+	} else if bag.IsBagDown() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return
 	}

@@ -1,6 +1,7 @@
 package adminrestartserver
 
 import (
+	"fmt"
 	"github.com/SuperH-0630/cat-shop-back/src/config"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
 	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
@@ -17,6 +18,9 @@ const (
 	CodeSecretError   = -4
 )
 
+const MinWaitSec = 10
+const MaxWaitSec = 60
+
 func Handler(c *gin.Context) {
 	user, ok := c.Value(contextkey.UserKey).(*model.User)
 	if !ok {
@@ -31,6 +35,13 @@ func Handler(c *gin.Context) {
 		return
 	}
 
+	waitsec := query.WaitSec
+	if waitsec < MinWaitSec {
+		waitsec = MinWaitSec
+	} else if waitsec > MaxWaitSec {
+		waitsec = MaxWaitSec
+	}
+
 	if !user.PasswordCheck(query.Password) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodePasswordError, "用户密码错误"))
 		return
@@ -41,12 +52,12 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	_, err = utils.Restart("-wait")
+	_, err = utils.Restart("-wait", fmt.Sprintf("%d", waitsec))
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(err))
 		return
 	}
 	httpstop.SetStop()
 
-	c.JSON(200, data.NewSuccess("退出信号已发出"))
+	c.JSON(200, NewSuccessJsonData(waitsec))
 }

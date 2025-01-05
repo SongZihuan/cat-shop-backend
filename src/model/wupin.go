@@ -32,7 +32,7 @@ type WuPin struct {
 	BuyJian    modeltype.Total `gorm:"type:uint;not null"`
 
 	Hot       bool `gorm:"type:boolean;not null;"`
-	Show      bool `gorm:"type:boolean;not null;"`
+	Down      bool `gorm:"type:boolean;not null;"`
 	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
@@ -164,13 +164,9 @@ func (w *WuPin) IsClassDown() bool {
 }
 
 func (w *WuPin) IsWupinDown() bool {
-	if w.Class == nil {
-		return !w.Show || w.ClassDown
-	} else {
-		if w.ClassID != w.Class.ID {
-			panic("class id not equal")
-		}
-
-		return !w.Show || w.Class.IsClassDown()
+	if w.Class == nil && w.ClassID != w.Class.ID {
+		panic("class id not equal")
 	}
+
+	return w.Down || w.ClassDown || (w.Class != nil && w.Class.IsClassDown())
 }

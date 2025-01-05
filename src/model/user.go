@@ -68,13 +68,9 @@ func (u *User) UpdateType(tp modeltype.UserType) bool {
 	}
 }
 
-func (u *User) UpdateStatus(st modeltype.UserStatus, isRoot bool) bool {
-	// 只有root可以设置delete
+func (u *User) UpdateStatus(st modeltype.UserStatus) bool {
 	if st == modeltype.DeleteUserStatus {
 		if u.Status == modeltype.DeleteUserStatus {
-			return true
-		} else if isRoot {
-			u.Status = st
 			return true
 		} else {
 			return false
@@ -83,6 +79,12 @@ func (u *User) UpdateStatus(st modeltype.UserStatus, isRoot bool) bool {
 		u.Status = st
 		return true
 	}
+}
+
+func (u *User) UpdateStatusWithRoot(st modeltype.UserStatus) bool {
+	// 只有root可以设置delete
+	u.Status = st
+	return true
 }
 
 func (u *User) UpdatePhone(phone string) {

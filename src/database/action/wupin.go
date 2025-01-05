@@ -18,7 +18,7 @@ func GetWupinByIDWithShow(wupinID uint) (*model.WuPin, error) {
 	}
 
 	db := internal.DB()
-	err := db.Model(&model.WuPin{}).Joins("Class").Where("id = ?", wupinID).Where("show = true").First(wupin).Error
+	err := db.Model(&model.WuPin{}).Joins("Class").Where("id = ?", wupinID).Where("down = false").Where("class_down = false").First(wupin).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -30,7 +30,7 @@ func GetWupinByIDWithShow(wupinID uint) (*model.WuPin, error) {
 
 func GetHotWupinListWithShow() (res []model.WuPin, err error) {
 	db := internal.DB()
-	err = db.Model(&model.WuPin{}).Joins("Class").Limit(HotWupinLimit).Where("hot = true").Where("show = true").Where("class_down = false").Order("create_at desc").Find(&res).Error
+	err = db.Model(&model.WuPin{}).Joins("Class").Limit(HotWupinLimit).Where("hot = true").Where("down = false").Where("class_down = false").Order("create_at desc").Find(&res).Error
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func GetHotWupinListWithShow() (res []model.WuPin, err error) {
 
 func GetSearchListWithShow(search string, selectClass uint, page int, pagesize int) (res []model.WuPin, err error) {
 	db := internal.DB()
-	sql := db.Model(&model.WuPin{}).Joins("Class").Where("show = true").Limit(pagesize).Offset((page - 1) * pagesize)
+	sql := db.Model(&model.WuPin{}).Joins("Class").Where("down = false").Where("class_down = false").Limit(pagesize).Offset((page - 1) * pagesize)
 
 	if search != "" {
 		sql = sql.Where("name LIKE ?", "%"+search+"%")
@@ -63,7 +63,7 @@ func GetSearchCountWithShow(search string, selectClass uint) (int, error) {
 	}
 
 	db := internal.DB()
-	sql := db.Model(&model.WuPin{}).Select("COUNT(*) as count").Where("show = true")
+	sql := db.Model(&model.WuPin{}).Select("COUNT(*) as count").Where("down = false").Where("class_down = false")
 
 	if search != "" {
 		sql = sql.Where("name LIKE ?", "%"+search+"%")

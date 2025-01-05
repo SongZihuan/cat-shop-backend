@@ -33,13 +33,23 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
-	res, err := action.GetUserByPage(query.Page, query.PageSize, self.IsRootAdmin())
+	var res []model.User
+	if self.IsRootAdmin() {
+		res, err = action.RootAdminGetUserByPage(query.Page, query.PageSize)
+	} else {
+		res, err = action.AdminGetUserByPage(query.Page, query.PageSize)
+	}
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.GetUserCount(self.IsRootAdmin())
+	var maxcount int
+	if self.IsRootAdmin() {
+		maxcount, err = action.RootAdminGetUserCount()
+	} else {
+		maxcount, err = action.AdminGetUserCount()
+	}
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

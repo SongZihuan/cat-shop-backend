@@ -70,7 +70,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.NewImage(fileType, fileData)
+	img, errDB, errImg := action.AdminNewImage(fileType, fileData)
 	if errImg != nil || errDB != nil {
 		c.JSON(http.StatusOK, NewError("系统错误"))
 		return

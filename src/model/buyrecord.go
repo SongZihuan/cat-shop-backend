@@ -74,8 +74,8 @@ type BuyRecord struct {
 	WupinPingJia   modeltype.Total `gorm:"type:uint;not null"`
 	WupinBuyGood   modeltype.Total `gorm:"type:uint;not null"`
 
-	WuPinShow bool `gorm:"type:boolean;not null"`
 	WupinHot  bool `gorm:"type:boolean;not null"`
+	WupinDown bool `gorm:"type:boolean;not null"`
 	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
@@ -437,27 +437,35 @@ func (r *BuyRecord) IsClassDownOrNotShow() bool {
 }
 
 func (r *BuyRecord) IsClassDown() bool {
-	if r.WuPin == nil {
+	if r.Class == nil {
 		return r.ClassDown
 	} else {
-		if r.WuPin.ID != r.WuPinID {
+		if r.Class.ID != r.ClassID {
 			panic("wupin id not equal")
 		}
 
-		return r.WuPin.IsClassDown()
+		return r.Class.IsClassDown()
 	}
 }
 
 func (r *BuyRecord) IsWupinDown() bool {
 	if r.WuPin == nil {
-		return !r.WuPinShow || r.ClassShow
+		return r.WupinDown || r.ClassDown
 	} else {
 		if r.WuPinID != r.WuPin.ID {
 			panic("wupin id not equal")
 		}
 
-		return !r.WuPin.IsWupinDown()
+		return r.WuPin.IsWupinDown()
 	}
+}
+
+func (r *BuyRecord) IsBuyRecordCanNotPay() bool {
+	return r.IsWupinDown() || r.IsClassDown()
+}
+
+func (r *BuyRecord) IsBuyRecordCanPay() bool {
+	return !r.IsBuyRecordCanNotPay()
 }
 
 func (*BuyRecord) IsBuyRecordDown() bool {

@@ -6,7 +6,7 @@ import (
 	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
 )
 
-func NewVideo(tp modeltype.VideoType, file []byte) (*model.Video, error, error) {
+func AdminNewVideo(tp modeltype.VideoType, file []byte) (*model.Video, error, error) {
 	vid, err := model.NewVideo(tp, file)
 	if err != nil {
 		return nil, nil, err

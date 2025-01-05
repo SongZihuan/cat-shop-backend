@@ -75,7 +75,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.NewImage(modeltype.AvatarImage, fileData)
+	img, errDB, errImg := action.AdminNewImage(modeltype.AvatarImage, fileData)
 	if errImg != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(errImg))
 		return
@@ -84,7 +84,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateUserAvatar(user, img.GetUrl())
+	err = action.AdminUpdateUserAvatar(user, img.GetUrl())
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(errImg))
 		return

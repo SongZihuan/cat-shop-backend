@@ -7,16 +7,14 @@ import (
 )
 
 type HttpConfig struct {
-	Address           string      `yaml:"address"`
-	DebugMsg          bool        `yaml:"debugmsg"`
-	ApiBaseAPI        string      `yaml:"apibaseapi"`
-	ResourceBaseAPI   string      `yaml:"resourcebaseapi"`
-	TestApi           bool        `yaml:"testapi"`
-	Proxy             ProxyConfig `yaml:"proxy"`
-	StopSecret        string      `yaml:"stopsecret"`
-	StopWaitSecond    int         `yaml:"stopwaitsecond"`
-	RestartWaitSecond int         `yaml:"restartwaitsecond"`
-	WaitStartSecond   int         `yaml:"waitstartsecond"`
+	Address         string      `yaml:"address"`
+	DebugMsg        bool        `yaml:"debugmsg"`
+	ApiBaseAPI      string      `yaml:"apibaseapi"`
+	ResourceBaseAPI string      `yaml:"resourcebaseapi"`
+	TestApi         bool        `yaml:"testapi"`
+	Proxy           ProxyConfig `yaml:"proxy"`
+	StopSecret      string      `yaml:"stopsecret"`
+	StopWaitSecond  int         `yaml:"stopwaitsecond"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -59,14 +57,6 @@ func (h *HttpConfig) setDefault() {
 		h.StopWaitSecond = 10
 	}
 
-	if h.RestartWaitSecond <= 0 {
-		h.StopWaitSecond = 20
-	}
-
-	if h.WaitStartSecond <= 0 {
-		h.WaitStartSecond = 20
-	}
-
 	h.Proxy.setDefault()
 }
 
@@ -78,10 +68,6 @@ func (h *HttpConfig) check() ConfigError {
 
 	if len(h.StopSecret) < 8 {
 		return NewConfigError("StopSecret length less than 8")
-	}
-
-	if h.RestartWaitSecond <= h.StopWaitSecond {
-		_ = NewConfigWarning("RestartWaitSecond is greater than StopWaitSecond")
 	}
 
 	return nil

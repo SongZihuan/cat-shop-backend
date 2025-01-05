@@ -23,30 +23,39 @@ func NewEmptyClass() *Class {
 		},
 		Name: modeltype.ClassEmptyName,
 		Show: modeltype.ClassEmptyShow,
+		Down: modeltype.ClassEmptyDown,
 	}
 }
 
-func (cls *Class) ResetEmpty() {
+func (cls *Class) resetEmpty() bool {
 	if !cls.IsEmpty() {
 		panic("class is not empty")
 	}
+
+	if cls.Name == modeltype.ClassEmptyName && cls.Show == modeltype.ClassEmptyShow && cls.Down == modeltype.ClassEmptyDown {
+		return false
+	}
+
 	cls.Name = modeltype.ClassEmptyName
 	cls.Show = modeltype.ClassEmptyShow
+	cls.Down = modeltype.ClassEmptyDown
+	return true
 }
 
 func (cls *Class) IsEmpty() bool {
 	return cls.ID == modeltype.ClassEmptyID
 }
 
-func (cls *Class) IsEmptyWithCheck() bool {
+func (cls *Class) ResetIsEmpty() bool {
 	if !cls.IsEmpty() {
 		return false
 	}
 
-	return cls.Show == modeltype.ClassEmptyShow && cls.Name == modeltype.ClassEmptyName
+	return cls.resetEmpty()
 }
 
 func (cls *Class) IsClassDown() bool {
+
 	return !cls.IsEmpty() && cls.Down
 }
 

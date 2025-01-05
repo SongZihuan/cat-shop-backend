@@ -1,5 +1,7 @@
 package flagparser
 
+import "time"
+
 var data flagData
 
 func Help() bool {
@@ -10,6 +12,6 @@ func ConfigFile() string {
 	return data.ConfigFile()
 }
 
-func Wait() bool {
-	return data.Wait()
+func WaitSec() time.Duration {
+	return time.Second * time.Duration(data.Wait())
 }

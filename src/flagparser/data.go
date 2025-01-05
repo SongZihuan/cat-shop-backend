@@ -1,11 +1,14 @@
 package flagparser
 
+const MinWaitSec = 0
+const MaxWaitSec = 60
+
 type flagData struct {
 	flagReady bool
 
 	help       bool
 	configFile string
-	wait       bool
+	wait       uint
 }
 
 func newFlagData() flagData {
@@ -13,7 +16,7 @@ func newFlagData() flagData {
 		flagReady:  false,
 		help:       false,
 		configFile: "",
-		wait:       false,
+		wait:       0,
 	}
 }
 
@@ -41,10 +44,16 @@ func (d *flagData) ConfigFile() string {
 	return d.configFile
 }
 
-func (d *flagData) Wait() bool {
+func (d *flagData) Wait() uint {
 	if !d.isReady() {
 		panic("flag not ready")
 	}
 
-	return d.wait
+	if d.wait > MaxWaitSec {
+		return MaxWaitSec
+	} else if d.wait < MinWaitSec {
+		return MinWaitSec
+	} else {
+		return d.wait
+	}
 }

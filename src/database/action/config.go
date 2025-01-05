@@ -17,19 +17,23 @@ func GetConfigLst() (res []model.Config, err error) {
 	return res, nil
 }
 
-func DeleteConfig(key modeltype.ConfigKeyType) error {
-	return UpdateConfig(key, "")
+func AdminGetConfigLst() (res []model.Config, err error) {
+	return GetConfigLst()
 }
 
-func UpdateConfigString(key modeltype.ConfigKeyType, value modeltype.ConfigValueType) error {
-	return UpdateConfig(key, value)
+func AdminDeleteConfig(key modeltype.ConfigKeyType) error {
+	return AdminUpdateConfig(key, "")
 }
 
-func UpdateConfigPic(key modeltype.ConfigKeyType, img *model.Image) error {
-	return UpdateConfig(key, modeltype.ConfigValueType(img.GetUrl()))
+func AdminUpdateConfigString(key modeltype.ConfigKeyType, value modeltype.ConfigValueType) error {
+	return AdminUpdateConfig(key, value)
 }
 
-func UpdateConfig(key modeltype.ConfigKeyType, value modeltype.ConfigValueType) error {
+func AdminUpdateConfigPic(key modeltype.ConfigKeyType, img *model.Image) error {
+	return AdminUpdateConfig(key, modeltype.ConfigValueType(img.GetUrl()))
+}
+
+func AdminUpdateConfig(key modeltype.ConfigKeyType, value modeltype.ConfigValueType) error {
 	return internal.DB().Transaction(func(tx *gorm.DB) error {
 		var cfg = new(model.Config)
 		err := tx.Model(&model.Config{}).Where("key = ?", key).Order("create_at desc").First(cfg).Error

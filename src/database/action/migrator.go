@@ -28,8 +28,7 @@ func CreateEmptyClass() error {
 		return err
 	}
 
-	if !cls.IsEmptyWithCheck() {
-		cls.ResetEmpty()
+	if cls.ResetIsEmpty() {
 		err := db.Save(cls).Error
 		if err != nil {
 			return err
