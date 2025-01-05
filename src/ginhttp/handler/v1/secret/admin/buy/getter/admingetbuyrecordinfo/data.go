@@ -1,6 +1,6 @@
 package admingetbuyrecordinfo
 
-import "github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+import "github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 
 type Data struct {
 }

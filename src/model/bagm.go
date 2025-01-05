@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"gorm.io/gorm"
 	"time"
 )

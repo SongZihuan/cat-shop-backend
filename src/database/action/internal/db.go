@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

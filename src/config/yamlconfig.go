@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/flagparser"
+	"github.com/SongZihuan/cat-shop-backend/src/flagparser"
 	"gopkg.in/yaml.v3"
 	"os"
 )

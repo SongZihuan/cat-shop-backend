@@ -1,6 +1,6 @@
 package adminupdateconfigstring
 
-import "github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+import "github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 
 type Query struct {
 	Key   modeltype.ConfigKeyType   `form:"key"`

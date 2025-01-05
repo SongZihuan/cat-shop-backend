@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
-	"github.com/SuperH-0630/cat-shop-back/src/model"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/model"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

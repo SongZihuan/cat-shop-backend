@@ -1,10 +1,10 @@
 package sendmsg
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/database/action"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
-	"github.com/SuperH-0630/cat-shop-back/src/model"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"

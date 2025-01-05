@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/cmd"
-	"github.com/SuperH-0630/cat-shop-back/src/mainfunc"
+	"github.com/SongZihuan/cat-shop-backend/src/cmd"
+	"github.com/SongZihuan/cat-shop-backend/src/mainfunc"
 )
 
 var v1Main cmd.MainFunc = mainfunc.MainV1

@@ -4,12 +4,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/config"
-	"github.com/SuperH-0630/cat-shop-back/src/database"
-	"github.com/SuperH-0630/cat-shop-back/src/database/action"
-	"github.com/SuperH-0630/cat-shop-back/src/flagparser"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/httpstop"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/database"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/flagparser"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/httpstop"
 	"time"
 )
 

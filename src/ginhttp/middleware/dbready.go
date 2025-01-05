@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/database"
+	"github.com/SongZihuan/cat-shop-backend/src/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

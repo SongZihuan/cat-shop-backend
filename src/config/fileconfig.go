@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
-	"github.com/SuperH-0630/cat-shop-back/src/utils"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"path"
 )
 

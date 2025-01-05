@@ -1,11 +1,11 @@
 package adminstopserver
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/config"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/contextkey"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/httpstop"
-	"github.com/SuperH-0630/cat-shop-back/src/model"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/httpstop"
+	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"

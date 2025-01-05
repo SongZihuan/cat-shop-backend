@@ -1,8 +1,8 @@
 package getxieyi
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/database/action"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

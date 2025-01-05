@@ -1,5 +1,5 @@
 # 猫猫超市后端
-前端：[github.com/SuperH-0630/cat-shop-front](https://github.com/SuperH-0630/cat-shop-front)
+前端：[github.com/SongZihuan/cat-shop-front](https://github.com/SongZihuan/cat-shop-front)
 
 技术栈：Golang + gin + gorm + jwt + yaml
 
@@ -50,10 +50,10 @@ jwt:
 
 ```shell
 # 显示把昂住信息
-go run github.com/SuperH-0630/cat-shop-back/src/cmd/v1 -help
+go run github.com/SongZihuan/cat-shop-backend/src/cmd/v1 -help
 
 # 运行服务并指定配置文件
-go run github.com/SuperH-0630/cat-shop-back/src/cmd/v1 -config ./etc/config.yaml
+go run github.com/SongZihuan/cat-shop-backend/src/cmd/v1 -config ./etc/config.yaml
 ```
 
 ### 实际运行
@@ -71,7 +71,7 @@ go run github.com/SuperH-0630/cat-shop-back/src/cmd/v1 -config ./etc/config.yaml
 可以使用`go build`进行构建。
 
 ```shell
-go build github.com/SuperH-0630/cat-shop-back/src/cmd/v1
+go build github.com/SongZihuan/cat-shop-backend/src/cmd/v1
 ```
 
 ## 鸣谢

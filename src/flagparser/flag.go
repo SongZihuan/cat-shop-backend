@@ -3,7 +3,7 @@ package flagparser
 import (
 	"flag"
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/utils"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 )
 
 var isReady = false

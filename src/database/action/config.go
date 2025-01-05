@@ -2,9 +2,9 @@ package action
 
 import (
 	"errors"
-	"github.com/SuperH-0630/cat-shop-back/src/database/action/internal"
-	"github.com/SuperH-0630/cat-shop-back/src/model"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
+	"github.com/SongZihuan/cat-shop-backend/src/model"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"gorm.io/gorm"
 )
 

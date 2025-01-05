@@ -3,9 +3,9 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/config"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
-	"github.com/SuperH-0630/cat-shop-back/src/utils"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"gorm.io/gorm"
 	"net/url"
 	"time"

@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/config"
-	v1 "github.com/SuperH-0630/cat-shop-back/src/ginhttp/router/v1"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
+	v1 "github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/v1"
 	"github.com/gin-gonic/gin"
 )
 

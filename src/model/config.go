@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/SuperH-0630/cat-shop-back/src/config"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"gorm.io/gorm"
 )
 

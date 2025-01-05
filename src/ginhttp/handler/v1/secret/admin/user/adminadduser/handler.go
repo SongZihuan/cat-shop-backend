@@ -2,10 +2,10 @@ package adminadduser
 
 import (
 	"errors"
-	"github.com/SuperH-0630/cat-shop-back/src/database/action"
-	"github.com/SuperH-0630/cat-shop-back/src/ginhttp/data"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
-	"github.com/SuperH-0630/cat-shop-back/src/utils"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

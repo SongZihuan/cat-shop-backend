@@ -2,8 +2,8 @@ package image
 
 import (
 	"fmt"
-	"github.com/SuperH-0630/cat-shop-back/src/config"
-	"github.com/SuperH-0630/cat-shop-back/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
 	"net/http"
