@@ -6,11 +6,15 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 )
 
-func GetUserXieYi() (*model.Xieyi, error) {
+func GetXieYi(xieyiType modeltype.XieYiType) (*model.Xieyi, error) {
 	xieyi := new(model.Xieyi)
 
+	if xieyiType == "" {
+		xieyiType = modeltype.XieYiDefault
+	}
+
 	db := internal.DB()
-	err := db.Model(&model.Xieyi{}).Where("type = ?", modeltype.XieyiUser).Limit(1).Order("created_at desc").FirstOrCreate(xieyi, model.Xieyi{Data: ""}).Error
+	err := db.Model(&model.Xieyi{}).Where("type = ?", xieyiType).Limit(1).Order("created_at desc").FirstOrCreate(xieyi, model.Xieyi{Data: ""}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -18,8 +22,15 @@ func GetUserXieYi() (*model.Xieyi, error) {
 	return xieyi, nil
 }
 
-func AdminUpdateUserXieyi(xieyiType modeltype.XieYiType, content string) error {
+func AdminGetXieYi(xieyiType modeltype.XieYiType) (*model.Xieyi, error) {
+	return GetXieYi(xieyiType)
+}
+
+func AdminUpdateXieYi(xieyiType modeltype.XieYiType, content string) error {
+	if xieyiType == "" {
+		xieyiType = modeltype.XieYiDefault
+	}
+
 	xieyi := model.NewXieyi(xieyiType, content)
-	db := internal.DB()
-	return db.Create(xieyi).Error
+	return internal.DB().Create(xieyi).Error
 }

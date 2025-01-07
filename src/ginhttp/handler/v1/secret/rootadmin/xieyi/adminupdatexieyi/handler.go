@@ -15,7 +15,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminUpdateUserXieyi(query.Type, query.Content)
+	err = action.AdminUpdateXieYi(query.Type, query.Content)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

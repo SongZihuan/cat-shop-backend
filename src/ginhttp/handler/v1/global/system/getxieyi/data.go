@@ -1,6 +1,13 @@
 package getxieyi
 
-import "github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+import (
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+)
+
+type Query struct {
+	Type modeltype.XieYiType `json:"type"`
+}
 
 type Data struct {
 	XieYi string `json:"xieyi"`

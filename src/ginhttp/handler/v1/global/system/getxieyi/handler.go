@@ -8,7 +8,14 @@ import (
 )
 
 func Handler(c *gin.Context) {
-	res, err := action.GetUserXieYi()
+	query := Query{}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	res, err := action.GetXieYi(query.Type)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
