@@ -94,7 +94,7 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if !wupin.IsWupinDown() {
+	} else if wupin.IsWupinDown() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "商品未找到", "商品不再出售"))
 		return
 	}

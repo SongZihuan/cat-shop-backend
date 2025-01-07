@@ -12,7 +12,9 @@ import (
 )
 
 const (
-	CodeWBagNotFound data.CodeType = -1
+	CodeWBagNotFound  data.CodeType = -1
+	CodeWupinNotFound data.CodeType = -2
+	CodeBagDown       data.CodeType = -3
 )
 
 func Handler(c *gin.Context) {
@@ -30,11 +32,17 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.WupinID <= 0 {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到", "wupinID应该大于0"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "商品已下架", "wupinID应该大于0"))
 		return
 	}
 
-	bag, err := action.GetBagByWupinIDWithUser(user, query.WupinID)
+	wupin, err := action.GetWupinByID(query.WupinID)
+	if errors.Is(err, action.ErrNotFound) || wupin == nil || wupin.IsWupinDown() {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "商品以下架"))
+		return
+	}
+
+	bag, err := action.GetUserBag(user, wupin)
 	if errors.Is(err, action.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
 		return
@@ -42,7 +50,7 @@ func Handler(c *gin.Context) {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	} else if bag.IsBagDown() {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWBagNotFound, "购物车未找到"))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBagDown, "购物车未找到"))
 		return
 	}
 

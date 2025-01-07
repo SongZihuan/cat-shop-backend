@@ -58,7 +58,7 @@ func NewWupin(wp model.Wupin) Wupin {
 		Email:      utils.GetSQLNullString(wp.Email),
 		Wechat:     utils.GetSQLNullString(wp.WeChat),
 		Location:   wp.Location,
-		BuyMoney:   wp.BuyMoney,
+		BuyMoney:   wp.BuyPrice,
 		BuyTotal:   wp.BuyTotal,
 		BuyDaohuo:  wp.BuyDaoHuo,
 		BuyPingJia: wp.BuyPingjia,

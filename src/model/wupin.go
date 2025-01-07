@@ -24,7 +24,7 @@ type Wupin struct {
 	Email    sql.NullString `gorm:"type:varchar(50);"`
 	Location string         `gorm:"type:varchar(200);not null"`
 
-	BuyMoney   modeltype.Price `gorm:"type:uint;not null"` // 购物总金额
+	BuyPrice   modeltype.Price `gorm:"type:uint;not null"` // 购物总金额
 	BuyTotal   modeltype.Total `gorm:"type:uint;not null"` // 购物总人数
 	BuyDaoHuo  modeltype.Total `gorm:"type:uint;not null"`
 	BuyPingjia modeltype.Total `gorm:"type:uint;not null"`
@@ -70,7 +70,7 @@ func (w *Wupin) BuyNow(r *BuyRecord) bool {
 		return false
 	}
 
-	w.BuyMoney += r.TotalPrice
+	w.BuyPrice += r.TotalPrice
 	w.BuyTotal += 1
 	w.BuyJian += r.Num
 	return true
@@ -81,12 +81,12 @@ func (w *Wupin) BackPayNow(r *BuyRecord) bool {
 		return false
 	}
 
-	w.BuyMoney -= r.TotalPrice
+	w.BuyPrice -= r.TotalPrice
 	w.BuyTotal -= 1
 	w.BuyJian -= r.Num
 
-	if w.BuyMoney <= 0 {
-		w.BuyMoney = 0
+	if w.BuyPrice <= 0 {
+		w.BuyPrice = 0
 	}
 
 	if w.BuyTotal < 0 {
@@ -189,7 +189,7 @@ func (m *Wupin) IsWupinShow() bool {
 }
 
 func (m *Wupin) IsWupinHot() bool {
-	return !m.IsWupinDown() && m.Hot
+	return m.IsWupinShow() && m.Hot
 }
 
 func (w *Wupin) UpdateNormalInfo(name string, pic string, class *Class, tag string, hotPrice modeltype.PriceNull, realPrice modeltype.Price, info string, hot bool, down bool) bool {
@@ -229,4 +229,12 @@ func (w *Wupin) UpdateInfo(name string, pic string, class *Class, tag string, ho
 	res1 := w.UpdateNormalInfo(name, pic, class, tag, hotPrice, realPrice, info, hot, down)
 	res2 := w.UpdateShopInfo(ren, phone, email, wechat, location)
 	return res1 || res2
+}
+
+func (w *Wupin) IsWupinCanSale() bool {
+	return !w.IsWupinDown()
+}
+
+func (w *Wupin) IsWupinCanNotSale() bool {
+	return !w.IsWupinCanSale()
 }

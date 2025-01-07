@@ -1,6 +1,7 @@
 package getbaglst
 
 import (
+	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
@@ -17,24 +18,28 @@ type Class struct {
 	Name string `json:"name"`
 }
 
-type Wupin struct {
-	ID        uint   `json:"id"`
-	Name      string `json:"name"`
-	Pic       string `json:"pic"`
-	ClassID   uint   `json:"classId"`
-	ClassOf   *Class `json:"classOf"`
-	Tag       string `json:"tag,omitempty"`
-	HotPrice  int64  `json:"hotPrice,omitempty"`
-	RealPrice int64  `json:"realPrice"`
-	Info      string `json:"info"`
-	Ren       string `json:"ren"`
-	Phone     string `json:"phone"`
-	Email     string `json:"email,omitempty"`
-	Wechat    string `json:"wechat,omitempty"`
-	Location  string `json:"location"`
-	BuyTotal  int64  `json:"buytotal"`
-	BuyDaohuo int64  `json:"buydaohuo"`
-	BuyGood   int64  `json:"buygood"`
+type WuPin struct {
+	ID         uint   `json:"id"`
+	Name       string `json:"name"`
+	Pic        string `json:"pic"`
+	ClassID    uint   `json:"classId"`
+	ClassOf    *Class `json:"classOf"`
+	Tag        string `json:"tag,omitempty"`
+	HotPrice   int64  `json:"hotPrice,omitempty"`
+	RealPrice  int64  `json:"realPrice"`
+	Info       string `json:"info"`
+	Ren        string `json:"ren"`
+	Phone      string `json:"phone"`
+	Email      string `json:"email,omitempty"`
+	Wechat     string `json:"wechat,omitempty"`
+	Location   string `json:"location"`
+	BuyTotal   int64  `json:"buytotal"`
+	BuyDaohuo  int64  `json:"buydaohuo"`
+	BuyGood    int64  `json:"buygood"`
+	BuyPrice   int64  `json:"buyprice"`
+	BuyPingjia int64  `json:"buypingjia"`
+	BuyJian    int64  `json:"buyjian"`
+	Hot        bool   `json:"hot"`
 }
 
 type Bag struct {
@@ -44,63 +49,83 @@ type Bag struct {
 	ClassID uint            `json:"classId"`
 	Num     modeltype.Total `json:"num"`
 	Time    int64           `json:"time"`
-	Wupin   *Wupin          `json:"wupin"`
+	Wupin   *WuPin          `json:"wupin"`
+	Down    bool            `json:"down"`
 }
 
 func NewBag(bag *model.Bag) Bag {
-	var class *Class
-	var wp *Wupin
-
-	if bag.WupinID <= 0 || bag.Wupin == nil {
-		panic("wupin is nil")
-	}
-
-	if bag.Wupin.ClassID >= 0 && bag.Wupin.Class != nil && bag.Wupin.Class.Show {
-		class = &Class{
-			ID:   bag.Wupin.ClassID,
-			Name: bag.Wupin.Class.Name,
+	if bag.IsBagCanSale() {
+		return Bag{
+			ID:      bag.ID,
+			UserID:  bag.UserID,
+			WupinID: bag.WupinID,
+			ClassID: bag.ClassID,
+			Num:     bag.Num,
+			Time:    bag.Time.Unix(),
+			Wupin: &WuPin{
+				ID:      bag.Wupin.ID,
+				Name:    bag.Wupin.Name,
+				Pic:     bag.Wupin.Pic,
+				ClassID: bag.ClassID,
+				ClassOf: &Class{
+					ID:   bag.Class.ID,
+					Name: bag.Class.Name,
+				},
+				Tag:        utils.GetSQLNullString(bag.Wupin.Tag),
+				HotPrice:   bag.Wupin.HotPrice.ToInt64(),
+				RealPrice:  bag.Wupin.RealPrice.ToInt64(),
+				Info:       bag.Wupin.Info,
+				Ren:        bag.Wupin.Ren,
+				Phone:      bag.Wupin.Phone,
+				Email:      utils.GetSQLNullString(bag.Wupin.Email),
+				Wechat:     utils.GetSQLNullString(bag.Wupin.WeChat),
+				Location:   bag.Wupin.Location,
+				BuyTotal:   bag.Wupin.BuyTotal.ToInt64(),
+				BuyDaohuo:  bag.Wupin.BuyDaoHuo.ToInt64(),
+				BuyGood:    bag.Wupin.BuyGood.ToInt64(),
+				BuyPrice:   bag.Wupin.BuyPrice.ToInt64(),
+				BuyPingjia: bag.Wupin.BuyPingjia.ToInt64(),
+				BuyJian:    bag.Wupin.BuyJian.ToInt64(),
+				Hot:        bag.Wupin.Hot,
+			},
+			Down: false,
 		}
 	} else {
-		class = &Class{
-			ID:   modeltype.ClassEmptyID,
-			Name: modeltype.ClassEmptyName,
+		return Bag{
+			ID:      bag.ID,
+			UserID:  bag.UserID,
+			WupinID: bag.WupinID,
+			ClassID: bag.ClassID,
+			Num:     bag.Num,
+			Time:    bag.Time.Unix(),
+			Wupin: &WuPin{
+				ID:      bag.Wupin.ID,
+				Name:    fmt.Sprintf("%s（以下架）", bag.Wupin.Name),
+				Pic:     bag.Wupin.Pic,
+				ClassID: bag.ClassID,
+				ClassOf: &Class{
+					ID:   bag.Class.ID,
+					Name: bag.Class.Name,
+				},
+				Tag:        "",
+				HotPrice:   0,
+				RealPrice:  0,
+				Info:       bag.Wupin.Info,
+				Ren:        "无",
+				Phone:      "000-0000-0000",
+				Email:      "",
+				Wechat:     "",
+				Location:   "无",
+				BuyTotal:   bag.Wupin.BuyTotal.ToInt64(),
+				BuyDaohuo:  bag.Wupin.BuyDaoHuo.ToInt64(),
+				BuyGood:    bag.Wupin.BuyGood.ToInt64(),
+				BuyPrice:   bag.Wupin.BuyPrice.ToInt64(),
+				BuyPingjia: bag.Wupin.BuyPingjia.ToInt64(),
+				BuyJian:    bag.Wupin.BuyJian.ToInt64(),
+				Hot:        false,
+			},
+			Down: true,
 		}
-	}
-
-	if bag.WupinID > 0 || bag.Wupin != nil {
-		wp = &Wupin{
-			ID:        bag.Wupin.ID,
-			Name:      bag.Wupin.Name,
-			Pic:       bag.Wupin.Pic,
-			ClassID:   class.ID,
-			ClassOf:   class,
-			Tag:       utils.GetSQLNullString(bag.Wupin.Tag),
-			HotPrice:  bag.Wupin.HotPrice.ToInt64(),
-			RealPrice: bag.Wupin.RealPrice.ToInt64(),
-			Info:      bag.Wupin.Info,
-			Ren:       bag.Wupin.Ren,
-			Phone:     bag.Wupin.Phone,
-			Email:     utils.GetSQLNullString(bag.Wupin.Email),
-			Wechat:    utils.GetSQLNullString(bag.Wupin.WeChat),
-			Location:  bag.Wupin.Location,
-			BuyTotal:  bag.Wupin.BuyTotal.ToInt64(),
-			BuyDaohuo: bag.Wupin.BuyDaoHuo.ToInt64(),
-			BuyGood:   bag.Wupin.BuyGood.ToInt64(),
-		}
-	} else {
-		wp = &Wupin{
-			ID: modeltype.WupinEmptyID,
-		}
-	}
-
-	return Bag{
-		ID:      bag.ID,
-		UserID:  bag.UserID,
-		WupinID: bag.WupinID,
-		ClassID: bag.ClassID,
-		Num:     bag.Num,
-		Time:    bag.Time.Unix(),
-		Wupin:   wp,
 	}
 }
 

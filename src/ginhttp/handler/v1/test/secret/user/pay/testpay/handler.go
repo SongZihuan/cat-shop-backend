@@ -56,9 +56,7 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	}
-
-	if record.Status != modeltype.WaitPayCheck && record.Status != modeltype.PayCheckFail {
+	} else if record.Status != modeltype.WaitPayCheck && record.Status != modeltype.PayCheckFail {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeRepeatTransactions, "重复交易", "购物记录状态不正确"))
 		return
 	} else if !record.IsBuyRecordCanPay() {

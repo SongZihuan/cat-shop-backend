@@ -23,7 +23,7 @@ type WupinM struct {
 	Email    sql.NullString `gorm:"type:varchar(50);"`
 	Location string         `gorm:"type:varchar(200);not null"`
 
-	BuyMoney modeltype.Price `gorm:"type:uint;not null"`
+	BuyPrice modeltype.Price `gorm:"type:uint;not null"`
 	BuyTotal modeltype.Total `gorm:"type:uint;not null"`
 
 	BuyDaoHuo  modeltype.Total `gorm:"type:uint;not null"`

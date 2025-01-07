@@ -31,20 +31,12 @@ func GetBagByID(userID uint, bagID uint) (*model.Bag, error) {
 	return bag, nil
 }
 
-func GetBagByWupinIDWithUser(user *model.User, wupinID uint) (*model.Bag, error) {
-	return GetBagByWupinIDWithUserID(user.ID, wupinID)
-}
-
-func GetBagByWupinIDWithUserID(userID uint, wupinID uint) (*model.Bag, error) {
+func GetUserBag(user *model.User, wupin *model.Wupin) (*model.Bag, error) {
 	var bag = new(model.Bag)
 	var err error
 
-	if wupinID <= 0 {
-		return nil, ErrNotFound
-	}
-
 	db := internal.DB()
-	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wupin_id = ?", wupinID).Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").Order("time desc").First(bag).Error
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("wupin_id = ?", wupin.ID).Where("user_id = ?", user.ID).Where("class_down = false").Where("wupin_down = false").Order("time desc").First(bag).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
@@ -69,7 +61,7 @@ func AdminGetBagByWupinIDWithUser(user *model.User, wupin *model.Wupin) (*model.
 	return bag, nil
 }
 
-func GetBagListByUser(user *model.User, limit int, offset int) ([]model.Bag, error) {
+func GetUserBagList(user *model.User, limit int, offset int) ([]model.Bag, error) {
 	return GetBagListByUserID(user.ID, limit, offset)
 }
 
@@ -78,7 +70,7 @@ func GetBagListByUserID(userID uint, limit int, offset int) ([]model.Bag, error)
 	var err error
 
 	db := internal.DB()
-	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("user_id = ?", userID).Where("class_down = false").Where("wupin_down = false").Where("num > ?", 0).Limit(limit).Offset(offset).Find(&res).Error
+	err = db.Model(model.Bag{}).Joins("Wupin").Joins("Class").Where("user_id = ?", userID).Where("num > ?", 0).Limit(limit).Offset(offset).Find(&res).Error // 不再销售的也返回
 	if err != nil {
 		return nil, err
 	}

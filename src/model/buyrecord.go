@@ -69,18 +69,28 @@ type BuyRecord struct {
 	WupinEmail    sql.NullString `gorm:"type:varchar(50);"`
 	WupinLocation string         `gorm:"type:varchar(200);not null"`
 
-	WupinBuyTotal  modeltype.Total `gorm:"type:uint;not null"`
-	WupinBuyDaoHuo modeltype.Total `gorm:"type:uint;not null"`
-	WupinPingJia   modeltype.Total `gorm:"type:uint;not null"`
-	WupinBuyGood   modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyTotal   modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyDaoHuo  modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyGood    modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyPrice   modeltype.Price `gorm:"type:uint;not null"`
+	WupinBuyPingJia modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyJian    modeltype.Total `gorm:"type:uint;not null"`
+	WupinHot        bool            `gorm:"type:boolean;not null"`
 
-	WupinHot  bool `gorm:"type:boolean;not null"`
-	WupinDown bool `gorm:"type:boolean;not null"`
+	WupinDown bool `gorm:"type:boolean;not null"` // 并非物品Lock信息
 	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 
 func NewBuyRecord(user *User, wupin *Wupin, num modeltype.Total, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
+	if wupin.IsWupinCanNotSale() {
+		panic("wupin not sale")
+	}
+
+	if num <= 0 {
+		panic("num is bad")
+	}
+
 	return &BuyRecord{
 		Status:     modeltype.WaitPayCheck,
 		UserID:     user.ID,
@@ -107,10 +117,13 @@ func NewBuyRecord(user *User, wupin *Wupin, num modeltype.Total, username, userp
 		WupinEmail:    wupin.Email,
 		WupinLocation: wupin.Location,
 
-		WupinBuyTotal:  wupin.BuyTotal,
-		WupinBuyDaoHuo: wupin.BuyDaoHuo,
-		WupinPingJia:   wupin.BuyPingjia,
-		WupinBuyGood:   wupin.BuyGood,
+		WupinBuyTotal:   wupin.BuyTotal,
+		WupinBuyDaoHuo:  wupin.BuyDaoHuo,
+		WupinBuyGood:    wupin.BuyGood,
+		WupinBuyPrice:   wupin.BuyPrice,
+		WupinBuyPingJia: wupin.BuyPingjia,
+		WupinBuyJian:    wupin.BuyJian,
+		WupinHot:        wupin.Hot,
 
 		UserName:     username,
 		UserPhone:    userphone,
@@ -125,13 +138,21 @@ func NewBuyRecord(user *User, wupin *Wupin, num modeltype.Total, username, userp
 		ShopEmail:    wupin.Email,
 		ShopLocation: userlocation,
 		ShopRemark:   sql.NullString{Valid: false},
+
+		WupinDown: wupin.IsWupinDown(),
 	}
 }
 
 func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
+	if bag.IsBagCanNotSale() {
+		panic("bag not sale")
+	}
+
 	wupin := bag.Wupin
 	if wupin == nil {
 		panic("wupin is nil")
+	} else if wupin.IsWupinCanNotSale() {
+		panic("wupin not sale")
 	}
 
 	return &BuyRecord{
@@ -160,10 +181,13 @@ func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, us
 		WupinEmail:    wupin.Email,
 		WupinLocation: wupin.Location,
 
-		WupinBuyTotal:  wupin.BuyTotal,
-		WupinBuyDaoHuo: wupin.BuyDaoHuo,
-		WupinPingJia:   wupin.BuyPingjia,
-		WupinBuyGood:   wupin.BuyGood,
+		WupinBuyTotal:   wupin.BuyTotal,
+		WupinBuyDaoHuo:  wupin.BuyDaoHuo,
+		WupinBuyGood:    wupin.BuyGood,
+		WupinBuyPrice:   wupin.BuyPrice,
+		WupinBuyPingJia: wupin.BuyPingjia,
+		WupinBuyJian:    wupin.BuyJian,
+		WupinHot:        wupin.Hot,
 
 		UserName:     username,
 		UserPhone:    userphone,
@@ -178,6 +202,8 @@ func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, us
 		ShopEmail:    wupin.Email,
 		ShopLocation: userlocation,
 		ShopRemark:   sql.NullString{Valid: false},
+
+		WupinDown: wupin.IsWupinDown(),
 	}
 }
 
@@ -440,8 +466,16 @@ func (r *BuyRecord) isWupinDown() bool {
 	}
 }
 
-func (r *BuyRecord) IsBuyRecordCanNotPay() bool {
+func (r *BuyRecord) IsWupinSale() bool {
 	return r.isWupinDown() || r.isClassDown()
+}
+
+func (r *BuyRecord) IsWupinNotSale() bool {
+	return !r.IsWupinSale()
+}
+
+func (r *BuyRecord) IsBuyRecordCanNotPay() bool {
+	return r.IsWupinSale()
 }
 
 func (r *BuyRecord) IsBuyRecordCanPay() bool {

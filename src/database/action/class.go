@@ -45,7 +45,7 @@ func GetClassList(limit int) ([]model.Class, error) {
 	}
 
 	var res = make([]model.Class, 0, 100)
-	err := internal.DB().Model(&model.Class{}).Where("id != ?", modeltype.ClassEmptyID).Where("down = false").Where("show = true").Limit(limit).Find(&res).Error
+	err := internal.DB().Model(&model.Class{}).Where("id != ?", modeltype.ClassEmptyID).Where("class_down = false").Where("show = true").Limit(limit).Find(&res).Error
 	if err != nil {
 		return nil, err
 	}

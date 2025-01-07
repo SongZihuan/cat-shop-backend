@@ -83,5 +83,17 @@ func (bag *Bag) IsBagDown() bool {
 }
 
 func (bag *Bag) IsBagShow() bool {
-	return bag.Num > 0 && !bag.IsBagDown()
+	return bag.Num > 0
+}
+
+func (bag *Bag) IsBagNotShow() bool {
+	return !bag.IsBagShow()
+}
+
+func (bag *Bag) IsBagCanSale() bool {
+	return bag.IsBagShow() && !bag.IsBagDown()
+}
+
+func (bag *Bag) IsBagCanNotSale() bool {
+	return !bag.IsBagCanNotSale()
 }

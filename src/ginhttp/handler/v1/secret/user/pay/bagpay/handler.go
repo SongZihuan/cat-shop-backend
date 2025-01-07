@@ -92,10 +92,7 @@ func Handler(c *gin.Context) {
 	} else if bag.IsBagDown() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "购物车未找到", "商品不再出售"))
 		return
-	} else if !bag.IsBagShow() {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "购物车未找到"))
-		return
-	} else if bag.WupinID <= 0 || bag.Wupin == nil {
+	} else if bag.IsBagNotShow() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "购物车未找到"))
 		return
 	}

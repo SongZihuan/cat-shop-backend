@@ -81,7 +81,10 @@ func (cls *Class) IsClassDown() bool {
 }
 
 func (cls *Class) IsClassDownOrNotShow() bool {
-	return cls.IsEmpty() || !cls.Show || cls.IsClassDown()
+	if cls.IsEmpty() {
+		return modeltype.ClassEmptyShow && !modeltype.ClassEmptyDown
+	}
+	return !cls.Show || cls.IsClassDown()
 }
 
 func (cls *Class) IsClassShow() bool {

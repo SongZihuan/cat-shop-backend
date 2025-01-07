@@ -3,13 +3,11 @@ package config
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
-	"strings"
 )
 
 type HttpConfig struct {
 	Address        string      `yaml:"address"`
 	DebugMsg       StringBool  `yaml:"debugmsg"`
-	FrontURL       string      `yaml:"fronturl"`
 	BaseURL        string      `yaml:"baseurl"`
 	ApiURL         string      `yaml:"apiurl"`
 	ResourceURL    string      `yaml:"resourceurl"`
@@ -57,18 +55,4 @@ func (h *HttpConfig) check() ConfigError {
 
 func (h *HttpConfig) CheckStopSecret(secret string) bool {
 	return h.StopSecret == secret
-}
-
-func processURL(url string, defaultUrl ...string) string {
-	if len(url) == 0 && len(defaultUrl) == 1 {
-		url = defaultUrl[0]
-	}
-
-	url = strings.TrimSpace(url)
-	url = strings.TrimRight(url, "/")
-	if !strings.HasPrefix(url, "/") {
-		url = "/" + url
-	}
-
-	return url
 }

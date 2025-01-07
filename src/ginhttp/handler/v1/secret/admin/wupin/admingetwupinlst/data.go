@@ -74,7 +74,7 @@ func NewWupin(wupin model.Wupin) Wupin {
 		BuyTotal:   wupin.BuyTotal,   // 购物总人数
 		BuyDaohuo:  wupin.BuyDaoHuo,  // 到货总人数
 		BuyGood:    wupin.BuyGood,    // 好评总人数
-		BuyPrice:   wupin.BuyMoney,   // 购物总金额
+		BuyPrice:   wupin.BuyPrice,   // 购物总金额
 		BuyPingjia: wupin.BuyPingjia, // 评价总人数
 		BuyJian:    wupin.BuyJian,    // 购买总件数
 		Hot:        wupin.Hot,

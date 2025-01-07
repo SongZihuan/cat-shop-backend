@@ -61,12 +61,14 @@ type BuyRecordM struct {
 	WupinEmail    sql.NullString `gorm:"type:varchar(50);"`
 	WupinLocation string         `gorm:"type:varchar(200);not null"`
 
-	WupinBuyTotal  modeltype.Total `gorm:"type:uint;not null"`
-	WupinBuyDaoHuo modeltype.Total `gorm:"type:uint;not null"`
-	WupinPingJia   modeltype.Total `gorm:"type:uint;not null"`
-	WupinBuyGood   modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyTotal   modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyDaoHuo  modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyGood    modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyPrice   modeltype.Price `gorm:"type:uint;not null"`
+	WupinBuyPingJia modeltype.Total `gorm:"type:uint;not null"`
+	WupinBuyJian    modeltype.Total `gorm:"type:uint;not null"`
+	WupinHot        bool            `gorm:"type:boolean;not null"`
 
-	WupinHot  bool `gorm:"type:boolean;not null"`
 	WupinDown bool `gorm:"type:boolean;not null"`
 	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
