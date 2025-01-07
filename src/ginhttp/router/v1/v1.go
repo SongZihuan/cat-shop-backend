@@ -12,6 +12,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/global/wupin/getsearch"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/global/wupin/getwupin"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/admingetconfig"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminxieyi/admingetxieyi"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/bag/adminaddbag"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/bag/admingetbag"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/daohuo/admindaohuo"
@@ -48,13 +49,12 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/admingetwupin"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/admingetwupinlst"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/adminupdatewupin"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/xieyi/admingetxieyi"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/admindeleteconfig"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminrestartserver"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminstopserver"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminupdateconfigpic"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminupdateconfigstring"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/xieyi/adminupdatexieyi"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminxieyi/adminupdatexieyi"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/bag/addbag"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/bag/getbaglst"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/fahuo/daohuo"
@@ -81,7 +81,7 @@ import (
 )
 
 func Api(api *gin.RouterGroup) {
-	api.Use(middleware.DBReady(), middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.AdminUser(), middleware.MustAccept(), middleware.ReturnContentJson())
+	api.Use(middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.AdminUser(), middleware.MustAccept(), middleware.ReturnContentJson())
 
 	globalApiV1(api)
 	secretApiV1(api)

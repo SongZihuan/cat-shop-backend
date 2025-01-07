@@ -7,8 +7,7 @@ import (
 )
 
 type Query struct {
-	Page     int `form:"page"`
-	PageSize int `form:"pagesize"`
+	ID uint `json:"ID"`
 }
 
 type Class struct {
@@ -18,41 +17,32 @@ type Class struct {
 	Down bool   `json:"down"`
 }
 
-type Data struct {
-	List     []Class `json:"list"`
-	Total    int     `json:"total"`
-	MaxCount int     `json:"maxpage"`
-}
-
-func NewData(list []model.Class, maxcount int) Data {
-	res := make([]Class, 0, len(list))
-	for _, v := range list {
-		if v.Show {
-			if v.ID == modeltype.ClassEmptyID {
-				res = append(res, Class{
-					ID:   modeltype.ClassEmptyID,
-					Name: modeltype.ClassEmptyName,
-					Show: modeltype.ClassEmptyShow,
-					Down: modeltype.ClassEmptyDown,
-				})
-			} else {
-				res = append(res, Class{
-					ID:   v.ID,
-					Name: v.Name,
-					Show: v.Show,
-					Down: v.Down,
-				})
-			}
-		}
-	}
-
-	return Data{
-		List:     res,
-		Total:    len(list),
-		MaxCount: maxcount,
+func NewClassEmptyData() Class {
+	return Class{
+		ID:   modeltype.ClassEmptyID,
+		Name: modeltype.ClassEmptyName,
+		Show: modeltype.ClassEmptyShow,
+		Down: modeltype.ClassEmptyDown,
 	}
 }
 
-func NewJsonData(list []model.Class, maxcount int) data.Data {
-	return data.NewSuccessWithData(NewData(list, maxcount))
+func NewData(cls *model.Class) Class {
+	if cls.ID == modeltype.ClassEmptyID {
+		return NewClassEmptyData()
+	}
+
+	return Class{
+		ID:   cls.ID,
+		Name: cls.Name,
+		Show: cls.Show,
+		Down: cls.ClassDown,
+	}
+}
+
+func NewJsonData(cls *model.Class) data.Data {
+	return data.NewSuccessWithData(NewData(cls))
+}
+
+func NewClassEmptyJsonData() data.Data {
+	return data.NewSuccessWithData(NewClassEmptyData())
 }

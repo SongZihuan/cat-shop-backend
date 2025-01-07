@@ -18,9 +18,10 @@ const Size3MB = 3 * 1024 * 1024
 const Size2MB = 2 * 1024 * 1024
 
 const (
-	CodeFileTooBig   data.CodeType = -1
-	CodeNotImage     data.CodeType = -2
-	CodeUserIsDelete data.CodeType = -3
+	CodeFileTooBig    data.CodeType = -1
+	CodeNotImage      data.CodeType = -2
+	CodeUserIsDelete  data.CodeType = -3
+	CodeFileNotUpload data.CodeType = -4
 )
 
 func Handler(c *gin.Context) {
@@ -48,7 +49,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if query.File == nil {
-		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
+		c.JSON(http.StatusOK, data.NewCustomError(CodeFileNotUpload, "文件未上传"))
 		return
 	}
 

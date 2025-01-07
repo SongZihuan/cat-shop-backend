@@ -7,14 +7,16 @@ import (
 )
 
 type HttpConfig struct {
-	Address         string      `yaml:"address"`
-	DebugMsg        bool        `yaml:"debugmsg"`
-	ApiBaseAPI      string      `yaml:"apibaseapi"`
-	ResourceBaseAPI string      `yaml:"resourcebaseapi"`
-	TestApi         bool        `yaml:"testapi"`
-	Proxy           ProxyConfig `yaml:"proxy"`
-	StopSecret      string      `yaml:"stopsecret"`
-	StopWaitSecond  int         `yaml:"stopwaitsecond"`
+	Address        string      `yaml:"address"`
+	DebugMsg       StringBool  `yaml:"debugmsg"`
+	FrontURL       string      `yaml:"fronturl"`
+	BaseURL        string      `yaml:"baseurl"`
+	ApiURL         string      `yaml:"apiurl"`
+	ResourceURL    string      `yaml:"resourceurl"`
+	EnableTestAPI  string      `yaml:"enabletestapi"`
+	Proxy          ProxyConfig `yaml:"proxy"`
+	StopSecret     string      `yaml:"stopsecret"`
+	StopWaitSecond int         `yaml:"stopwaitsecond"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -22,31 +24,11 @@ func (h *HttpConfig) setDefault() {
 		h.Address = "localhost:2689"
 	}
 
-	h.ApiBaseAPI = strings.TrimSpace(h.ApiBaseAPI)
+	h.DebugMsg.SetDefault(Disable)
 
-	if h.ApiBaseAPI == "" {
-		h.ApiBaseAPI = "/api"
-	} else {
-		if !strings.HasPrefix(h.ApiBaseAPI, "/") {
-			h.ApiBaseAPI = "/" + h.ApiBaseAPI
-		}
-
-		if strings.HasSuffix(h.ApiBaseAPI, "/") {
-			h.ApiBaseAPI = strings.TrimRight(h.ApiBaseAPI, "/")
-		}
-	}
-
-	if h.ResourceBaseAPI == "" {
-		h.ResourceBaseAPI = "/file"
-	} else {
-		if !strings.HasPrefix(h.ResourceBaseAPI, "/") {
-			h.ResourceBaseAPI = "/" + h.ResourceBaseAPI
-		}
-
-		if strings.HasSuffix(h.ResourceBaseAPI, "/") {
-			h.ResourceBaseAPI = strings.TrimRight(h.ResourceBaseAPI, "/")
-		}
-	}
+	h.BaseURL = processURL(h.BaseURL)
+	h.ApiURL = processURL(h.ApiURL, "/api")
+	h.ResourceURL = processURL(h.ResourceURL, "/resource")
 
 	if h.StopSecret == "" {
 		h.StopSecret = utils.RandStr(8)
@@ -75,4 +57,18 @@ func (h *HttpConfig) check() ConfigError {
 
 func (h *HttpConfig) CheckStopSecret(secret string) bool {
 	return h.StopSecret == secret
+}
+
+func processURL(url string, defaultUrl ...string) string {
+	if len(url) == 0 && len(defaultUrl) == 1 {
+		url = defaultUrl[0]
+	}
+
+	url = strings.TrimSpace(url)
+	url = strings.TrimRight(url, "/")
+	if !strings.HasPrefix(url, "/") {
+		url = "/" + url
+	}
+
+	return url
 }

@@ -54,13 +54,13 @@ func MainV1() int {
 	}
 	defer database.CloseMySql()
 
-	err = action.AutoMigrate()
+	err = action.SystemAutoMigrate()
 	if err != nil {
 		exitByError(err)
 		return 1
 	}
 
-	err = action.CreateEmptyClass()
+	err = action.SystemCreateEmptyClass()
 	if err != nil {
 		exitByError(err)
 		return 1

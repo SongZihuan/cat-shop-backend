@@ -7,6 +7,10 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
 )
 
+type Query struct {
+	Limit int `query:"limit"`
+}
+
 type Class struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
@@ -36,28 +40,18 @@ type Wupin struct {
 }
 
 func NewWupin(wp model.Wupin) Wupin {
-	var class *Class
-	if wp.IsClassDownOrNotShow() {
-		class = &Class{
-			ID:   modeltype.ClassEmptyID,
-			Name: modeltype.ClassEmptyName,
-		}
-	} else {
-		class = &Class{
-			ID:   wp.Class.ID,
-			Name: wp.Class.Name,
-		}
-	}
-
 	return Wupin{
-		ID:         wp.ID,
-		Name:       wp.Name,
-		Pic:        wp.Pic,
-		ClassID:    class.ID,
-		ClassOf:    class,
+		ID:      wp.ID,
+		Name:    wp.Name,
+		Pic:     wp.Pic,
+		ClassID: wp.ClassID,
+		ClassOf: &Class{
+			ID:   wp.ClassID,
+			Name: wp.Class.Name,
+		},
 		Tag:        utils.GetSQLNullString(wp.Tag),
-		HotPrice:   modeltype.GetPrice(wp.HotPrice),
-		RealPrice:  modeltype.GetPrice(wp.RealPrice),
+		HotPrice:   wp.HotPrice.ToInt64(),
+		RealPrice:  wp.RealPrice.ToInt64(),
 		Info:       wp.Info,
 		Ren:        wp.Ren,
 		Phone:      wp.Phone,
@@ -81,7 +75,7 @@ type Data struct {
 func NewData(list []model.Wupin) Data {
 	res := make([]Wupin, 0, len(list))
 	for _, v := range list {
-		if v.Hot {
+		if v.IsWupinHot() {
 			res = append(res, NewWupin(v))
 		}
 	}

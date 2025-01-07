@@ -7,9 +7,9 @@ import (
 
 type Class struct {
 	gorm.Model
-	Name string `gorm:"type:varchar(20);not null"`
-	Show bool   `gorm:"type:boolean;not null"` // 仅不展示
-	Down bool   `gorm:"type:boolean;not null"` // 下架所有商品
+	Name      string `gorm:"type:varchar(20);not null"`
+	Show      bool   `gorm:"type:boolean;not null"` // 仅不展示
+	ClassDown bool   `gorm:"type:boolean;not null"` // 下架所有商品
 }
 
 func (*Class) TableName() string {
@@ -21,10 +21,31 @@ func NewEmptyClass() *Class {
 		Model: gorm.Model{
 			ID: modeltype.ClassEmptyID,
 		},
-		Name: modeltype.ClassEmptyName,
-		Show: modeltype.ClassEmptyShow,
-		Down: modeltype.ClassEmptyDown,
+		Name:      modeltype.ClassEmptyName,
+		Show:      modeltype.ClassEmptyShow,
+		ClassDown: modeltype.ClassEmptyDown,
 	}
+}
+
+func NewClass(name string, show bool, down bool) *Class {
+	return &Class{
+		Name:      name,
+		Show:      show,
+		ClassDown: down,
+	}
+}
+
+func (cls *Class) UpdateInfo(name string, show bool, down bool) bool {
+	if cls.ID == modeltype.WupinEmptyID {
+		return false
+	}
+
+	oldDown := cls.IsClassDown()
+	cls.Name = name
+	cls.Show = show
+	cls.ClassDown = down
+
+	return oldDown != cls.IsClassDown()
 }
 
 func (cls *Class) resetEmpty() bool {
@@ -32,13 +53,13 @@ func (cls *Class) resetEmpty() bool {
 		panic("class is not empty")
 	}
 
-	if cls.Name == modeltype.ClassEmptyName && cls.Show == modeltype.ClassEmptyShow && cls.Down == modeltype.ClassEmptyDown {
+	if cls.Name == modeltype.ClassEmptyName && cls.Show == modeltype.ClassEmptyShow && cls.ClassDown == modeltype.ClassEmptyDown {
 		return false
 	}
 
 	cls.Name = modeltype.ClassEmptyName
 	cls.Show = modeltype.ClassEmptyShow
-	cls.Down = modeltype.ClassEmptyDown
+	cls.ClassDown = modeltype.ClassEmptyDown
 	return true
 }
 
@@ -56,9 +77,13 @@ func (cls *Class) ResetIsEmpty() bool {
 
 func (cls *Class) IsClassDown() bool {
 
-	return !cls.IsEmpty() && cls.Down
+	return !cls.IsEmpty() && cls.ClassDown
 }
 
 func (cls *Class) IsClassDownOrNotShow() bool {
 	return cls.IsEmpty() || !cls.Show || cls.IsClassDown()
+}
+
+func (cls *Class) IsClassShow() bool {
+	return !cls.IsClassDownOrNotShow()
 }

@@ -3,28 +3,19 @@ package config
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
-	"strings"
 )
 
 type ProxyConfig struct {
-	Proxy      string   `json:"proxy"`
-	TrustedIPs []string `json:"trustedips"`
+	Proxy      StringBool `json:"proxy"`
+	TrustedIPs []string   `json:"trustedips"`
 }
 
 func (p *ProxyConfig) setDefault() {
-	if p.Proxy == "" {
-		p.Proxy = "enable"
-	}
-
-	p.Proxy = strings.ToLower(p.Proxy)
+	p.Proxy.SetDefault(Disable)
 }
 
 func (p *ProxyConfig) check() ConfigError {
-	if p.Proxy != "enable" && p.Proxy != "disable" {
-		return NewConfigError("proxy must be enable/disable")
-	}
-
-	if p.Proxy == "enable" {
+	if p.Proxy.Is(Enable) {
 		if len(p.TrustedIPs) == 0 {
 			_ = NewConfigWarning("proxy trusts ips will be ignore because proxy is disabled")
 		} else {
@@ -42,5 +33,5 @@ func (p *ProxyConfig) check() ConfigError {
 }
 
 func (p *ProxyConfig) Enable() bool {
-	return p.Proxy == "enable"
+	return p.Proxy.Is(Enable)
 }

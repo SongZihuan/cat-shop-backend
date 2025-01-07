@@ -75,17 +75,17 @@ func NewBag(bag *model.Bag) Bag {
 			ClassID:   class.ID,
 			ClassOf:   class,
 			Tag:       utils.GetSQLNullString(bag.Wupin.Tag),
-			HotPrice:  modeltype.GetPrice(bag.Wupin.HotPrice),
-			RealPrice: modeltype.GetPrice(bag.Wupin.RealPrice),
+			HotPrice:  bag.Wupin.HotPrice.ToInt64(),
+			RealPrice: bag.Wupin.RealPrice.ToInt64(),
 			Info:      bag.Wupin.Info,
 			Ren:       bag.Wupin.Ren,
 			Phone:     bag.Wupin.Phone,
 			Email:     utils.GetSQLNullString(bag.Wupin.Email),
 			Wechat:    utils.GetSQLNullString(bag.Wupin.WeChat),
 			Location:  bag.Wupin.Location,
-			BuyTotal:  modeltype.GetTotal(bag.Wupin.BuyTotal),
-			BuyDaohuo: modeltype.GetTotal(bag.Wupin.BuyDaoHuo),
-			BuyGood:   modeltype.GetTotal(bag.Wupin.BuyGood),
+			BuyTotal:  bag.Wupin.BuyTotal.ToInt64(),
+			BuyDaohuo: bag.Wupin.BuyDaoHuo.ToInt64(),
+			BuyGood:   bag.Wupin.BuyGood.ToInt64(),
 		}
 	} else {
 		wp = &Wupin{

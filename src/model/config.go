@@ -13,6 +13,24 @@ type Config struct {
 	Type  modeltype.TypesOfConfigValueType `gorm:"type:varchar(20);not null"`
 }
 
+func NewConfig(Key modeltype.ConfigKeyType, Value modeltype.ConfigValueType) *Config {
+	tp, ok := modeltype.ConfigType[Key]
+	if !ok {
+		panic("bad config key")
+	}
+
+	_, ok = modeltype.ConfigInfo[Key]
+	if !ok {
+		panic("bad config key")
+	}
+
+	return &Config{
+		Key:   Key,
+		Value: Value,
+		Type:  tp,
+	}
+}
+
 func (c *Config) Default() modeltype.ConfigValueType {
 	if !config.IsReady() {
 		panic("config is not ready")

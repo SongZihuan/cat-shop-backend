@@ -416,27 +416,7 @@ func (r *BuyRecord) TuiHuoDengJi(kuaidi string, kuaidinum string) bool {
 	return false
 }
 
-func (r *BuyRecord) IsClassDownOrNotShow() bool {
-	if r.Wupin == nil {
-		if r.ClassDown {
-			return true // 下架状态 均返回fakse
-		} else {
-			if r.ClassShow {
-				return false // 非下架状态，Show为true表示展示
-			} else {
-				return true // 非下架状态，Show为false表示隐藏
-			}
-		}
-	} else {
-		if r.Wupin.ID != r.WupinID {
-			panic("wupin id not equal")
-		}
-
-		return r.Wupin.IsClassDownOrNotShow()
-	}
-}
-
-func (r *BuyRecord) IsClassDown() bool {
+func (r *BuyRecord) isClassDown() bool {
 	if r.Class == nil {
 		return r.ClassDown
 	} else {
@@ -448,7 +428,7 @@ func (r *BuyRecord) IsClassDown() bool {
 	}
 }
 
-func (r *BuyRecord) IsWupinDown() bool {
+func (r *BuyRecord) isWupinDown() bool {
 	if r.Wupin == nil {
 		return r.WupinDown || r.ClassDown
 	} else {
@@ -461,7 +441,7 @@ func (r *BuyRecord) IsWupinDown() bool {
 }
 
 func (r *BuyRecord) IsBuyRecordCanNotPay() bool {
-	return r.IsWupinDown() || r.IsClassDown()
+	return r.isWupinDown() || r.isClassDown()
 }
 
 func (r *BuyRecord) IsBuyRecordCanPay() bool {

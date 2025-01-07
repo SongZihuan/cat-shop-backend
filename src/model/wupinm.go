@@ -32,7 +32,7 @@ type WupinM struct {
 	BuyJian    modeltype.Total `gorm:"type:uint;not null"`
 
 	Hot       bool `gorm:"type:boolean;not null;"`
-	Down      bool `gorm:"type:boolean;not null;"`
+	WupinDown bool `gorm:"type:boolean;not null;"`
 	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }

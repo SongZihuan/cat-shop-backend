@@ -25,8 +25,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	wupin, err := action.GetWupinByIDWithShow(query.ID)
-	if errors.Is(err, action.ErrNotFound) {
+	wupin, err := action.GetWupinByID(query.ID)
+	if errors.Is(err, action.ErrNotFound) || wupin == nil || wupin.IsWupinDown() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "未找到商品"))
 		return
 	} else if err != nil {

@@ -16,10 +16,29 @@ type Bag struct {
 	Class     *Class          `gorm:"foreignKey:ClassID"`
 	Num       modeltype.Total `gorm:"type:uint;not null"`
 	Time      time.Time       `gorm:"type:datetime;not null"`
-	WupinHot  bool            `gorm:"type:boolean;not null"`
 	WupinDown bool            `gorm:"type:boolean;not null"`
 	ClassShow bool            `gorm:"type:boolean;not null;"`
 	ClassDown bool            `gorm:"type:boolean;not null;"`
+}
+
+func NewBag(user *User, wupin *Wupin, num modeltype.Total) *Bag {
+	tmp1 := *wupin
+	tmp2 := *wupin.Class
+	tmp3 := *user
+
+	return &Bag{
+		UserID:    user.ID,
+		User:      &tmp3,
+		WupinID:   wupin.ID,
+		Wupin:     &tmp1,
+		ClassID:   wupin.ClassID,
+		Class:     &tmp2,
+		Num:       num,
+		Time:      time.Now(),
+		WupinDown: wupin.IsWupinDown(),
+		ClassShow: wupin.Class.IsClassShow(),
+		ClassDown: wupin.Class.IsClassDown(),
+	}
 }
 
 func (*Bag) TableName() string {
@@ -28,10 +47,14 @@ func (*Bag) TableName() string {
 
 func (bag *Bag) Add(num int) bool {
 	bag.Num += modeltype.Total(num)
-	return bag.Num != 0
+	if bag.Num <= 0 {
+		bag.Num = 0
+		return false
+	}
+	return true
 }
 
-func (bag *Bag) IsClassDown() bool {
+func (bag *Bag) isClassDown() bool {
 	if bag.Class == nil {
 		return bag.ClassDown
 	} else {
@@ -43,7 +66,7 @@ func (bag *Bag) IsClassDown() bool {
 	}
 }
 
-func (bag *Bag) IsWupinDown() bool {
+func (bag *Bag) isWupinDown() bool {
 	if bag.Wupin == nil {
 		return bag.WupinDown || bag.ClassShow
 	} else {
@@ -56,7 +79,7 @@ func (bag *Bag) IsWupinDown() bool {
 }
 
 func (bag *Bag) IsBagDown() bool {
-	return bag.IsWupinDown() || bag.IsClassDown()
+	return bag.isWupinDown() || bag.isClassDown()
 }
 
 func (bag *Bag) IsBagShow() bool {

@@ -12,7 +12,7 @@ func TestApiMiddleware() gin.HandlerFunc {
 		panic("config is not ready")
 	}
 
-	if config.Config().Yaml.Http.TestApi {
+	if config.Config().Yaml.Http.EnableTestAPI == "enable" {
 		return func(c *gin.Context) {
 			c.Next()
 		}

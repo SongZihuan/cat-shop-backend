@@ -80,61 +80,54 @@ type BuyRecord struct {
 }
 
 func NewBuyRecord(record *model.BuyRecord) BuyRecord {
-	var class *Class
 	var nwp *NowWupin
 	var wp *Wupin
 
-	if record.IsClassDownOrNotShow() {
-		class = &Class{
-			ID:   modeltype.ClassEmptyID,
-			Name: modeltype.ClassEmptyName,
-		}
-	} else {
-		class = &Class{
-			ID:   record.Wupin.Class.ID,
-			Name: record.Wupin.Class.Name,
-		}
-	}
-
 	wp = &Wupin{
-		ID:        record.Wupin.ID,
-		Name:      record.WupinName,
-		Pic:       record.WupinPic,
-		ClassID:   class.ID,
-		ClassOf:   class,
+		ID:      record.Wupin.ID,
+		Name:    record.WupinName,
+		Pic:     record.WupinPic,
+		ClassID: record.WupinClassID,
+		ClassOf: &Class{
+			ID:   record.WupinClassID,
+			Name: record.WupinClass.Name,
+		},
 		Tag:       utils.GetSQLNullString(record.WupinTag),
-		HotPrice:  modeltype.GetPrice(record.WupinHotPrice),
-		RealPrice: modeltype.GetPrice(record.WupinRealPrice),
+		HotPrice:  record.WupinHotPrice.ToInt64(),
+		RealPrice: record.WupinRealPrice.ToInt64(),
 		Info:      record.WupinInfo,
 		Ren:       record.WupinRen,
 		Phone:     record.WupinPhone,
 		Email:     utils.GetSQLNullString(record.WupinEmail),
 		Wechat:    utils.GetSQLNullString(record.WupinWeChat),
 		Location:  record.WupinLocation,
-		BuyTotal:  modeltype.GetTotal(record.WupinBuyTotal),
-		BuyDaohuo: modeltype.GetTotal(record.WupinBuyDaoHuo),
-		BuyGood:   modeltype.GetTotal(record.WupinBuyGood),
+		BuyTotal:  record.WupinBuyTotal.ToInt64(),
+		BuyDaohuo: record.WupinBuyDaoHuo.ToInt64(),
+		BuyGood:   record.WupinBuyGood.ToInt64(),
 	}
 
 	if record.WupinID > 0 && record.Wupin != nil {
 		nwp = &NowWupin{
-			ID:        record.Wupin.ID,
-			Name:      record.Wupin.Name,
-			Pic:       record.Wupin.Pic,
-			ClassID:   class.ID,
-			ClassOf:   class,
+			ID:      record.Wupin.ID,
+			Name:    record.Wupin.Name,
+			Pic:     record.Wupin.Pic,
+			ClassID: record.ClassID,
+			ClassOf: &Class{
+				ID:   record.ClassID,
+				Name: record.Class.Name,
+			},
 			Tag:       utils.GetSQLNullString(record.Wupin.Tag),
-			HotPrice:  modeltype.GetPrice(record.Wupin.HotPrice),
-			RealPrice: modeltype.GetPrice(record.Wupin.RealPrice),
+			HotPrice:  record.Wupin.HotPrice.ToInt64(),
+			RealPrice: record.Wupin.RealPrice.ToInt64(),
 			Info:      record.Wupin.Info,
 			Ren:       record.Wupin.Ren,
 			Phone:     record.Wupin.Phone,
 			Email:     utils.GetSQLNullString(record.Wupin.Email),
 			Wechat:    utils.GetSQLNullString(record.Wupin.WeChat),
 			Location:  record.Wupin.Location,
-			BuyTotal:  modeltype.GetTotal(record.Wupin.BuyTotal),
-			BuyDaohuo: modeltype.GetTotal(record.Wupin.BuyDaoHuo),
-			BuyGood:   modeltype.GetTotal(record.Wupin.BuyGood),
+			BuyTotal:  record.Wupin.BuyTotal.ToInt64(),
+			BuyDaohuo: record.Wupin.BuyDaoHuo.ToInt64(),
+			BuyGood:   record.Wupin.BuyGood.ToInt64(),
 		}
 	} else {
 		nwp = &NowWupin{

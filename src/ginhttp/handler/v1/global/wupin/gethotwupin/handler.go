@@ -8,7 +8,14 @@ import (
 )
 
 func Handler(c *gin.Context) {
-	res, err := action.GetHotWupinListWithShow()
+	query := Query{}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
+		return
+	}
+
+	res, err := action.GetHotWupinList(query.Limit)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

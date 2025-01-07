@@ -40,28 +40,18 @@ type Wupin struct {
 }
 
 func NewData(wp *model.Wupin) Wupin {
-	var class *Class
-	if wp.IsClassDownOrNotShow() {
-		class = &Class{
-			ID:   modeltype.ClassEmptyID,
-			Name: modeltype.ClassEmptyName,
-		}
-	} else {
-		class = &Class{
-			ID:   wp.Class.ID,
-			Name: wp.Class.Name,
-		}
-	}
-
 	return Wupin{
-		ID:         wp.ID,
-		Name:       wp.Name,
-		Pic:        wp.Pic,
-		ClassID:    class.ID,
-		ClassOf:    class,
+		ID:      wp.ID,
+		Name:    wp.Name,
+		Pic:     wp.Pic,
+		ClassID: wp.ClassID,
+		ClassOf: &Class{
+			ID:   wp.ClassID,
+			Name: wp.Class.Name,
+		},
 		Tag:        utils.GetSQLNullString(wp.Tag),
-		HotPrice:   modeltype.GetPrice(wp.HotPrice),
-		RealPrice:  modeltype.GetPrice(wp.RealPrice),
+		HotPrice:   wp.HotPrice.ToInt64(),
+		RealPrice:  wp.RealPrice.ToInt64(),
 		Info:       wp.Info,
 		Ren:        wp.Ren,
 		Phone:      wp.Phone,
@@ -78,5 +68,8 @@ func NewData(wp *model.Wupin) Wupin {
 }
 
 func NewJsonData(wp *model.Wupin) data.Data {
-	return data.NewSuccessWithData(NewData(wp))
+	if wp.IsWupinDown() {
+		return data.NewSuccessWithData(NewData(wp))
+	}
+	return data.NewCustomError(CodeWupinNotFound, "未找到商品")
 }

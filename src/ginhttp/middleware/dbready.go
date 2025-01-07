@@ -1,13 +1,15 @@
 package middleware
 
 import (
+	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/database"
+	"github.com/SongZihuan/cat-shop-backend/src/flagparser"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func DBReady() gin.HandlerFunc {
-	if database.IsReady() {
+func AllReady() gin.HandlerFunc {
+	if flagparser.IsReady() && config.IsReady() && database.IsReady() {
 		return func(c *gin.Context) {
 			c.Next()
 		}

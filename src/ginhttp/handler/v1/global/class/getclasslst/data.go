@@ -18,7 +18,7 @@ type Data struct {
 func NewData(list []model.Class) Data {
 	res := make([]Class, 0, len(list))
 	for _, v := range list {
-		if v.IsClassDownOrNotShow() {
+		if v.IsClassShow() {
 			res = append(res, Class{
 				ID:   v.ID,
 				Name: v.Name,

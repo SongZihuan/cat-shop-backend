@@ -59,12 +59,17 @@ func (img *Image) SavePath() string {
 	return path.Join(basePath, fmt.Sprintf("%d", img.Time.Unix()), fmt.Sprintf("%s.dat", hash))
 }
 
-func (img *Image) GetUrl() string {
+func getImagePath() string {
 	if !config.IsReady() {
 		panic("config is not ready")
 	}
 
-	return config.Config().Yaml.Http.ResourceBaseAPI + modeltype.ImagePath + "?" + img.GetQuery()
+	cfg := config.Config().Yaml.Http
+	return cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
+}
+
+func (img *Image) GetUrl() string {
+	return getImagePath() + "?" + img.GetQuery()
 }
 
 func (img *Image) GetQuery() string {

@@ -30,4 +30,4 @@ var ImageAlt = map[ImageType]string{
 	AvatarImage: "头像",
 }
 
-const ImagePath = "/v1/image"
+const ImagePathV1 = "/v1/image"

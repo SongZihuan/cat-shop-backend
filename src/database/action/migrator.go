@@ -5,9 +5,10 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"gorm.io/gorm"
 )
 
-func AutoMigrate() error {
+func SystemAutoMigrate() error {
 	if !internal.IsReady() {
 		return errors.New("db is not ready")
 	}
@@ -16,12 +17,14 @@ func AutoMigrate() error {
 	return db.AutoMigrate(model.AutoCreateModelList...)
 }
 
-func CreateEmptyClass() error {
+func SystemCreateEmptyClass() error {
 	if !internal.IsReady() {
 		return errors.New("db is not ready")
 	}
+	return systemCreateEmptyClass(internal.DB())
+}
 
-	db := internal.DB()
+func systemCreateEmptyClass(db *gorm.DB) error {
 	cls := model.NewEmptyClass()
 	err := db.Model(&model.ClassM{}).Where("id = ?", modeltype.ClassEmptyID).Limit(1).FirstOrCreate(cls).Error
 	if err != nil {

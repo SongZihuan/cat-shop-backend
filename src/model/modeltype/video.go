@@ -17,4 +17,4 @@ var VideoTypeToName = map[VideoType]string{
 	WupinVideo: "WuPin",
 }
 
-const VideoPath = "/v1/video"
+const VideoPathV1 = "/v1/video"

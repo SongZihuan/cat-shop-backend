@@ -9,8 +9,7 @@ import (
 	"net/http"
 )
 
-const DefaultLimit = 10
-const MaxLimit = 20
+const MaxPageSize = 20
 
 func Handler(c *gin.Context) {
 	user, ok := c.Value(contextkey.AdminUserKey).(*model.User)
@@ -26,23 +25,25 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	if query.Limit <= 0 {
-		query.Limit = DefaultLimit
+	if query.PageSize > MaxPageSize || query.PageSize <= 0 {
+		query.PageSize = MaxPageSize
 	}
 
-	if query.Limit > MaxLimit {
-		query.Limit = MaxLimit
+	if query.Page <= 0 {
+		query.Page = 1
 	}
 
-	if query.Offset < 0 {
-		query.Offset = 0
-	}
-
-	res, err := action.AdminGetBagListByUser(user, query.Limit, query.Offset)
+	res, err := action.AdminGetBagListByUser(user, query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, NewJsonData(res))
+	maxcount, err := action.AdminGetBagCountByUser(user)
+	if err != nil {
+		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, NewJsonData(res, maxcount))
 }

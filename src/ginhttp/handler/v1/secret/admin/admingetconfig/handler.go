@@ -8,7 +8,7 @@ import (
 )
 
 func Handler(c *gin.Context) {
-	res, err := action.AdminGetConfigLst()
+	res, err := action.AdminGetConfigLst(0)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

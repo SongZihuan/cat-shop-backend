@@ -1,14 +1,7 @@
 package adminaddclass
 
-import "github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
-
-type Data struct {
-}
-
-func NewData() Data {
-	return Data{}
-}
-
-func NewJsonData() data.Data {
-	return data.NewSuccessWithData(NewData())
+type Query struct {
+	Name string `form:"name"`
+	Show bool   `form:"show"`
+	Down bool   `form:"down"`
 }

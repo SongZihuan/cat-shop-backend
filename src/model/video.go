@@ -59,12 +59,17 @@ func (vid *Video) SavePath() string {
 	return path.Join(basePath, fmt.Sprintf("%d", vid.Time.Unix()), fmt.Sprintf("%s.dat", hash))
 }
 
-func (vid *Video) GetUrl() string {
+func getVideoPath() string {
 	if !config.IsReady() {
 		panic("config is not ready")
 	}
 
-	return config.Config().Yaml.Http.ResourceBaseAPI + modeltype.VideoPath + "?" + vid.GetQuery()
+	cfg := config.Config().Yaml.Http
+	return cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
+}
+
+func (vid *Video) GetUrl() string {
+	return getVideoPath() + "?" + vid.GetQuery()
 }
 
 func (vid *Video) GetQuery() string {
