@@ -2,21 +2,18 @@ package router
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/middleware"
 	v1 "github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/v1"
-	"github.com/gin-gonic/gin"
 )
 
 const Version1 = "/v1"
 
-func InitRouter(engine *gin.Engine) {
-	if !config.IsReady() {
-		panic("config is not ready")
-	}
+func InitRouter(engine *ginplus.Router) {
 	v1Router(engine)
 }
 
-func v1Router(engine *gin.Engine) {
+func v1Router(engine *ginplus.Router) {
 	if !config.IsReady() {
 		panic("config is not ready")
 	}

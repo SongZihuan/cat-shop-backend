@@ -1,6 +1,7 @@
 package adminimageupload
 
 import (
+	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/database/action"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gabriel-vasile/mimetype"
@@ -77,4 +78,9 @@ func Handler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, NewSuccess(img.GetUrl(), alt))
+}
+
+func getImagePath() string {
+	cfg := config.Config().Yaml.Http
+	return cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
 }

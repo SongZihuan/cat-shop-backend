@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/global/class/getclasslst"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/global/system/getconfig"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/global/system/getxieyi"
@@ -77,10 +78,9 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/pay/repay"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/test/secret/user/pay/testpay"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/middleware"
-	"github.com/gin-gonic/gin"
 )
 
-func Api(api *gin.RouterGroup) {
+func Api(api *ginplus.Router) {
 	api.Use(middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.MustAccept(), middleware.ReturnContentJson())
 
 	globalApiV1(api)
@@ -88,12 +88,12 @@ func Api(api *gin.RouterGroup) {
 	testApiV1(api)
 }
 
-func Resource(api *gin.RouterGroup) {
+func Resource(api *ginplus.Router) {
 	api.GET("/image", image.Handler) // ${/resource}/v1/image
 	api.GET("/video", video.Handler) // ${/resource}/v1/video
 }
 
-func globalApiV1(apiV1 *gin.RouterGroup) {
+func globalApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/global")
 
 	loginAndRegisterApiV1(api)
@@ -103,20 +103,20 @@ func globalApiV1(apiV1 *gin.RouterGroup) {
 	xieyiApiV1(api)
 }
 
-func loginAndRegisterApiV1(api *gin.RouterGroup) {
+func loginAndRegisterApiV1(api *ginplus.Router) {
 	api.GET("/login", login.Handler)
 	api.GET("/register", register.Handler)
 }
 
-func configApiV1(api *gin.RouterGroup) {
+func configApiV1(api *ginplus.Router) {
 	api.GET("/config", getconfig.Handler)
 }
 
-func classApiV1(api *gin.RouterGroup) {
+func classApiV1(api *ginplus.Router) {
 	api.GET("/class", getclasslst.Handler)
 }
 
-func wupinApiV1(apiV1 *gin.RouterGroup) {
+func wupinApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/wupin")
 	api.GET("/info", getwupin.Handler)
 	api.GET("/list", getsearch.Handler)
@@ -124,11 +124,11 @@ func wupinApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/search", getsearch.Handler)
 }
 
-func xieyiApiV1(api *gin.RouterGroup) {
+func xieyiApiV1(api *ginplus.Router) {
 	api.GET("/xieyi", getxieyi.Handler)
 }
 
-func secretApiV1(apiV1 *gin.RouterGroup) {
+func secretApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/")
 	api.Use(middleware.MustXTokenMiddleware())
 
@@ -137,7 +137,7 @@ func secretApiV1(apiV1 *gin.RouterGroup) {
 	rootAdminApiV1(api)
 }
 
-func userApiV1(apiV1 *gin.RouterGroup) {
+func userApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/user")
 
 	userEditApiV1(api)
@@ -148,12 +148,12 @@ func userApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/info", getuserinfo.Handler)
 }
 
-func userKefuApiV1(apiV1 *gin.RouterGroup) {
+func userKefuApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/kefu")
 	api.POST("/sendmsg", sendmsg.Handler)
 }
 
-func userEditApiV1(apiV1 *gin.RouterGroup) {
+func userEditApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/edit")
 
 	api.POST("/info", updateuserinfo.Handler)
@@ -161,7 +161,7 @@ func userEditApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/avatar", updateuseravtar.Handler)
 }
 
-func userBuyRecordApiV1(apiV1 *gin.RouterGroup) {
+func userBuyRecordApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/buyrecord")
 	userFahuoApiV1(api)
 	userDaohuoApiV1(api)
@@ -174,27 +174,27 @@ func userBuyRecordApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/lst/page", getbuyrecordlstbypage.Handler)
 }
 
-func userFahuoApiV1(apiV1 *gin.RouterGroup) {
+func userFahuoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/fahuo")
 
 	api.POST("/change/user", fahuochangeuser.Handler)
 	api.POST("/quxiao", fahuoquxiaoshenqing.Handler)
 }
 
-func userDaohuoApiV1(apiV1 *gin.RouterGroup) {
+func userDaohuoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/daohuo")
 	api.POST("/queren", daohuo.Handler)
 	api.POST("/pingjia", pingjia.Handler)
 }
 
-func userTuihuoApiV1(apiV1 *gin.RouterGroup) {
+func userTuihuoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/tuihuo")
 
 	api.POST("/shenqing", tuihuoshenqing.Handler)
 	api.POST("/dengji", tuihuodengji.Handler)
 }
 
-func userPayApiV1(apiV1 *gin.RouterGroup) {
+func userPayApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/zhifu")
 	api.POST("/new", newpay.Handler)
 	api.POST("/bag", bagpay.Handler)
@@ -202,7 +202,7 @@ func userPayApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/quxiao", quxiaopay.Handler)
 }
 
-func userBagApiV1(apiV1 *gin.RouterGroup) {
+func userBagApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/bag")
 
 	api.POST("/add", addbag.Handler)
@@ -210,7 +210,7 @@ func userBagApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/list/infinite", getbaglst.Handler)
 }
 
-func adminApiV1(apiV1 *gin.RouterGroup) {
+func adminApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/admin")
 	api.Use(middleware.MustAdminXTokenMiddleware())
 
@@ -225,31 +225,31 @@ func adminApiV1(apiV1 *gin.RouterGroup) {
 	adminConfigApiV1(api)
 }
 
-func adminConfigApiV1(apiV1 *gin.RouterGroup) {
+func adminConfigApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/config")
 	api.POST("/info", admingetconfig.Handler)
 }
 
-func adminFileUploadApiV1(apiV1 *gin.RouterGroup) {
+func adminFileUploadApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/file/upload")
 
 	api.POST("/image", adminimageupload.Handler)
 	api.POST("/video", adminvideoupload.Handler)
 }
 
-func adminMsgApiV1(apiV1 *gin.RouterGroup) {
+func adminMsgApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/kefu/msg")
 
 	api.GET("/list", admingetmsg.Handler)
 }
 
-func adminXieyiApiV1(apiV1 *gin.RouterGroup) {
+func adminXieyiApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/xieyi")
 
 	api.GET("/info", admingetxieyi.Handler)
 }
 
-func adminClassApiV1(apiV1 *gin.RouterGroup) {
+func adminClassApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/class")
 	adminUpdateClassApiV1(api)
 	adminAddClassApiV1(api)
@@ -258,16 +258,16 @@ func adminClassApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/list", admingetclasslst.Handler)
 }
 
-func adminUpdateClassApiV1(apiV1 *gin.RouterGroup) {
+func adminUpdateClassApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/edit")
 	api.POST("/all", adminupdateclass.Handler)
 }
 
-func adminAddClassApiV1(api *gin.RouterGroup) {
+func adminAddClassApiV1(api *ginplus.Router) {
 	api.POST("/add", adminaddclass.Handler)
 }
 
-func adminUserApiV1(apiV1 *gin.RouterGroup) {
+func adminUserApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/user")
 	api.Use(middleware.MustAdminUserMiddleware(), middleware.AdminHasUserPermission())
 
@@ -280,22 +280,22 @@ func adminUserApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/add", adminadduser.Handler)
 }
 
-func adminUserListApiV1(apiV1 *gin.RouterGroup) {
+func adminUserListApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/user")
 	api.GET("/list", admingetuserlst.Handler) // 不需要MustAdmin
 }
 
-func adminBuyRecordApiV1(apiV1 *gin.RouterGroup) {
+func adminBuyRecordApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/buyrecord")
 	api.GET("/list", admingetbuyrecordbypage.Handler)
 }
 
-func adminUserMsgApiV1(apiV1 *gin.RouterGroup) {
+func adminUserMsgApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/kefu/msg")
 	api.GET("/list", admingetusermsg.Handler)
 }
 
-func adminUpdateUserApiV1(apiV1 *gin.RouterGroup) {
+func adminUpdateUserApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/edit")
 
 	api.POST("/info", adminupdateuserinfo.Handler)
@@ -304,7 +304,7 @@ func adminUpdateUserApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/phone", adminupdateuserphone.Handler)
 }
 
-func adminWupinApiV1(apiV1 *gin.RouterGroup) {
+func adminWupinApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/wupin")
 
 	api.POST("/add", adminaddwupin.Handler)
@@ -314,14 +314,14 @@ func adminWupinApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/list", admingetwupinlst.Handler)
 }
 
-func adminUserBagApiV1(apiV1 *gin.RouterGroup) {
+func adminUserBagApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/bag")
 
 	api.POST("/add", adminaddbag.Handler)
 	api.GET("/list", admingetbag.Handler)
 }
 
-func adminUserBuyRecordApiV1(apiV1 *gin.RouterGroup) {
+func adminUserBuyRecordApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/buyrecord")
 	adminFahuoApiV1(api)
 	adminDaohuoApiV1(api)
@@ -332,7 +332,7 @@ func adminUserBuyRecordApiV1(apiV1 *gin.RouterGroup) {
 	api.GET("/list", admingetuserbuyrecordlstbypage.Handler)
 }
 
-func adminTuihuoApiV1(apiV1 *gin.RouterGroup) {
+func adminTuihuoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/tuihuo")
 
 	api.POST("/check", admintuihuoaccept.Handler)
@@ -341,14 +341,14 @@ func adminTuihuoApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/shenqing", admintuihuoshenqing.Handler)
 }
 
-func adminPayApiV1(apiV1 *gin.RouterGroup) {
+func adminPayApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/zhifu")
 
 	api.POST("/people", adminpeoplepay.Handler)
 	api.POST("/quxiao", adminquxiaopay.Handler)
 }
 
-func adminFahuoApiV1(apiV1 *gin.RouterGroup) {
+func adminFahuoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/fahuo")
 	adminFahuoChangeInfoApiV1(api)
 
@@ -358,20 +358,20 @@ func adminFahuoApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/dengji", adminfahuodengji.Handler)
 }
 
-func adminFahuoChangeInfoApiV1(apiV1 *gin.RouterGroup) {
+func adminFahuoChangeInfoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/change")
 
 	api.POST("/user", adminfahuochuangeuser.Handler)
 	api.POST("/shop", adminfahuochangeshop.Handler)
 }
 
-func adminDaohuoApiV1(apiV1 *gin.RouterGroup) {
+func adminDaohuoApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/daohuo")
 
 	api.POST("/queren", admindaohuo.Handler)
 }
 
-func rootAdminApiV1(apiV1 *gin.RouterGroup) {
+func rootAdminApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/admin/root")
 	api.Use(middleware.MustRootAdminXTokenMiddleware())
 
@@ -380,13 +380,13 @@ func rootAdminApiV1(apiV1 *gin.RouterGroup) {
 	rootAdminXieyiApiV1(api)
 }
 
-func rootAdminXieyiApiV1(apiV1 *gin.RouterGroup) {
+func rootAdminXieyiApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/xieyi")
 
 	api.GET("/edit", adminupdatexieyi.Handler)
 }
 
-func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
+func rootAdminConfigApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/config")
 
 	api.POST("/delete", admindeleteconfig.Handler)
@@ -394,14 +394,14 @@ func rootAdminConfigApiV1(apiV1 *gin.RouterGroup) {
 	api.POST("/update/string", adminupdateconfigstring.Handler)
 }
 
-func rootAdminHttpServer(apiV1 *gin.RouterGroup) {
+func rootAdminHttpServer(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/httpserver")
 
 	api.POST("/stop", adminstopserver.Handler)
 	api.POST("/restart", adminrestartserver.Handler)
 }
 
-func testApiV1(apiV1 *gin.RouterGroup) {
+func testApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/test")
 	api.Use(middleware.TestApiMiddleware())
 
@@ -409,24 +409,24 @@ func testApiV1(apiV1 *gin.RouterGroup) {
 	testSecretApiV1(api)
 }
 
-func testGlobalApi(apiV1 *gin.RouterGroup) {
+func testGlobalApi(apiV1 *ginplus.Router) {
 	_ = apiV1.Group("/global")
 }
 
-func testSecretApiV1(apiV1 *gin.RouterGroup) {
+func testSecretApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/")
 	api.Use(middleware.MustXTokenMiddleware())
 
 	testUserApiV1(api)
 }
 
-func testUserApiV1(apiV1 *gin.RouterGroup) {
+func testUserApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/user")
 
 	testUserPayApiV1(api)
 }
 
-func testUserPayApiV1(apiV1 *gin.RouterGroup) {
+func testUserPayApiV1(apiV1 *ginplus.Router) {
 	api := apiV1.Group("/zhifu")
 
 	api.POST("/try", testpay.Handler)

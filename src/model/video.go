@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/resourcepath"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"gorm.io/gorm"
@@ -59,17 +60,8 @@ func (vid *Video) SavePath() string {
 	return path.Join(basePath, fmt.Sprintf("%d", vid.Time.Unix()), fmt.Sprintf("%s.dat", hash))
 }
 
-func getVideoPath() string {
-	if !config.IsReady() {
-		panic("config is not ready")
-	}
-
-	cfg := config.Config().Yaml.Http
-	return cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
-}
-
 func (vid *Video) GetUrl() string {
-	return getVideoPath() + "?" + vid.GetQuery()
+	return resourcepath.GetVideoPath() + "?" + vid.GetQuery()
 }
 
 func (vid *Video) GetQuery() string {

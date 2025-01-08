@@ -5,37 +5,26 @@ import (
 	"errors"
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/resourcepath"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/router"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 )
 
 var ServerClose = fmt.Errorf("server close")
 
-var engine *gin.Engine = nil
+var engine *ginplus.Router = nil
 var server *http.Server = nil
 
 func InitGin() error {
-	if !config.IsReady() {
-		panic("config is not ready")
+	_engine, err := ginplus.NewEngine()
+	if err != nil {
+		return err
 	}
-	cfg := config.Config()
-
-	gin.SetMode(cfg.Yaml.Global.GetGinMode())
-
-	_engine := gin.Default()
-
-	if cfg.Yaml.Http.Proxy.Enable() {
-		_engine.ForwardedByClientIP = true
-		err := _engine.SetTrustedProxies(cfg.Yaml.Http.Proxy.TrustedIPs)
-		if err != nil {
-			return err
-		}
-	}
-
 	router.InitRouter(_engine)
-
+	resourcepath.LoadImagePath(_engine)
+	resourcepath.LoadVideoPath(_engine)
 	engine = _engine
 	return nil
 }

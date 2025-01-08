@@ -8,10 +8,12 @@ func processURL(url string, defaultUrl ...string) string {
 	}
 
 	url = strings.TrimSpace(url)
-	url = strings.TrimRight(url, "/")
+
 	if !strings.HasPrefix(url, "/") {
 		url = "/" + url
 	}
+
+	url = strings.TrimRight(url, "/")
 
 	return url
 }

@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/resourcepath"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"gorm.io/gorm"
@@ -59,17 +60,8 @@ func (img *Image) SavePath() string {
 	return path.Join(basePath, fmt.Sprintf("%d", img.Time.Unix()), fmt.Sprintf("%s.dat", hash))
 }
 
-func getImagePath() string {
-	if !config.IsReady() {
-		panic("config is not ready")
-	}
-
-	cfg := config.Config().Yaml.Http
-	return cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
-}
-
 func (img *Image) GetUrl() string {
-	return getImagePath() + "?" + img.GetQuery()
+	return resourcepath.GetImagePath() + "?" + img.GetQuery()
 }
 
 func (img *Image) GetQuery() string {
