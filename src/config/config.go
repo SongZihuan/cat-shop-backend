@@ -7,18 +7,32 @@ type ConfigStruct struct {
 	yamlHasParser bool
 	sigChan       chan os.Signal
 
-	Yaml YamlConfig
-	File FileLocationConfig
+	Yaml       YamlConfig
+	File       FileLocationConfig
+	CoreOrigin CorsOrigin
 }
 
 func (c *ConfigStruct) init() error {
+	c.configReady = false
+	c.yamlHasParser = false
+
 	c.sigChan = make(chan os.Signal)
 	err := initSignal(c.sigChan)
 	if err != nil {
 		return err
 	}
 
+	err = c.Yaml.init()
+	if err != nil {
+		return err
+	}
+
 	err = c.File.init()
+	if err != nil {
+		return err
+	}
+
+	err = c.CoreOrigin.init()
 	if err != nil {
 		return err
 	}
@@ -44,7 +58,7 @@ func (c *ConfigStruct) setDefault() {
 }
 
 func (c *ConfigStruct) check() (err ConfigError) {
-	err = c.Yaml.check(&c.File)
+	err = c.Yaml.check(&c.File, &c.CoreOrigin)
 	if err != nil && err.IsError() {
 		return err
 	}

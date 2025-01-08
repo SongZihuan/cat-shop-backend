@@ -16,6 +16,10 @@ type YamlConfig struct {
 	Password PasswordConfig `yaml:"password"`
 }
 
+func (y *YamlConfig) init() error {
+	return nil
+}
+
 func (y *YamlConfig) setDefault() {
 	y.Global.setDefault()
 	y.Mysql.setDefault()
@@ -26,7 +30,7 @@ func (y *YamlConfig) setDefault() {
 	y.Password.setDefault()
 }
 
-func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
+func (y *YamlConfig) check(fl *FileLocationConfig, co *CorsOrigin) (err ConfigError) {
 	err = y.Global.check()
 	if err != nil && err.IsError() {
 		return err
@@ -42,7 +46,7 @@ func (y *YamlConfig) check(fl *FileLocationConfig) (err ConfigError) {
 		return err
 	}
 
-	err = y.Http.check()
+	err = y.Http.check(co)
 	if err != nil && err.IsError() {
 		return err
 	}

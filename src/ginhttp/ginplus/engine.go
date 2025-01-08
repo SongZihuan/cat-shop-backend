@@ -279,6 +279,16 @@ func (r *Router) ServeHTTP(wri http.ResponseWriter, req *http.Request) {
 	panic("Bad router")
 }
 
+func (r *Router) NotRouter(NotFound gin.HandlerFunc, NotMethod gin.HandlerFunc) {
+	engine, ok := r.router.(*gin.Engine)
+	if !ok {
+		panic("not engine")
+	}
+
+	engine.NoRoute(NotFound)
+	engine.NoMethod(NotMethod)
+}
+
 func (r *Router) DebugMsg(format string, values ...any) {
 	debugPrint(format, values...)
 }

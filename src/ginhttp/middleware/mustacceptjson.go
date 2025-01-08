@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/header"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -8,7 +9,7 @@ import (
 
 func MustAccept() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		acceptHeader := c.GetHeader("Accept")
+		acceptHeader := c.GetHeader(header.RequestsAccept)
 		if !strings.Contains(acceptHeader, "application/json") {
 			c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"error": "Accept header must include application/json"})
 			return
@@ -20,9 +21,9 @@ func MustAccept() gin.HandlerFunc {
 func ReturnContentJson() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
-		ct := c.Writer.Header().Get("Content-Type")
+		ct := c.Writer.Header().Get(header.RequestsContentType)
 		if ct != "" {
-			c.Writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+			c.Writer.Header().Set(header.RequestsContentType, "application/json; charset=utf-8")
 		}
 	}
 }

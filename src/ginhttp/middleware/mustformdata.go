@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/header"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -8,12 +9,9 @@ import (
 
 func MustFormData() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Request.Method != http.MethodGet && c.Request.Method != http.MethodPost {
-			c.AbortWithStatus(http.StatusMethodNotAllowed)
-			return
-		} else if c.Request.Method == http.MethodPost {
-			ct := c.GetHeader("Content-Type")
-			cl := c.GetHeader("Content-Length")
+		if c.Request.Method == http.MethodPost {
+			ct := c.GetHeader(header.RequestsContentType)
+			cl := c.GetHeader(header.RequestsContentLength)
 
 			if ct != "multipart/form-data" {
 				c.AbortWithStatus(http.StatusBadRequest)

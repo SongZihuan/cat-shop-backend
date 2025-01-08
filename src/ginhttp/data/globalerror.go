@@ -87,3 +87,11 @@ func NewClientAdminUserNotFound() Data {
 func NewClientAdminUserNoPermission() Data {
 	return newClientError(GlobalCodeErrorAdminApiUserNoPermission, "无权操作指定用户")
 }
+
+func NewClientNotFoundError() Data {
+	return newClientError(GlobalCodeErrNotFound, "资源不存在")
+}
+
+func NewClientCorsError(debugmsg ...interface{}) Data {
+	return newClientError(GlobalCodeErrNotFound, "不允许跨域", debugmsg...)
+}

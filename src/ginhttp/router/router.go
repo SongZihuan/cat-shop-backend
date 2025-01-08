@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/notrouter"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/middleware"
 	v1 "github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/v1"
 )
@@ -10,6 +11,7 @@ import (
 const Version1 = "/v1"
 
 func InitRouter(engine *ginplus.Router) {
+	engine.NotRouter(notrouter.Handler404, notrouter.Handler403)
 	v1Router(engine)
 }
 
@@ -18,7 +20,7 @@ func v1Router(engine *ginplus.Router) {
 		panic("config is not ready")
 	}
 
-	engine.Use(middleware.AllReady())
+	engine.Use(middleware.AllReady(), middleware.AllowMethod(), middleware.Cors())
 	v1.Api(engine.Group(config.Config().Yaml.Http.BaseURL).Group(config.Config().Yaml.Http.ApiURL).Group(Version1))
 	v1.Resource(engine.Group(config.Config().Yaml.Http.BaseURL).Group(config.Config().Yaml.Http.ResourceURL).Group(Version1))
 }

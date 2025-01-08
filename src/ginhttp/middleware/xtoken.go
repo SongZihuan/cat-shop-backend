@@ -23,7 +23,7 @@ const (
 )
 
 func handlerToken(c *gin.Context) (*jwttoken.Data, *model.User, TokenStatus) {
-	token := c.GetHeader(header.RequestXTokenHeader)
+	token := c.GetHeader(header.RequestsXTokenHeader)
 
 	if token == "" {
 		c.Set(contextkey.DebugTokenKey, "没有Token")

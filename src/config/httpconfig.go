@@ -15,6 +15,7 @@ type HttpConfig struct {
 	Proxy          ProxyConfig      `yaml:"proxy"`
 	StopSecret     string           `yaml:"stopsecret"`
 	StopWaitSecond int              `yaml:"stopwaitsecond"`
+	Cors           CorsConfig       `yaml:"cors"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -30,7 +31,7 @@ func (h *HttpConfig) setDefault() {
 
 	if h.StopSecret == "" {
 		h.StopSecret = utils.RandStr(8)
-		fmt.Printf("Auto set http stop secret %s\n", h.StopSecret)
+		NewConfigWarning(fmt.Sprintf("Auto set http stop secret %s\n", h.StopSecret))
 	}
 
 	if h.StopWaitSecond <= 0 {
@@ -38,10 +39,16 @@ func (h *HttpConfig) setDefault() {
 	}
 
 	h.Proxy.setDefault()
+	h.Cors.setDefault()
 }
 
-func (h *HttpConfig) check() ConfigError {
+func (h *HttpConfig) check(co *CorsOrigin) ConfigError {
 	err := h.Proxy.check()
+	if err != nil && err.IsError() {
+		return err
+	}
+
+	err = h.Cors.check(co)
 	if err != nil && err.IsError() {
 		return err
 	}

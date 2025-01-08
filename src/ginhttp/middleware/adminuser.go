@@ -19,9 +19,9 @@ func getAdminUser(c *gin.Context, self *model.User) (*model.User, error) {
 
 	var err error
 	var query Query
-	if c.Request.Method == "GET" {
+	if c.Request.Method == http.MethodGet {
 		err = c.ShouldBindQuery(&query)
-	} else if c.Request.Method == "POST" {
+	} else if c.Request.Method == http.MethodPost {
 		err = c.ShouldBindWith(&query, binding.FormMultipart)
 	} else {
 		return nil, nil

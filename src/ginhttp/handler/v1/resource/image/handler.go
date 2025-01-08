@@ -3,6 +3,7 @@ package image
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/header"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
@@ -53,7 +54,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	acceptHeader := c.GetHeader("Accept")
+	acceptHeader := c.GetHeader(header.RequestsAccept)
 	if acceptHeader != "" &&
 		!strings.Contains(acceptHeader, "*/*") &&
 		!strings.Contains(acceptHeader, "image/*") &&
@@ -63,6 +64,6 @@ func Handler(c *gin.Context) {
 	}
 
 	c.Writer.WriteHeader(http.StatusOK)
-	c.Writer.Header().Set("Content-Type", mimeTp)
+	c.Writer.Header().Set(header.RequestsContentType, mimeTp)
 	_, _ = c.Writer.Write(dat)
 }
