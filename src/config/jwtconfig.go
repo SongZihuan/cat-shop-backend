@@ -7,12 +7,12 @@ import (
 )
 
 type JwtConfig struct {
-	Secret     string     `json:"secret"`
-	SecretPath string     `json:"secretpath"`
-	SaveSecret StringBool `json:"savesecret"`
-	Hour       int64      `json:"hour"`
-	ResetMin   int64      `json:"resetmin"`
-	Issuer     string     `json:"issuer"`
+	Secret     string           `json:"secret"`
+	SecretPath string           `json:"secretpath"`
+	SaveSecret utils.StringBool `json:"savesecret"`
+	Hour       int64            `json:"hour"`
+	ResetMin   int64            `json:"resetmin"`
+	Issuer     string           `json:"issuer"`
 }
 
 func (j *JwtConfig) setDefault() {
@@ -29,7 +29,7 @@ func (j *JwtConfig) setDefault() {
 		}
 	}
 
-	j.SaveSecret.SetDefault(Enable)
+	j.SaveSecret.SetDefaultEanble()
 
 	if j.Hour <= 0 {
 		j.Hour = 2
@@ -52,7 +52,7 @@ func (j *JwtConfig) setDefault() {
 }
 
 func (j *JwtConfig) check() ConfigError {
-	if j.SaveSecret.Is(Enable) {
+	if j.SaveSecret.IsEnable() {
 		err := saveJwtSecret(j.SecretPath, j.Secret)
 		if err != nil {
 			_ = NewConfigWarning("jwt secret save warning:" + err.Error())

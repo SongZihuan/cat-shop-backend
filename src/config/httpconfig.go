@@ -6,15 +6,15 @@ import (
 )
 
 type HttpConfig struct {
-	Address        string      `yaml:"address"`
-	DebugMsg       StringBool  `yaml:"debugmsg"`
-	BaseURL        string      `yaml:"baseurl"`
-	ApiURL         string      `yaml:"apiurl"`
-	ResourceURL    string      `yaml:"resourceurl"`
-	EnableTestAPI  string      `yaml:"enabletestapi"`
-	Proxy          ProxyConfig `yaml:"proxy"`
-	StopSecret     string      `yaml:"stopsecret"`
-	StopWaitSecond int         `yaml:"stopwaitsecond"`
+	Address        string           `yaml:"address"`
+	DebugMsg       utils.StringBool `yaml:"debugmsg"`
+	BaseURL        string           `yaml:"baseurl"`
+	ApiURL         string           `yaml:"apiurl"`
+	ResourceURL    string           `yaml:"resourceurl"`
+	EnableTestAPI  string           `yaml:"enabletestapi"`
+	Proxy          ProxyConfig      `yaml:"proxy"`
+	StopSecret     string           `yaml:"stopsecret"`
+	StopWaitSecond int              `yaml:"stopwaitsecond"`
 }
 
 func (h *HttpConfig) setDefault() {
@@ -22,7 +22,7 @@ func (h *HttpConfig) setDefault() {
 		h.Address = "localhost:2689"
 	}
 
-	h.DebugMsg.SetDefault(Disable)
+	h.DebugMsg.SetDefaultDisable()
 
 	h.BaseURL = utils.ProcessPath(h.BaseURL)
 	h.ApiURL = utils.ProcessPath(h.ApiURL, "/api")

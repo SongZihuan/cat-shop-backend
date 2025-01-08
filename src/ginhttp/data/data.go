@@ -29,7 +29,7 @@ func newData(code CodeType, vargs ...interface{}) Data {
 	}
 
 	dat := _newData(code, vargs...)
-	if config.Config().Yaml.Http.DebugMsg.Is(config.Disable) {
+	if config.Config().Yaml.Http.DebugMsg.IsDisable() {
 		dat.DebugMsg = ""
 	}
 

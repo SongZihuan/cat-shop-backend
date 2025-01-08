@@ -6,16 +6,16 @@ import (
 )
 
 type ProxyConfig struct {
-	Proxy      StringBool `json:"proxy"`
-	TrustedIPs []string   `json:"trustedips"`
+	Proxy      utils.StringBool `json:"proxy"`
+	TrustedIPs []string         `json:"trustedips"`
 }
 
 func (p *ProxyConfig) setDefault() {
-	p.Proxy.SetDefault(Disable)
+	p.Proxy.SetDefaultDisable()
 }
 
 func (p *ProxyConfig) check() ConfigError {
-	if p.Proxy.Is(Enable) {
+	if p.Proxy.IsEnable() {
 		if len(p.TrustedIPs) == 0 {
 			_ = NewConfigWarning("proxy trusts ips will be ignore because proxy is disabled")
 		} else {
@@ -33,5 +33,5 @@ func (p *ProxyConfig) check() ConfigError {
 }
 
 func (p *ProxyConfig) Enable() bool {
-	return p.Proxy.Is(Enable)
+	return p.Proxy.IsEnable()
 }
