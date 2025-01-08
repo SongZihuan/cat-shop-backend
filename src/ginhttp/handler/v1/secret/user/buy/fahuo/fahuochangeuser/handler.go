@@ -86,5 +86,5 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, data.NewSuccess("确认到货成功"))
+	c.JSON(http.StatusOK, data.NewSuccess("修改成功"))
 }

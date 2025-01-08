@@ -68,8 +68,8 @@ type BuyRecord struct {
 	ShouhuoTime        int64               `json:"shouhuotime"`
 	PingjiaTime        int64               `json:"pingjiatime"`
 	TuiHuoShenQingTime int64               `json:"tuihuoshenqingtime"`
-	DengjituihuoTime   int64               `json:"dengjituihuotime"`
 	QuerentuihuoTime   int64               `json:"querentuihuotime"`
+	DengjituihuoTime   int64               `json:"dengjituihuotime"`
 	TuohuoTime         int64               `json:"tuohuotime"`
 	Quxiaotime         int64               `json:"quxiaotime"`
 	Status             modeltype.BuyStatus `json:"status"`
@@ -101,8 +101,8 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 			ShouhuoTime:        utils.GetSQLNullTimeUnix(record.ShouHuoTime),
 			PingjiaTime:        utils.GetSQLNullTimeUnix(record.PingJiaTime),
 			TuiHuoShenQingTime: utils.GetSQLNullTimeUnix(record.TuiHuoShenQingTime),
-			DengjituihuoTime:   utils.GetSQLNullTimeUnix(record.DengJiTuiHuoTime),
 			QuerentuihuoTime:   utils.GetSQLNullTimeUnix(record.QueRenTuiHuoTime),
+			DengjituihuoTime:   utils.GetSQLNullTimeUnix(record.DengJiTuiHuoTime),
 			TuohuoTime:         utils.GetSQLNullTimeUnix(record.TuiHuoTime),
 			Quxiaotime:         utils.GetSQLNullTimeUnix(record.QuXiaoTime),
 			Status:             record.Status,
@@ -196,8 +196,8 @@ func NewBuyRecord(record *model.BuyRecord) BuyRecord {
 			ShouhuoTime:        utils.GetSQLNullTimeUnix(record.ShouHuoTime),
 			PingjiaTime:        utils.GetSQLNullTimeUnix(record.PingJiaTime),
 			TuiHuoShenQingTime: utils.GetSQLNullTimeUnix(record.TuiHuoShenQingTime),
-			DengjituihuoTime:   utils.GetSQLNullTimeUnix(record.DengJiTuiHuoTime),
 			QuerentuihuoTime:   utils.GetSQLNullTimeUnix(record.QueRenTuiHuoTime),
+			DengjituihuoTime:   utils.GetSQLNullTimeUnix(record.DengJiTuiHuoTime),
 			TuohuoTime:         utils.GetSQLNullTimeUnix(record.TuiHuoTime),
 			Quxiaotime:         utils.GetSQLNullTimeUnix(record.QuXiaoTime),
 			Status:             record.Status,

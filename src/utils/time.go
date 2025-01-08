@@ -12,9 +12,15 @@ func GetSQLNullTimeUnix(s sql.NullTime) int64 {
 	return 0
 }
 
-func SqlNullNow() sql.NullTime {
+func SqlTimeNow() sql.NullTime {
 	return sql.NullTime{
 		Valid: true,
 		Time:  time.Now(),
+	}
+}
+
+func SqlTimeNull() sql.NullTime {
+	return sql.NullTime{
+		Valid: false,
 	}
 }

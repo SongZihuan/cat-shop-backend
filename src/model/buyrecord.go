@@ -2,12 +2,8 @@ package model
 
 import (
 	"database/sql"
-	"fmt"
-	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
-	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"gorm.io/gorm"
-	"net/url"
 	"time"
 )
 
@@ -29,8 +25,8 @@ type BuyRecord struct {
 	ShouHuoTime        sql.NullTime        `gorm:"type:datetime;"`
 	PingJiaTime        sql.NullTime        `gorm:"type:datetime;"`
 	TuiHuoShenQingTime sql.NullTime        `gorm:"type:datetime;"`
-	DengJiTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
 	QueRenTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
+	DengJiTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
 	TuiHuoTime         sql.NullTime        `gorm:"type:datetime;"`
 	QuXiaoTime         sql.NullTime        `gorm:"type:datetime;"`
 	FaHuoKuaiDi        sql.NullString      `gorm:"type:varchar(20);"`
@@ -78,368 +74,7 @@ type BuyRecord struct {
 	WupinHot        bool            `gorm:"type:boolean;not null"`
 
 	WupinDown bool `gorm:"type:boolean;not null"` // 并非物品Lock信息
-	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
-}
-
-func NewBuyRecord(user *User, wupin *Wupin, num modeltype.Total, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
-	if wupin.IsWupinCanNotSale() {
-		panic("wupin not sale")
-	}
-
-	if num <= 0 {
-		panic("num is bad")
-	}
-
-	return &BuyRecord{
-		Status:     modeltype.WaitPayCheck,
-		UserID:     user.ID,
-		WupinID:    wupin.ID,
-		ClassID:    wupin.ClassID,
-		Num:        num,
-		Price:      wupin.GetPrice(),
-		TotalPrice: wupin.GetPriceTotal(num),
-		XiaDanTime: time.Now(),
-
-		WupinName:    wupin.Name,
-		WupinPic:     wupin.Pic,
-		WupinClassID: wupin.ClassID,
-		WupinClass:   wupin.Class,
-		WupinTag:     wupin.Tag,
-
-		WupinHotPrice:  wupin.HotPrice,
-		WupinRealPrice: wupin.RealPrice,
-
-		WupinInfo:     wupin.Info,
-		WupinRen:      wupin.Ren,
-		WupinPhone:    wupin.Phone,
-		WupinWeChat:   wupin.WeChat,
-		WupinEmail:    wupin.Email,
-		WupinLocation: wupin.Location,
-
-		WupinBuyTotal:   wupin.BuyTotal,
-		WupinBuyDaoHuo:  wupin.BuyDaoHuo,
-		WupinBuyGood:    wupin.BuyGood,
-		WupinBuyPrice:   wupin.BuyPrice,
-		WupinBuyPingJia: wupin.BuyPingjia,
-		WupinBuyJian:    wupin.BuyJian,
-		WupinHot:        wupin.Hot,
-
-		UserName:     username,
-		UserPhone:    userphone,
-		UserLocation: userlocation,
-		UserWeChat:   sql.NullString{String: userwechat, Valid: len(userwechat) != 0},
-		UserEmail:    sql.NullString{String: useremail, Valid: len(useremail) != 0},
-		UserRemark:   sql.NullString{String: userremark, Valid: len(userremark) != 0},
-
-		ShopName:     wupin.Ren,
-		ShopPhone:    wupin.Phone,
-		ShopWeChat:   wupin.WeChat,
-		ShopEmail:    wupin.Email,
-		ShopLocation: userlocation,
-		ShopRemark:   sql.NullString{Valid: false},
-
-		WupinDown: wupin.IsWupinDown(),
-	}
-}
-
-func NewBagBuyRecord(user *User, bag *Bag, username, userphone, userlocation, userwechat, useremail, userremark string) *BuyRecord {
-	if bag.IsBagCanNotSale() {
-		panic("bag not sale")
-	}
-
-	wupin := bag.Wupin
-	if wupin == nil {
-		panic("wupin is nil")
-	} else if wupin.IsWupinCanNotSale() {
-		panic("wupin not sale")
-	}
-
-	return &BuyRecord{
-		Status:     modeltype.WaitPayCheck,
-		UserID:     user.ID,
-		WupinID:    wupin.ID,
-		ClassID:    wupin.ClassID,
-		Num:        bag.Num,
-		Price:      wupin.GetPrice(),
-		TotalPrice: wupin.GetPriceTotal(bag.Num),
-		XiaDanTime: time.Now(),
-
-		WupinName:    wupin.Name,
-		WupinPic:     wupin.Pic,
-		WupinClassID: wupin.ClassID,
-		WupinClass:   wupin.Class,
-		WupinTag:     wupin.Tag,
-
-		WupinHotPrice:  wupin.HotPrice,
-		WupinRealPrice: wupin.RealPrice,
-
-		WupinInfo:     wupin.Info,
-		WupinRen:      wupin.Ren,
-		WupinPhone:    wupin.Phone,
-		WupinWeChat:   wupin.WeChat,
-		WupinEmail:    wupin.Email,
-		WupinLocation: wupin.Location,
-
-		WupinBuyTotal:   wupin.BuyTotal,
-		WupinBuyDaoHuo:  wupin.BuyDaoHuo,
-		WupinBuyGood:    wupin.BuyGood,
-		WupinBuyPrice:   wupin.BuyPrice,
-		WupinBuyPingJia: wupin.BuyPingjia,
-		WupinBuyJian:    wupin.BuyJian,
-		WupinHot:        wupin.Hot,
-
-		UserName:     username,
-		UserPhone:    userphone,
-		UserLocation: userlocation,
-		UserWeChat:   sql.NullString{String: userwechat, Valid: len(userwechat) != 0},
-		UserEmail:    sql.NullString{String: useremail, Valid: len(useremail) != 0},
-		UserRemark:   sql.NullString{String: userremark, Valid: len(userremark) != 0},
-
-		ShopName:     wupin.Ren,
-		ShopPhone:    wupin.Phone,
-		ShopWeChat:   wupin.WeChat,
-		ShopEmail:    wupin.Email,
-		ShopLocation: userlocation,
-		ShopRemark:   sql.NullString{Valid: false},
-
-		WupinDown: wupin.IsWupinDown(),
-	}
-}
-
-func (r *BuyRecord) BindUser(u *User) {
-	if r.UserID != u.ID {
-		panic("bad user id")
-	} else if r.User == nil {
-		r.User = u
-	}
-}
-
-func (r *BuyRecord) Repay() {
-	if r.Status == modeltype.PayCheckFail {
-		r.Status = modeltype.WaitPayCheck
-	}
-}
-
-func (r *BuyRecord) GetNewPayUrl(pft modeltype.PayFromType, redirect string) string {
-	if !config.IsReady() {
-		panic("config is not ready")
-	}
-
-	if r.Status != modeltype.WaitPayCheck {
-		return ""
-	}
-
-	cfg := config.Config()
-	basePath := cfg.Yaml.Front.BasePath + cfg.Yaml.Front.TestPath + cfg.Yaml.Front.TestPayPath
-	query := r.getPayUrlQuery(pft, modeltype.NewPay, redirect)
-
-	return basePath + "?" + query
-}
-
-func (r *BuyRecord) GetRepayPayUrl(pft modeltype.PayFromType, redirect string) string {
-	if !config.IsReady() {
-		panic("config is not ready")
-	}
-
-	if r.Status != modeltype.WaitPayCheck { // 此处应该是WaitPayCheck，因为在调用该函数之前旧调用了Repay函数，该函数会重置Status为WaitPayCheck
-		return ""
-	}
-
-	cfg := config.Config()
-	basePath := cfg.Yaml.Front.BasePath + cfg.Yaml.Front.TestPath + cfg.Yaml.Front.TestPayPath
-	query := r.getPayUrlQuery(pft, modeltype.Repay, redirect)
-
-	return basePath + "?" + query
-}
-
-func (r *BuyRecord) GetBagPayUrl(pft modeltype.PayFromType, redirect string) string {
-	if !config.IsReady() {
-		panic("config is not ready")
-	}
-
-	if r.Status != modeltype.WaitPayCheck {
-		return ""
-	}
-
-	cfg := config.Config()
-	basePath := cfg.Yaml.Front.BasePath + cfg.Yaml.Front.TestPath + cfg.Yaml.Front.TestPayPath
-	query := r.getPayUrlQuery(pft, modeltype.BagPay, redirect)
-
-	return basePath + "?" + query
-}
-
-func (r *BuyRecord) getPayUrlQuery(pft modeltype.PayFromType, pt modeltype.PayType, redirect string) string {
-	pftn, ok := modeltype.PayFromTypeToName[pft]
-	if !ok {
-		return ""
-	}
-
-	ptn, ok := modeltype.PayTypeToName[pt]
-	if !ok {
-		return ""
-	}
-
-	v := url.Values{}
-	v.Add(string(modeltype.PayFromTypeKey), pftn)
-	v.Add(string(modeltype.PayBuyRecordIdKey), fmt.Sprintf("%d", r.ID))
-	v.Add(string(modeltype.PayRedirectKey), redirect)
-	v.Add(string(modeltype.PayTypeKey), ptn)
-
-	return v.Encode()
-}
-
-func (r *BuyRecord) PaySuccess() bool {
-	if r.WupinID <= 0 || r.Wupin == nil {
-		return false
-	} else if r.UserID <= 0 || r.User == nil {
-		return false
-	}
-
-	if r.Status == modeltype.WaitPayCheck {
-		ok := r.Wupin.BuyNow(r)
-		if !ok {
-			return false
-		}
-
-		ok = r.User.BuyNow(r)
-		if !ok {
-			return false
-		}
-
-		r.Status = modeltype.WaitFahuo
-		r.FuKuanTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) PayFail() bool {
-	if r.Status == modeltype.WaitPayCheck {
-		r.Status = modeltype.PayCheckFail
-		return false
-	}
-	return false
-}
-
-func (r *BuyRecord) ChangeUser(username, userphone, userlocation, userwechat, useremail, userremark string) bool {
-	if r.Status == modeltype.WaitShouHuo || r.Status == modeltype.WaitPayCheck || r.Status == modeltype.PayCheckFail {
-		r.UserName = username
-		r.UserPhone = userphone
-		r.UserLocation = userlocation
-		r.UserWeChat = sql.NullString{String: userwechat, Valid: len(userwechat) != 0}
-		r.UserEmail = sql.NullString{String: useremail, Valid: len(useremail) != 0}
-		r.UserRemark = sql.NullString{String: userremark, Valid: len(userremark) != 0}
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) DaoHuo() bool {
-	if r.WupinID <= 0 || r.Wupin == nil {
-		return false
-	} else if r.UserID <= 0 || r.User == nil {
-		return false
-	}
-
-	if r.Status == modeltype.WaitPingJia {
-		return true
-	} else if r.Status == modeltype.WaitShouHuo {
-		ok := r.Wupin.Daohuo(r)
-		if !ok {
-			return false
-		}
-
-		ok = r.User.Daohuo(r)
-		if !ok {
-			return false
-		}
-
-		r.Status = modeltype.WaitPingJia
-		r.ShouHuoTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) PingJia(isGood bool) bool {
-	if r.WupinID <= 0 || r.Wupin == nil {
-		return false
-	} else if r.UserID <= 0 || r.User == nil {
-		return false
-	}
-
-	if r.Status == modeltype.YiPingJia {
-		return true
-	} else if r.Status == modeltype.WaitPingJia {
-		ok := r.Wupin.PingJia(r, isGood)
-		if !ok {
-			return false
-		}
-
-		ok = r.User.PingJia(r, isGood)
-		if !ok {
-			return false
-		}
-
-		r.Status = modeltype.YiPingJia
-		r.IsGood = sql.NullBool{Bool: isGood, Valid: true}
-		r.PingJiaTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) QuXiaoFahuo() bool {
-	if r.WupinID <= 0 || r.Wupin == nil {
-		return false
-	}
-
-	if r.Status == modeltype.QuXiao {
-		return true
-	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
-		r.Status = modeltype.QuXiao
-		r.QuXiaoTime = utils.SqlNullNow()
-		return true
-	} else if r.Status == modeltype.WaitFahuo {
-		r.Status = modeltype.CheckQuXiao
-		r.QuXiaoTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) QuXiaoPay() bool {
-	if r.Status == modeltype.QuXiao {
-		return true
-	} else if r.Status == modeltype.PayCheckFail || r.Status == modeltype.WaitPayCheck {
-		r.Status = modeltype.QuXiao
-		r.QuXiaoTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) TuiHuoShenQing() bool {
-	if r.Status == modeltype.WaitPingJia || r.Status == modeltype.YiPingJia || r.Status == modeltype.TuiHuoFail {
-		r.Status = modeltype.TuiHuoCheck
-		r.TuiHuoShenQingTime = utils.SqlNullNow()
-		return true
-	}
-	return false
-}
-
-func (r *BuyRecord) TuiHuoDengJi(kuaidi string, kuaidinum string) bool {
-	if r.Status == modeltype.WaitTuiHuoShouHuo {
-		return true
-	} else if r.Status == modeltype.WaitTuiHuoFahuo {
-		r.Status = modeltype.WaitTuiHuoShouHuo
-		r.DengJiTuiHuoTime = utils.SqlNullNow()
-		r.TuiHuoKuaiDi = sql.NullString{String: kuaidi, Valid: true}
-		r.TuiHuoKuaiDiNum = sql.NullString{String: kuaidinum, Valid: true}
-		return true
-	}
-	return false
 }
 
 func (r *BuyRecord) isClassDown() bool {
@@ -474,12 +109,20 @@ func (r *BuyRecord) IsWupinNotSale() bool {
 	return !r.IsWupinSale()
 }
 
-func (r *BuyRecord) IsBuyRecordCanNotPay() bool {
-	return r.IsWupinSale()
+func (r *BuyRecord) IsBuyRecordCanRepay() bool {
+	return r.IsWupinSale() && r.Status == modeltype.PayCheckFail
+}
+
+func (r *BuyRecord) IsBuyRecordCanNotRepay() bool {
+	return !r.IsBuyRecordCanRepay()
 }
 
 func (r *BuyRecord) IsBuyRecordCanPay() bool {
-	return !r.IsBuyRecordCanNotPay()
+	return r.IsWupinSale() && r.Status == modeltype.WaitPay
+}
+
+func (r *BuyRecord) IsBuyRecordCanNotPay() bool {
+	return !r.IsBuyRecordCanPay()
 }
 
 func (*BuyRecord) IsBuyRecordDown() bool {

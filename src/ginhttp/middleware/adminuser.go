@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/database/action"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
@@ -11,7 +12,7 @@ import (
 	"net/http"
 )
 
-func getAdminUser(c *gin.Context, self *model.User) *model.User {
+func getAdminUser(c *gin.Context, self *model.User) (*model.User, error) {
 	type Query struct {
 		UserID uint `form:"userId"`
 	}
@@ -23,14 +24,14 @@ func getAdminUser(c *gin.Context, self *model.User) *model.User {
 	} else if c.Request.Method == "POST" {
 		err = c.ShouldBindWith(&query, binding.FormMultipart)
 	} else {
-		return nil
+		return nil, nil
 	}
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	if query.UserID <= 0 {
-		return nil
+		return nil, fmt.Errorf("nad user id")
 	}
 
 	var user *model.User
@@ -40,24 +41,24 @@ func getAdminUser(c *gin.Context, self *model.User) *model.User {
 		user, err = action.AdminGetUserByID(query.UserID)
 	}
 	if errors.Is(err, action.ErrNotFound) {
-		return nil
+		return nil, err
 	} else if err != nil {
-		return nil
+		return nil, err
 	}
 
-	return user
+	return user, err
 }
 
-func AdminUser() gin.HandlerFunc {
+func AdminHasUserPermission() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		self, ok := c.Value(contextkey.UserKey).(*model.User)
 		if !ok {
-			c.JSON(http.StatusOK, data.NewSystemUnknownError("admin self not found"))
+			c.JSON(http.StatusOK, data.NewSystemUnknownError("管理员未找到"))
 			return
 		}
 
-		user := getAdminUser(c, self)
-		if user != nil {
+		user, err := getAdminUser(c, self)
+		if err == nil || errors.Is(err, action.ErrNotFound) {
 			if c.Request.Method == http.MethodGet || user.HasPermission(self) {
 				c.Set(contextkey.AdminUserIDKey, user.ID)
 				c.Set(contextkey.AdminUserKey, user)
@@ -65,6 +66,9 @@ func AdminUser() gin.HandlerFunc {
 				c.JSON(http.StatusOK, data.NewClientAdminUserNoPermission())
 				return
 			}
+		} else {
+			c.JSON(http.StatusOK, data.NewSystemUnknownError("用户未找到"))
+			return
 		}
 
 		c.Next()

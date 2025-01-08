@@ -1,0 +1,90 @@
+package adminfahuochangeshop
+
+import (
+	"errors"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/model"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"net/http"
+)
+
+const (
+	CodeBuyRecordNotFound data.CodeType = -4
+	CodeBadName           data.CodeType = -5
+	CodeBadPhone          data.CodeType = -6
+	CodeBadLocation       data.CodeType = -7
+	CodeBadEmail          data.CodeType = -7
+	CodeStatusError       data.CodeType = -8
+)
+
+func Handler(c *gin.Context) {
+	user, ok := c.Value(contextkey.UserKey).(*model.User)
+	if !ok {
+		c.JSON(http.StatusOK, data.NewSystemUnknownError("用户未找到"))
+		return
+	}
+
+	query := Query{}
+	err := c.ShouldBindWith(&query, binding.FormMultipart)
+	if err != nil {
+		c.JSON(http.StatusOK, data.NewClientBadRequests(err))
+		return
+	}
+
+	if query.ID <= 0 {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
+		return
+	}
+
+	if len(query.ShopName) <= 0 {
+		query.ShopName = user.Name
+	} else if len(query.ShopName) >= 15 {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadName, "购买人姓名不对", "购买人姓名太长"))
+		return
+	}
+
+	if len(query.ShopPhone) <= 0 {
+		query.ShopPhone = user.Phone
+	} else if !utils.IsChinaMainlandPhone(query.ShopPhone) {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadPhone, "购买人联系电话不对"))
+		return
+	}
+
+	if len(query.ShopLocation) <= 0 || len(query.ShopLocation) >= 160 {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadLocation, "购买人联系地址不对"))
+		return
+	}
+
+	if len(query.ShopEmail) > 0 && !utils.IsValidEmail(query.ShopEmail) {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBadEmail, "错误的邮件地址"))
+		return
+	}
+
+	if len(query.ShopRemark) > 160 {
+		query.ShopRemark = query.ShopRemark[0:160]
+	}
+
+	record, err := action.AdminGetBuyRecordByIDAndUser(user, query.ID)
+	if errors.Is(err, action.ErrNotFound) {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
+		return
+	} else if err != nil {
+		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
+	}
+
+	err = action.AdminBuyRecordChangeShop(user, record, query.ShopName, query.ShopPhone, query.ShopLocation, query.ShopWechat, query.ShopEmail, query.ShopRemark)
+	if _, ok := action.IsBuyRecordStatusError(err); ok {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeStatusError, err.Error()))
+		return
+	} else if err != nil {
+		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, data.NewSuccess("修改成功"))
+}

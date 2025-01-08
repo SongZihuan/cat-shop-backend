@@ -44,7 +44,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.BuyRecordQuXiaoFahuo(user, record)
+	err = action.BuyRecordQuXiaoFahuo(user, record, query.Accept)
 	if _, ok := action.IsBuyRecordStatusError(err); ok {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeStatusError, err.Error()))
 		return

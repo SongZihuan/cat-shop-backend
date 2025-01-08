@@ -23,7 +23,7 @@ type User struct {
 	TotalBuy     modeltype.Total      `gorm:"type:uint;not null"`
 	TotalGood    modeltype.Total      `gorm:"type:uint;not null"`
 	TotalJian    modeltype.Total      `gorm:"type:uint;not null"`
-	TotalShouHuo modeltype.Total      `gorm:"type:uint;not null"`
+	TotalDaohuo  modeltype.Total      `gorm:"type:uint;not null"`
 	TotalPingJia modeltype.Total      `gorm:"type:uint;not null"`
 	PasswordHash string               `gorm:"type:char(64);not null"`
 }
@@ -179,21 +179,20 @@ func getPasswordHash(password string) string {
 }
 
 func (u *User) BuyNow(r *BuyRecord) bool {
-	if r.UserID != u.ID || r.User == nil || r.User.ID != u.ID {
-		return false
-	}
-
 	u.TotalPrice += r.TotalPrice
 	u.TotalBuy += 1
 	u.TotalJian += r.Num
 	return true
 }
 
-func (u *User) BackPayNow(r *BuyRecord) bool {
-	if r.UserID != u.ID || r.User == nil || r.User.ID != u.ID {
-		return false
-	}
+func (u *User) BuyQuXiao(r *BuyRecord) bool {
+	u.TotalPrice -= r.TotalPrice
+	u.TotalBuy -= 1
+	u.TotalJian -= r.Num
+	return true
+}
 
+func (u *User) TuiHuoBeforeFaHuo(r *BuyRecord) bool {
 	u.TotalPrice -= r.TotalPrice
 	u.TotalBuy -= 1
 	u.TotalJian -= r.Num
@@ -209,28 +208,57 @@ func (u *User) BackPayNow(r *BuyRecord) bool {
 	if u.TotalJian <= 0 {
 		u.TotalJian = 0
 	}
-
 	return true
 }
 
-func (u *User) Daohuo(r *BuyRecord) bool {
-	if r.WupinID != u.ID || r.Wupin == nil || r.Wupin.ID != u.ID {
-		return true
-	}
-	u.TotalShouHuo += 1
+func (u *User) Daohuo() bool {
+	u.TotalDaohuo += 1
 	return false
 }
 
-func (u *User) PingJia(r *BuyRecord, isGood bool) bool {
-	if r.WupinID != u.ID || r.Wupin == nil || r.Wupin.ID != u.ID {
-		return true
-	}
-
+func (u *User) PingJia(isGood bool) bool {
 	u.TotalPingJia += 1
-
 	if isGood {
 		u.TotalGood += 1
 	}
-
 	return false
+}
+
+func (u *User) TuiHuoAfterFaHuo(r *BuyRecord) bool {
+	u.TotalPrice -= r.TotalPrice
+	u.TotalBuy -= 1
+	u.TotalJian -= r.Num
+	u.TotalDaohuo -= 1
+
+	if r.IsGood.Valid {
+		u.TotalPingJia -= 1
+		if r.IsGood.Bool {
+			u.TotalGood -= 1
+		}
+	}
+
+	if u.TotalPrice <= 0 {
+		u.TotalPrice = 0
+	}
+
+	if u.TotalBuy <= 0 {
+		u.TotalBuy = 0
+	}
+
+	if u.TotalJian <= 0 {
+		u.TotalJian = 0
+	}
+
+	if u.TotalDaohuo <= 0 {
+		u.TotalDaohuo = 0
+	}
+
+	if u.TotalPingJia <= 0 {
+		u.TotalPingJia = 0
+	}
+
+	if u.TotalGood <= 0 {
+		u.TotalGood = 0
+	}
+	return true
 }

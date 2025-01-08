@@ -20,7 +20,7 @@ type UserM struct {
 	TotalBuy     modeltype.Total      `gorm:"type:uint;not null"`
 	TotalGood    modeltype.Total      `gorm:"type:uint;not null"`
 	TotalJian    modeltype.Total      `gorm:"type:uint;not null"`
-	TotalShouHuo modeltype.Total      `gorm:"type:uint;not null"`
+	TotalDaohuo  modeltype.Total      `gorm:"type:uint;not null"`
 	TotalPingJia modeltype.Total      `gorm:"type:uint;not null"`
 	PasswordHash string               `gorm:"type:char(64);not null"`
 }

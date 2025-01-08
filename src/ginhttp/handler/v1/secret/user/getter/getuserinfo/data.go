@@ -36,7 +36,7 @@ func NewData(user *model.User) User {
 		TotalBuy:     user.TotalBuy,
 		TotalGood:    user.TotalGood,
 		TotalJian:    user.TotalJian,
-		TotalShouHuo: user.TotalShouHuo,
+		TotalShouHuo: user.TotalDaohuo,
 		TotalPingJia: user.TotalPingJia,
 	}
 }

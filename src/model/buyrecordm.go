@@ -22,8 +22,8 @@ type BuyRecordM struct {
 	ShouHuoTime        sql.NullTime        `gorm:"type:datetime;"`
 	PingJiaTime        sql.NullTime        `gorm:"type:datetime;"`
 	TuiHuoShenQingTime sql.NullTime        `gorm:"type:datetime;"`
-	DengJiTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
 	QueRenTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
+	DengJiTuiHuoTime   sql.NullTime        `gorm:"type:datetime;"`
 	TuiHuoTime         sql.NullTime        `gorm:"type:datetime;"`
 	QuXiaoTime         sql.NullTime        `gorm:"type:datetime;"`
 	FaHuoKuaiDi        sql.NullString      `gorm:"type:varchar(20);"`
@@ -70,7 +70,6 @@ type BuyRecordM struct {
 	WupinHot        bool            `gorm:"type:boolean;not null"`
 
 	WupinDown bool `gorm:"type:boolean;not null"`
-	ClassShow bool `gorm:"type:boolean;not null;"`
 	ClassDown bool `gorm:"type:boolean;not null;"`
 }
 

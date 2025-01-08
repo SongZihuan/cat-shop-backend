@@ -11,44 +11,44 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/global/wupin/getwupin"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/resource/image"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/resource/video"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbag/adminaddbag"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbag/admingetbag"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admindaohuo"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminfahuo/adminacceptfahuoquxiao"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminfahuo/adminfahuochexiao"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminfahuo/adminfahuodengji"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminfahuo/changeinfo/adminfahuochangeshop"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminfahuo/changeinfo/adminfahuochuangeuser"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admingetter/admingetbuyrecordbypage"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admingetter/admingetbuyrecordinfo"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admingetter/admingetuserbuyrecordlstbypage"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminpay/adminpeoplepay"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/adminpay/adminquxiaopay"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admintuihuo/admintuihuoaccept"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admintuihuo/admintuihuodaohuo"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admintuihuo/admintuihuodengji"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminbuy/admintuihuo/admintuihuoshenqing"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminclass/adminaddclass"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminclass/admingetclass"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminclass/admingetclasslst"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminclass/adminupdateclass"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminfileupload/adminimageupload"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminfileupload/adminvideoupload"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/admingetconfig"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminxieyi/admingetxieyi"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/bag/adminaddbag"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/bag/admingetbag"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/daohuo/admindaohuo"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/fahuo/adminacceptfahuoquxiao"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/fahuo/adminfahuodengji"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/fahuo/adminfahuoquxiao"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/fahuo/changeinfo/adminfahuochangeshop"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/fahuo/changeinfo/adminfahuochuangeuser"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/getter/admingetbuyrecordbypage"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/getter/admingetbuyrecordinfo"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/getter/admingetuserbuyrecordlstbypage"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/pay/adminpeoplepay"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/pay/adminquxiaopay"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/tuihuo/admintuihuoaccept"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/tuihuo/admintuihuodaohuo"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/tuihuo/admintuihuodengji"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/buy/tuihuo/admintuihuoshenqing"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/class/adminaddclass"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/class/admingetclass"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/class/admingetclasslst"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/class/adminupdateclass"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/fileupload/adminimageupload"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/fileupload/adminvideoupload"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/msg/admingetmsg"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/adminadduser"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/admingetuserinfo"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/admingetuserlst"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/admingetusermsg"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/adminupdateuseravtar"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/adminupdateuserinfo"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/adminupdateuserpassword"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/user/adminupdateuserphone"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/adminaddwupin"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/admingetwupin"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/admingetwupinlst"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/wupin/adminupdatewupin"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/admingetmsg"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/admingetxieyi"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/adminadduser"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/admingetuserinfo"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/admingetuserlst"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/admingetusermsg"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/adminupdateuseravtar"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/adminupdateuserinfo"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/adminupdateuserpassword"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminuser/adminupdateuserphone"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminwupin/adminaddwupin"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminwupin/admingetwupin"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminwupin/admingetwupinlst"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/admin/adminwupin/adminupdatewupin"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/admindeleteconfig"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminrestartserver"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminstopserver"
@@ -57,14 +57,14 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/rootadmin/adminxieyi/adminupdatexieyi"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/bag/addbag"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/bag/getbaglst"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/fahuo/daohuo"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/daohuo"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/fahuo/fahuochangeuser"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/fahuo/fahuoquxiaoshenqing"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/fahuo/pingjia"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/fahuo/quxiaopay"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/getter/getbuyrecord"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/getter/getbuyrecordlst"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/getter/getbuyrecordlstbypage"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/pingjia"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/quxiaopay"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/tuihuo/tuihuodengji"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/buy/tuihuo/tuihuoshenqing"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/secret/user/edit/updateuseravtar"
@@ -81,7 +81,7 @@ import (
 )
 
 func Api(api *gin.RouterGroup) {
-	api.Use(middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.AdminUser(), middleware.MustAccept(), middleware.ReturnContentJson())
+	api.Use(middleware.MustFormData(), middleware.XTokenMiddleware(), middleware.MustAccept(), middleware.ReturnContentJson())
 
 	globalApiV1(api)
 	secretApiV1(api)
@@ -269,7 +269,7 @@ func adminAddClassApiV1(api *gin.RouterGroup) {
 
 func adminUserApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/user")
-	api.Use(middleware.MustAdminUserMiddleware())
+	api.Use(middleware.MustAdminUserMiddleware(), middleware.AdminHasUserPermission())
 
 	adminUpdateUserApiV1(api)
 	adminUserBagApiV1(api)
@@ -335,7 +335,7 @@ func adminUserBuyRecordApiV1(apiV1 *gin.RouterGroup) {
 func adminTuihuoApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/tuihuo")
 
-	api.POST("/tongyi", admintuihuoaccept.Handler)
+	api.POST("/check", admintuihuoaccept.Handler)
 	api.POST("/daohuo", admintuihuodaohuo.Handler)
 	api.POST("/dengji", admintuihuodengji.Handler)
 	api.POST("/shenqing", admintuihuoshenqing.Handler)
@@ -352,8 +352,9 @@ func adminFahuoApiV1(apiV1 *gin.RouterGroup) {
 	api := apiV1.Group("/fahuo")
 	adminFahuoChangeInfoApiV1(api)
 
-	api.POST("/quxiao/tongyi", adminacceptfahuoquxiao.Handler)
-	api.POST("/quxiao", adminfahuoquxiao.Handler)
+	api.POST("/quxiao/check", adminacceptfahuoquxiao.Handler)
+	api.POST("/quxiao", adminfahuochexiao.Handler)
+	api.POST("/chexiao", adminfahuochexiao.Handler)
 	api.POST("/dengji", adminfahuodengji.Handler)
 }
 

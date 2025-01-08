@@ -6,7 +6,6 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
-	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -56,10 +55,7 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if record.Status != modeltype.WaitPayCheck && record.Status != modeltype.PayCheckFail {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeRepeatTransactions, "重复交易", "购物记录状态不正确"))
-		return
-	} else if !record.IsBuyRecordCanPay() {
+	} else if record.IsBuyRecordCanNotPay() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "商户拒绝了此次交易", "商品不再出售"))
 		return
 	}

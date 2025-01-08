@@ -14,10 +14,11 @@ import (
 )
 
 const (
-	CodeBadRedirectTo     data.CodeType = -1
-	CodeWupinNotFound     data.CodeType = -2
-	CodeBuyRecordNotFound data.CodeType = -3
-	CodeWupinNotShort     data.CodeType = -4
+	CodeBadRedirectTo      data.CodeType = -1
+	CodeWupinNotFound      data.CodeType = -2
+	CodeBuyRecordNotFound  data.CodeType = -3
+	CodeWupinNotShort      data.CodeType = -4
+	CodeBuyRecordStatusBad data.CodeType = -5
 )
 
 func Handler(c *gin.Context) {
@@ -56,13 +57,8 @@ func Handler(c *gin.Context) {
 	} else if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
-	} else if record.IsBuyRecordCanNotPay() {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotShort, "购买记录未找到", "商品不再出售"))
-		return
-	}
-
-	if record.WupinID <= 0 || record.Wupin == nil {
-		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "购物车未找到"))
+	} else if record.IsBuyRecordCanNotRepay() {
+		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordStatusBad, "商品不能再支付", "购物状态错误"))
 		return
 	}
 

@@ -66,21 +66,20 @@ func NewWupin(name string, pic string, class *Class, tag string, hotPrice modelt
 }
 
 func (w *Wupin) BuyNow(r *BuyRecord) bool {
-	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
-		return false
-	}
-
 	w.BuyPrice += r.TotalPrice
 	w.BuyTotal += 1
 	w.BuyJian += r.Num
 	return true
 }
 
-func (w *Wupin) BackPayNow(r *BuyRecord) bool {
-	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
-		return false
-	}
+func (w *Wupin) BuyQuXiao(r *BuyRecord) bool {
+	w.BuyPrice -= r.TotalPrice
+	w.BuyTotal -= 1
+	w.BuyJian -= r.Num
+	return true
+}
 
+func (w *Wupin) TuiHuoBeforeFaHuo(r *BuyRecord) bool {
 	w.BuyPrice -= r.TotalPrice
 	w.BuyTotal -= 1
 	w.BuyJian -= r.Num
@@ -100,26 +99,57 @@ func (w *Wupin) BackPayNow(r *BuyRecord) bool {
 	return true
 }
 
-func (w *Wupin) Daohuo(r *BuyRecord) bool {
-	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
-		return true
-	}
+func (w *Wupin) Daohuo() bool {
 	w.BuyDaoHuo += 1
 	return false
 }
 
-func (w *Wupin) PingJia(r *BuyRecord, isGood bool) bool {
-	if r.WupinID != w.ID || r.Wupin == nil || r.Wupin.ID != w.ID {
-		return true
-	}
-
+func (w *Wupin) PingJia(isGood bool) bool {
 	w.BuyPingjia += 1
-
 	if isGood {
 		w.BuyGood += 1
 	}
 
 	return false
+}
+
+func (w *Wupin) TuiHuoAfterFaHuo(r *BuyRecord) bool {
+	w.BuyPrice -= r.TotalPrice
+	w.BuyTotal -= 1
+	w.BuyJian -= r.Num
+	w.BuyDaoHuo -= 1
+
+	if r.IsGood.Valid {
+		w.BuyPingjia -= 1
+		if r.IsGood.Bool {
+			w.BuyGood -= 1
+		}
+	}
+
+	if w.BuyPrice <= 0 {
+		w.BuyPrice = 0
+	}
+
+	if w.BuyTotal <= 0 {
+		w.BuyTotal = 0
+	}
+
+	if w.BuyJian <= 0 {
+		w.BuyJian = 0
+	}
+
+	if w.BuyDaoHuo <= 0 {
+		w.BuyDaoHuo = 0
+	}
+
+	if w.BuyPingjia <= 0 {
+		w.BuyPingjia = 0
+	}
+
+	if w.BuyGood <= 0 {
+		w.BuyGood = 0
+	}
+	return true
 }
 
 func (w *Wupin) GetRealPrice() modeltype.Price {

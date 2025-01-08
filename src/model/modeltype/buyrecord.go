@@ -3,7 +3,7 @@ package modeltype
 type BuyStatus int
 
 const (
-	WaitPayCheck      BuyStatus = 1
+	WaitPay           BuyStatus = 1
 	PayCheckFail      BuyStatus = 2
 	WaitFahuo         BuyStatus = 3
 	WaitShouHuo       BuyStatus = 4
@@ -14,12 +14,12 @@ const (
 	WaitTuiHuoShouHuo BuyStatus = 9
 	TuiHuoFail        BuyStatus = 10
 	TuiHuo            BuyStatus = 11
-	CheckQuXiao       BuyStatus = 12
+	WaitQuXiao        BuyStatus = 12
 	QuXiao            BuyStatus = 13
 )
 
 var StatusToName = map[BuyStatus]string{
-	WaitPayCheck:      "已下单，支付代确认",
+	WaitPay:           "已下单，等待支付和确认",
 	PayCheckFail:      "已下单，支付失败",
 	WaitFahuo:         "待发货",
 	WaitShouHuo:       "已发货",
@@ -30,6 +30,6 @@ var StatusToName = map[BuyStatus]string{
 	WaitTuiHuoShouHuo: "申请退货成功，待收货",
 	TuiHuoFail:        "申请退货失败",
 	TuiHuo:            "已退货",
-	CheckQuXiao:       "申请取消订单审核中",
+	WaitQuXiao:        "申请取消订单审核中",
 	QuXiao:            "已取消订单",
 }

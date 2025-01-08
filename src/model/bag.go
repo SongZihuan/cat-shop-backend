@@ -17,7 +17,6 @@ type Bag struct {
 	Num       modeltype.Total `gorm:"type:uint;not null"`
 	Time      time.Time       `gorm:"type:datetime;not null"`
 	WupinDown bool            `gorm:"type:boolean;not null"`
-	ClassShow bool            `gorm:"type:boolean;not null;"`
 	ClassDown bool            `gorm:"type:boolean;not null;"`
 }
 
@@ -36,8 +35,7 @@ func NewBag(user *User, wupin *Wupin, num modeltype.Total) *Bag {
 		Num:       num,
 		Time:      time.Now(),
 		WupinDown: wupin.IsWupinDown(),
-		ClassShow: wupin.Class.IsClassShow(),
-		ClassDown: wupin.Class.IsClassDown(),
+		ClassDown: wupin.isClassDown(),
 	}
 }
 
@@ -68,7 +66,7 @@ func (bag *Bag) isClassDown() bool {
 
 func (bag *Bag) isWupinDown() bool {
 	if bag.Wupin == nil {
-		return bag.WupinDown || bag.ClassShow
+		return bag.WupinDown || bag.ClassDown
 	} else {
 		if bag.WupinID != bag.Wupin.ID {
 			panic("wupin id not equal")

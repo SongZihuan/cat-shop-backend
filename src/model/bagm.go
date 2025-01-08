@@ -13,9 +13,7 @@ type BagM struct {
 	ClassID   uint            `gorm:"not null"`
 	Num       modeltype.Total `gorm:"type:uint;not null"`
 	Time      time.Time       `gorm:"type:datetime;not null"`
-	WupinHot  bool            `gorm:"type:boolean;not null"`
 	WupinDown bool            `gorm:"type:boolean;not null"`
-	ClassShow bool            `gorm:"type:boolean;not null;"`
 	ClassDown bool            `gorm:"type:boolean;not null;"`
 }
 
