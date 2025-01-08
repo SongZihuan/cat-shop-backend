@@ -118,6 +118,9 @@ func (h *handlerFuncRecordList) FindAll() []*handlerFuncRecord {
 }
 
 type Router struct {
+	father       *Router
+	son          []*Router
+	engine       *gin.Engine
 	router       gin.IRouter
 	relativePath string
 	path         string
@@ -162,6 +165,9 @@ func NewEngine() (*Router, error) {
 
 	relativePath := utils.ProcessPath("/")
 	return &Router{
+		father:       nil,
+		son:          make([]*Router, 0, defaultRouterSonListSize),
+		engine:       engine,
 		router:       engine,
 		relativePath: relativePath,
 		path:         relativePath,
@@ -170,23 +176,31 @@ func NewEngine() (*Router, error) {
 	}, nil
 }
 
-func newRouter(relativePath string, fatherPath string, routerMap map[string]*handlerFuncGroup, handlerMap map[uintptr]*handlerFuncRecordList, r gin.IRouter) *Router {
+func newRouter(relativePath string, r gin.IRouter, father *Router) *Router {
 	relativePath = utils.ProcessPath(relativePath)
-	routerPath := utils.ProcessPath(fatherPath + relativePath)
-	return &Router{
+	routerPath := utils.ProcessPath(father.path + relativePath)
+
+	son := &Router{
+		father:       father,
+		son:          make([]*Router, 0, defaultRouterSonListSize),
+		engine:       father.engine,
 		router:       r,
 		relativePath: relativePath,
 		path:         routerPath,
-		routerMap:    routerMap,
-		handlerMap:   handlerMap,
+		routerMap:    father.routerMap,
+		handlerMap:   father.handlerMap,
 	}
+
+	father.son = append(father.son, son)
+
+	return son
 }
 
 func (e *Router) Group(relativePath string, handlers ...gin.HandlerFunc) *Router {
 	relativePath = utils.ProcessPath(relativePath)
 	next := e.router.Group(relativePath, handlers...)
 
-	return newRouter(relativePath, e.path, e.routerMap, e.handlerMap, next)
+	return newRouter(relativePath, next, e)
 }
 
 func (e *Router) Use(middleware ...gin.HandlerFunc) {
@@ -272,21 +286,12 @@ func (r *Router) FindURL(handler gin.HandlerFunc, method string) (string, bool) 
 }
 
 func (r *Router) ServeHTTP(wri http.ResponseWriter, req *http.Request) {
-	if e, ok := r.router.(*gin.Engine); ok {
-		e.ServeHTTP(wri, req)
-		return
-	}
-	panic("Bad router")
+	r.engine.ServeHTTP(wri, req)
 }
 
 func (r *Router) NotRouter(NotFound gin.HandlerFunc, NotMethod gin.HandlerFunc) {
-	engine, ok := r.router.(*gin.Engine)
-	if !ok {
-		panic("not engine")
-	}
-
-	engine.NoRoute(NotFound)
-	engine.NoMethod(NotMethod)
+	r.engine.NoRoute(NotFound)
+	r.engine.NoMethod(NotMethod)
 }
 
 func (r *Router) DebugMsg(format string, values ...any) {
