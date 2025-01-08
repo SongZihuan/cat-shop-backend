@@ -9,3 +9,5 @@ cert
 .DS_Store
 
 testdata
+
+pkg
