@@ -2,6 +2,7 @@ package ginplus
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"reflect"
@@ -125,7 +126,7 @@ type Router struct {
 }
 
 func debugPrintWARNINGDefault() {
-	major, minor, _, err := getGoVersion()
+	major, minor, _, err := utils.GetGoVersion()
 	if err != nil {
 		panic(err)
 	}
@@ -159,7 +160,7 @@ func NewEngine() (*Router, error) {
 		}
 	}
 
-	relativePath := processURL("/")
+	relativePath := utils.ProcessPath("/")
 	return &Router{
 		router:       engine,
 		relativePath: relativePath,
@@ -170,8 +171,8 @@ func NewEngine() (*Router, error) {
 }
 
 func newRouter(relativePath string, fatherPath string, routerMap map[string]*handlerFuncGroup, handlerMap map[uintptr]*handlerFuncRecordList, r gin.IRouter) *Router {
-	relativePath = processURL(relativePath)
-	routerPath := processURL(fatherPath + relativePath)
+	relativePath = utils.ProcessPath(relativePath)
+	routerPath := utils.ProcessPath(fatherPath + relativePath)
 	return &Router{
 		router:       r,
 		relativePath: relativePath,
@@ -182,7 +183,7 @@ func newRouter(relativePath string, fatherPath string, routerMap map[string]*han
 }
 
 func (e *Router) Group(relativePath string, handlers ...gin.HandlerFunc) *Router {
-	relativePath = processURL(relativePath)
+	relativePath = utils.ProcessPath(relativePath)
 	next := e.router.Group(relativePath, handlers...)
 
 	return newRouter(relativePath, e.path, e.routerMap, e.handlerMap, next)

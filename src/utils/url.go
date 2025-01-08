@@ -1,8 +1,8 @@
-package config
+package utils
 
 import "strings"
 
-func processURL(url string, defaultUrl ...string) string {
+func ProcessPath(url string, defaultUrl ...string) string {
 	if len(url) == 0 && len(defaultUrl) == 1 {
 		url = defaultUrl[0]
 	}

@@ -18,7 +18,7 @@ func RandStr(length int) string {
 	return string(result)
 }
 
-func IsChinaMainlandPhone(phone string) bool {
+func InvalidPhone(phone string) bool {
 	pattern := `^1[3-9]\d{9}$`
 	matched, _ := regexp.MatchString(pattern, phone)
 	return matched

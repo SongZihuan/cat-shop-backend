@@ -49,7 +49,7 @@ func Handler(c *gin.Context) {
 
 	if len(query.ShopPhone) <= 0 {
 		query.ShopPhone = user.Phone
-	} else if !utils.IsChinaMainlandPhone(query.ShopPhone) {
+	} else if !utils.InvalidPhone(query.ShopPhone) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBadPhone, "购买人联系电话不对"))
 		return
 	}

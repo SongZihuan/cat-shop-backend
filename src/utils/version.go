@@ -1,15 +1,13 @@
-package ginplus
+package utils
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"runtime"
 	"strconv"
 	"strings"
 )
 
-func getGoVersion() (int64, int64, int64, error) {
+func GetGoVersion() (int64, int64, int64, error) {
 	version := runtime.Version()
 	v := version
 
@@ -49,8 +47,8 @@ func getGoVersion() (int64, int64, int64, error) {
 	}
 }
 
-func getGoVersionMajor() (int64, error) {
-	major, _, _, err := getGoVersion()
+func GetGoVersionMajor() (int64, error) {
+	major, _, _, err := GetGoVersion()
 	if err != nil {
 		return 0, err
 	}
@@ -58,8 +56,8 @@ func getGoVersionMajor() (int64, error) {
 	return major, nil
 }
 
-func getGoVersionMinor() (int64, error) {
-	_, minor, _, err := getGoVersion()
+func GetGoVersionMinor() (int64, error) {
+	_, minor, _, err := GetGoVersion()
 	if err != nil {
 		return 0, err
 	}
@@ -67,8 +65,8 @@ func getGoVersionMinor() (int64, error) {
 	return minor, nil
 }
 
-func getGoVersionPatch() (int64, error) {
-	_, _, patch, err := getGoVersion()
+func GetGoVersionPatch() (int64, error) {
+	_, _, patch, err := GetGoVersion()
 	if err != nil {
 		return 0, err
 	}
@@ -76,39 +74,26 @@ func getGoVersionPatch() (int64, error) {
 	return patch, nil
 }
 
-var DebugPrintFunc func(format string, values ...interface{})
-var DefaultWriter io.Writer = os.Stdout
-var DefaultErrorWriter io.Writer = os.Stderr
-
-func debugPrint(format string, values ...any) {
-	if !IsDebugging() {
-		return
+func GetGoVersionMajorMust() int64 {
+	major, err := GetGoVersionMajor()
+	if err != nil {
+		panic(err)
 	}
-
-	if DebugPrintFunc != nil {
-		DebugPrintFunc(format, values...)
-		return
-	}
-
-	if !strings.HasSuffix(format, "\n") {
-		format += "\n"
-	}
-
-	_, _ = fmt.Fprintf(DefaultWriter, "[GIN-PLUS-debug] "+format, values...)
+	return major
 }
 
-func processURL(url string, defaultUrl ...string) string {
-	if len(url) == 0 && len(defaultUrl) == 1 {
-		url = defaultUrl[0]
+func GetGoVersionMinorMust() int64 {
+	minor, err := GetGoVersionMinor()
+	if err != nil {
+		panic(err)
 	}
+	return minor
+}
 
-	url = strings.TrimSpace(url)
-
-	if !strings.HasPrefix(url, "/") {
-		url = "/" + url
+func GetGoVersionPatchMust() int64 {
+	patch, err := GetGoVersionPatch()
+	if err != nil {
+		panic(err)
 	}
-
-	url = strings.TrimRight(url, "/")
-
-	return url
+	return patch
 }

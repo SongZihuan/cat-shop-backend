@@ -1,5 +1,7 @@
 package config
 
+import "github.com/SongZihuan/cat-shop-backend/src/utils"
+
 type FrontConfig struct {
 	BasePath    string `yaml:"basepath"`
 	TestPath    string `yaml:"testpath"`
@@ -7,9 +9,9 @@ type FrontConfig struct {
 }
 
 func (f *FrontConfig) setDefault() {
-	f.BasePath = processURL(f.BasePath)
-	f.TestPath = processURL(f.TestPath, "/test")
-	f.TestPayPath = processURL(f.TestPayPath, "/pay")
+	f.BasePath = utils.ProcessPath(f.BasePath)
+	f.TestPath = utils.ProcessPath(f.TestPath, "/test")
+	f.TestPayPath = utils.ProcessPath(f.TestPayPath, "/pay")
 }
 
 func (c *FrontConfig) check() ConfigError {

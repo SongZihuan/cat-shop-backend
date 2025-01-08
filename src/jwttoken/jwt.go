@@ -55,7 +55,7 @@ func CreateUserToken(user *model.User) (t string, err error) {
 	return token.SignedString([]byte(config.Config().Yaml.Jwt.Secret))
 }
 
-func ParserUserToken(tokenString string) (data Data, err error) {
+func ParserUserToken(tokenString string) (data *Data, err error) {
 	if config.IsReady() {
 		panic("config is not ready")
 	}
@@ -70,14 +70,14 @@ func ParserUserToken(tokenString string) (data Data, err error) {
 		return []byte(config.Config().Yaml.Jwt.Secret), nil
 	})
 	if err != nil {
-		return Data{}, err
+		return nil, err
 	} else if !token.Valid {
-		return Data{}, errors.New("invalid token")
+		return nil, errors.New("invalid token")
 	}
 
 	if claims.userid <= 0 {
-		return Data{}, errors.New("invalid token")
+		return nil, errors.New("invalid token")
 	}
 
-	return claims.Data, nil
+	return &claims.Data, nil
 }

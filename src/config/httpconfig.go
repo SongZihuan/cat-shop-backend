@@ -24,9 +24,9 @@ func (h *HttpConfig) setDefault() {
 
 	h.DebugMsg.SetDefault(Disable)
 
-	h.BaseURL = processURL(h.BaseURL)
-	h.ApiURL = processURL(h.ApiURL, "/api")
-	h.ResourceURL = processURL(h.ResourceURL, "/resource")
+	h.BaseURL = utils.ProcessPath(h.BaseURL)
+	h.ApiURL = utils.ProcessPath(h.ApiURL, "/api")
+	h.ResourceURL = utils.ProcessPath(h.ResourceURL, "/resource")
 
 	if h.StopSecret == "" {
 		h.StopSecret = utils.RandStr(8)

@@ -7,6 +7,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/header"
 	"github.com/SongZihuan/cat-shop-backend/src/jwttoken"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -51,11 +52,11 @@ func handlerToken(c *gin.Context) (*jwttoken.Data, *model.User, TokenStatus) {
 	c.Set(contextkey.UserIDKey, user.ID)
 	c.Set(contextkey.UserKey, user)
 	c.Set(contextkey.DebugTokenKey, "正常")
-	return &tokenData, user, TokenStatusHasUser
+	return tokenData, user, TokenStatusHasUser
 }
 
 func handlerResetToken(c *gin.Context, tokenData *jwttoken.Data, user *model.User, status TokenStatus) {
-	if status == TokenStatusHasUser && httpStatusCheck(c) && user != nil && tokenData != nil && tokenData.IsNowReset() {
+	if status == TokenStatusHasUser && utils.HttpStatusOK(c.Writer.Status()) && user != nil && tokenData != nil && tokenData.IsNowReset() {
 		if newToken, err := jwttoken.CreateUserToken(user); err == nil {
 			c.Header(header.ResponseXTokenHeader, newToken)
 		}

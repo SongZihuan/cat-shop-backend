@@ -58,7 +58,7 @@ func Handler(c *gin.Context) {
 
 	if len(query.UserPhone) <= 0 {
 		query.UserPhone = user.Phone
-	} else if !utils.IsChinaMainlandPhone(query.UserPhone) {
+	} else if !utils.InvalidPhone(query.UserPhone) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBadPhone, "购买人联系电话不对"))
 		return
 	}
