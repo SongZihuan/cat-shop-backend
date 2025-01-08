@@ -21,55 +21,50 @@ const (
 	TokenStatusUserNotOk    TokenStatus = 5
 )
 
-func handlerToken(c *gin.Context) (*jwttoken.Data, TokenStatus) {
+func handlerToken(c *gin.Context) (*jwttoken.Data, *model.User, TokenStatus) {
 	token := c.GetHeader(header.RequestXTokenHeader)
 	if token != "" {
-		d, err := jwttoken.ParserUserToken(token)
+		tokenData, err := jwttoken.ParserUserToken(token)
 		if err != nil {
 			c.Set(contextkey.DebugTokenKey, "Token解析失败: "+err.Error())
-			return nil, TokenStatusExpired
+			return nil, nil, TokenStatusExpired
 		}
 
-		user, err := action.MiddlewareGetUserByID(d.Userid())
+		user, err := action.MiddlewareGetUserByID(tokenData.Userid())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.Set(contextkey.DebugTokenKey, "用户未找到")
-			return nil, TokenStatusUserNotFound
+			return nil, nil, TokenStatusUserNotFound
 		} else if err != nil {
 			c.Set(contextkey.DebugTokenKey, "Token解析失败: "+err.Error())
-			return nil, TokenStatusUserNotFound
+			return nil, nil, TokenStatusUserNotFound
 		} else if !user.CanLogin() {
 			c.Set(contextkey.DebugTokenKey, "用户非正常状态")
-			return nil, TokenStatusUserNotOk
+			return nil, nil, TokenStatusUserNotOk
 		}
 
 		c.Set(contextkey.TokenKey, token)
 		c.Set(contextkey.UserIDKey, user.ID)
 		c.Set(contextkey.UserKey, user)
 		c.Set(contextkey.DebugTokenKey, "正常")
-		return nil, TokenStatusHasUser
+		return &tokenData, user, TokenStatusHasUser
 	} else {
 		c.Set(contextkey.DebugTokenKey, "没有Token")
-		return nil, TokenStatusNotToken
+		return nil, nil, TokenStatusNotToken
 	}
 }
 
-func handlerResetToken(c *gin.Context, token *jwttoken.Data, status TokenStatus) {
-	if status == TokenStatusHasUser && token != nil && token.IsNowReset() && httpStatusCheck(c) {
-		if userInterface, ok := c.Get(contextkey.UserKey); ok {
-			if user, ok := userInterface.(*model.User); ok {
-				newToken, err := jwttoken.CreateUserToken(user)
-				if err == nil {
-					c.Header(header.ResponseXTokenHeader, newToken)
-				}
-			}
+func handlerResetToken(c *gin.Context, tokenData *jwttoken.Data, user *model.User, status TokenStatus) {
+	if status == TokenStatusHasUser && httpStatusCheck(c) && user != nil && tokenData != nil && tokenData.IsNowReset() {
+		if newToken, err := jwttoken.CreateUserToken(user); err == nil {
+			c.Header(header.ResponseXTokenHeader, newToken)
 		}
 	}
 }
 
 func XTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, status := handlerToken(c)
+		tokenData, user, status := handlerToken(c)
 		c.Next()
-		handlerResetToken(c, token, status)
+		handlerResetToken(c, tokenData, user, status)
 	}
 }
