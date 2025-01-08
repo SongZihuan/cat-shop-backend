@@ -58,3 +58,18 @@ func (s *StringBool) ToStringDefaultDisable() string {
 
 	return string(disable)
 }
+
+func (s *StringBool) ToBool(defaultVal ...bool) (res bool) {
+	defer func() {
+		if e := recover(); e != nil {
+			if len(defaultVal) == 1 {
+				res = defaultVal[0]
+			} else {
+				panic(e)
+			}
+		}
+	}()
+
+	res = s.IsEnable()
+	return
+}
