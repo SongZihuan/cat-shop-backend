@@ -1,7 +1,7 @@
 package getsearch
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -29,13 +29,13 @@ func Handler(c *gin.Context) {
 		query.Select = 0
 	}
 
-	res, err := action.GetSearchList(query.Search, query.Select, query.Page, query.PageSize)
+	res, err := useraction.GetSearchList(query.Search, query.Select, query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.GetSearchCount(query.Search, query.Select)
+	maxcount, err := useraction.GetSearchCount(query.Search, query.Select)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

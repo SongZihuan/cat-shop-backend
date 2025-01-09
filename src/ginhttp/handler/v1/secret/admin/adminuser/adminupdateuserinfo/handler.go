@@ -1,7 +1,8 @@
 package adminupdateuserinfo
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/rootaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -79,9 +80,9 @@ func Handler(c *gin.Context) {
 	var errType, errStatus, errDB error
 
 	if self.IsRootAdmin() {
-		errType, errStatus, errDB = action.RootAdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type)
+		errType, errStatus, errDB = rootaction.RootAdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type)
 	} else {
-		errType, errStatus, errDB = action.AdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type)
+		errType, errStatus, errDB = adminaction.AdminUpdateUser(user, query.Name, query.Wechat, query.Email, query.Location, query.Status, query.Type)
 	}
 	if errType != nil {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeTypeError, "用户类型错误"))

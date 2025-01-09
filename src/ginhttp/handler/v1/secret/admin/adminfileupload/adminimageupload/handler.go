@@ -2,7 +2,7 @@ package adminimageupload
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gabriel-vasile/mimetype"
@@ -72,7 +72,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.AdminNewImage(fileType, fileData)
+	img, errDB, errImg := adminaction.AdminNewImage(fileType, fileData)
 	if errImg != nil || errDB != nil {
 		c.JSON(http.StatusOK, NewError("系统错误"))
 		return

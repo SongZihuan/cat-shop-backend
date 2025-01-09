@@ -1,15 +1,14 @@
-package action
+package adminaction
 
 import (
 	"errors"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"gorm.io/gorm"
 	"time"
 )
-
-const ClassListLimit = 100
 
 func AdminGetClassListByPage(page int, pagesize int) (res []model.Class, err error) {
 	db := internal.DB()
@@ -37,26 +36,10 @@ func AdminGetClassCount() (int, error) {
 	return res.count, nil
 }
 
-func GetClassList(limit int) ([]model.Class, error) {
-	if limit > ClassListLimit {
-		limit = ClassListLimit
-	} else if limit <= 0 {
-		limit = ClassListLimit
-	}
-
-	var res = make([]model.Class, 0, 100)
-	err := internal.DB().Model(&model.Class{}).Where("id != ?", modeltype.ClassEmptyID).Where("class_down = false").Where("show = true").Limit(limit).Find(&res).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-}
-
 func AdminAddClass(name string, show bool, down bool) error {
 	db := internal.DB()
 
-	err := systemCreateEmptyClass(db)
+	err := adminCreateEmptyClass(db)
 	if err != nil {
 		return err
 	}
@@ -98,7 +81,7 @@ func AdminUpdateClass(id uint, name string, show bool, down bool) error {
 	}
 
 	err := internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := systemCreateEmptyClass(tx)
+		err := adminCreateEmptyClass(tx)
 		if err != nil {
 			return err
 		}
@@ -151,7 +134,25 @@ func AdminUpdateClass(id uint, name string, show bool, down bool) error {
 		return nil
 	})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return ErrNotFound
+		return error2.ErrNotFound
 	}
 	return err
+}
+
+// 内部使用
+func adminCreateEmptyClass(db *gorm.DB) error {
+	cls := model.NewEmptyClass()
+	err := db.Model(&model.ClassM{}).Where("id = ?", modeltype.ClassEmptyID).Limit(1).FirstOrCreate(cls).Error
+	if err != nil {
+		return err
+	}
+
+	if cls.ResetIsEmpty() {
+		err := db.Save(cls).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

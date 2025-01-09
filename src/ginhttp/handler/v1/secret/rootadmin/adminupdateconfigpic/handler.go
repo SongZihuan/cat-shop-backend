@@ -1,7 +1,7 @@
 package adminupdateconfigpic
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
@@ -56,7 +56,7 @@ func Handler(c *gin.Context) {
 		}
 
 		if canDelete {
-			err := action.AdminDeleteConfig(query.Key)
+			err := adminaction.AdminDeleteConfig(query.Key)
 			if err != nil {
 				c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 				return
@@ -101,7 +101,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.AdminNewImage(modeltype.AvatarImage, fileData)
+	img, errDB, errImg := adminaction.AdminNewImage(modeltype.AvatarImage, fileData)
 	if errImg != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(errImg))
 		return
@@ -110,7 +110,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminUpdateConfigPic(query.Key, img)
+	err = adminaction.AdminUpdateConfigPic(query.Key, img)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

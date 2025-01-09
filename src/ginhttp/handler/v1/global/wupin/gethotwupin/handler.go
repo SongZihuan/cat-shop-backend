@@ -1,7 +1,7 @@
 package gethotwupin
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -15,7 +15,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	res, err := action.GetHotWupinList(query.Limit)
+	res, err := useraction.GetHotWupinList(query.Limit)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

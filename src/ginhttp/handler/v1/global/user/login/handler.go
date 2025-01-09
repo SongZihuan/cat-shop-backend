@@ -2,7 +2,8 @@ package login
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/jwttoken"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
@@ -29,8 +30,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	user, err := action.GetUserByPhone(query.Phone)
-	if errors.Is(err, action.ErrNotFound) {
+	user, err := useraction.GetUserByPhone(query.Phone)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodePhoneError, "用户不存在或密码错误", "用户不存在"))
 		return
 	} else if err != nil {

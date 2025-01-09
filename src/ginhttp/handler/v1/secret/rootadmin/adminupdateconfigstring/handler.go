@@ -1,7 +1,7 @@
 package adminupdateconfigstring
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gin-gonic/gin"
@@ -56,7 +56,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminUpdateConfigString(query.Key, query.Value)
+	err = adminaction.AdminUpdateConfigString(query.Key, query.Value)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

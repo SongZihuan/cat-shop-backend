@@ -2,7 +2,8 @@ package adminaddbag
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -34,8 +35,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	wupin, err := action.AdminGetWupinByID(query.WupinID)
-	if errors.Is(err, action.ErrNotFound) {
+	wupin, err := adminaction.AdminGetWupinByID(query.WupinID)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到", "商品未找到"))
 		return
 	} else if err != nil {
@@ -46,8 +47,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	bag, err := action.AdminGetBagByWupinIDWithUser(user, wupin)
-	if errors.Is(err, action.ErrNotFound) {
+	bag, err := adminaction.AdminGetWupinBagWithUser(user, wupin)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBagNotFound, "购物车未找到"))
 		return
 	} else if err != nil {
@@ -58,7 +59,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	_, err = action.AdminAddBag(user, bag, query.Num)
+	_, err = adminaction.AdminAddBag(bag, query.Num)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

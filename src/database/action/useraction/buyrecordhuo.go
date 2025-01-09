@@ -1,7 +1,8 @@
-package action
+package useraction
 
 import (
 	"fmt"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
@@ -47,6 +48,8 @@ func NewBagBuyRecord(user *model.User, bag *model.Bag, username, userphone, user
 func NewRepayRecord(user *model.User, record *model.BuyRecord) error {
 	if record.UserID != user.ID {
 		return fmt.Errorf("bad user")
+	} else {
+		record.BindUser(user)
 	}
 
 	record.Repay()
@@ -126,7 +129,7 @@ func BuyRecordChangeUser(user *model.User, record *model.BuyRecord, username, us
 
 	ok := record.ChangeUser(username, userphone, userlocation, userwechat, useremail, userremark)
 	if !ok {
-		return NewBuyRecordStatusError("状态错误")
+		return error2.NewBuyRecordStatusError("状态错误")
 	}
 
 	return internal.DB().Transaction(func(tx *gorm.DB) error {
@@ -147,179 +150,6 @@ func BuyRecordChangeUser(user *model.User, record *model.BuyRecord, username, us
 
 		return nil
 	})
-}
-
-func AdminBuyRecordChangeUser(user *model.User, record *model.BuyRecord, username, userphone, userlocation, userwechat, useremail, userremark string) error {
-	return BuyRecordChangeUser(user, record, username, userphone, userlocation, userwechat, useremail, userremark)
-}
-
-func AdminBuyRecordChangeShop(user *model.User, record *model.BuyRecord, shopname, shopphone, shoplocation, shopwechat, shopemail, shopremark string) error {
-	if record.UserID != user.ID {
-		return fmt.Errorf("bad user")
-	} else {
-		record.BindUser(user)
-	}
-
-	ok := record.ChangeShop(shopname, shopphone, shoplocation, shopwechat, shopemail, shopremark)
-	if !ok {
-		return NewBuyRecordStatusError("状态错误")
-	}
-
-	return internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(record).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.Wupin).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.User).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
-func AdminBuyRecordAcceptQuxiao(user *model.User, record *model.BuyRecord) error {
-	if record.UserID != user.ID {
-		return fmt.Errorf("bad user")
-	} else {
-		record.BindUser(user)
-	}
-
-	ok := record.AcceptQuXiao()
-	if !ok {
-		return NewBuyRecordStatusError("状态错误")
-	}
-
-	return internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(record).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.Wupin).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.User).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
-func AdminBuyRecordAcceptTuiHuo(user *model.User, record *model.BuyRecord, accept bool) error {
-	if record.UserID != user.ID {
-		return fmt.Errorf("bad user")
-	} else {
-		record.BindUser(user)
-	}
-
-	if accept {
-		if ok := record.AcceptTuiHuo(); !ok {
-			return NewBuyRecordStatusError("状态错误")
-		}
-	} else {
-		if ok := record.NotAcceptTuiHuo(); !ok {
-			return NewBuyRecordStatusError("状态错误")
-		}
-	}
-
-	return internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(record).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.Wupin).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.User).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
-func AdminBuyRecordFaHuoCheHui(user *model.User, record *model.BuyRecord) error {
-	if record.UserID != user.ID {
-		return fmt.Errorf("bad user")
-	} else {
-		record.BindUser(user)
-	}
-
-	ok := record.CheHuiFaHuo()
-	if !ok {
-		return NewBuyRecordStatusError("状态错误")
-	}
-
-	return internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(record).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.Wupin).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.User).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
-func AdminBuyRecordTuiHuoDaoHuo(user *model.User, record *model.BuyRecord) error {
-	if record.UserID != user.ID {
-		return fmt.Errorf("bad user")
-	} else {
-		record.BindUser(user)
-	}
-
-	ok := record.TuiHuoDaoHuo()
-	if !ok {
-		return fmt.Errorf("status error")
-	}
-
-	return internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(record).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.Wupin).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.User).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
-func AdminBuyRecordDaoHuo(user *model.User, record *model.BuyRecord) error {
-	return BuyRecordDaoHuo(user, record)
 }
 
 func BuyRecordDaoHuo(user *model.User, record *model.BuyRecord) error {
@@ -423,10 +253,6 @@ func BuyRecordQuXiaoFahuo(user *model.User, record *model.BuyRecord, accept bool
 	})
 }
 
-func AdminBuyRecordQuXiaoPay(user *model.User, record *model.BuyRecord) error {
-	return BuyRecordQuXiaoPay(user, record)
-}
-
 func BuyRecordQuXiaoPay(user *model.User, record *model.BuyRecord) error {
 	if record.UserID != user.ID {
 		return fmt.Errorf("bad user")
@@ -435,7 +261,7 @@ func BuyRecordQuXiaoPay(user *model.User, record *model.BuyRecord) error {
 	}
 	ok := record.QuXiaoPay()
 	if !ok {
-		return NewBuyRecordStatusError("状态错误")
+		return error2.NewBuyRecordStatusError("状态错误")
 	}
 
 	return internal.DB().Transaction(func(tx *gorm.DB) error {
@@ -456,10 +282,6 @@ func BuyRecordQuXiaoPay(user *model.User, record *model.BuyRecord) error {
 
 		return nil
 	})
-}
-
-func AdminBuyRecordTuiHuoShenQing(user *model.User, record *model.BuyRecord) error {
-	return BuyRecordTuiHuoShenQing(user, record)
 }
 
 func BuyRecordTuiHuoShenQing(user *model.User, record *model.BuyRecord) error {
@@ -471,39 +293,7 @@ func BuyRecordTuiHuoShenQing(user *model.User, record *model.BuyRecord) error {
 
 	ok := record.TuiHuoShenQing()
 	if !ok {
-		return NewBuyRecordStatusError("状态错误")
-	}
-
-	return internal.DB().Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(record).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.Wupin).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Save(record.User).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
-
-func AdminBuyRecordFaHuoDengJi(user *model.User, record *model.BuyRecord, kuaidi string, kuaidinum string) error {
-	if record.UserID != user.ID {
-		return fmt.Errorf("bad user")
-	} else {
-		record.BindUser(user)
-	}
-
-	ok := record.FaHuoDengJi(kuaidi, kuaidinum)
-	if !ok {
-		return NewBuyRecordStatusError("状态错误")
+		return error2.NewBuyRecordStatusError("状态错误")
 	}
 
 	return internal.DB().Transaction(func(tx *gorm.DB) error {
@@ -535,7 +325,7 @@ func BuyRecordTuiHuoDengJi(user *model.User, record *model.BuyRecord, kuaidi str
 
 	ok := record.TuiHuoDengJi(kuaidi, kuaidinum)
 	if !ok {
-		return NewBuyRecordStatusError("状态错误")
+		return error2.NewBuyRecordStatusError("状态错误")
 	}
 
 	return internal.DB().Transaction(func(tx *gorm.DB) error {
@@ -556,8 +346,4 @@ func BuyRecordTuiHuoDengJi(user *model.User, record *model.BuyRecord, kuaidi str
 
 		return nil
 	})
-}
-
-func AdminBuyRecordTuiHuoDengJi(user *model.User, record *model.BuyRecord, kuaidi string, kuaidinum string) error {
-	return BuyRecordTuiHuoDengJi(user, record, kuaidi, kuaidinum)
 }

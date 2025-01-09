@@ -1,4 +1,4 @@
-package action
+package adminaction
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"

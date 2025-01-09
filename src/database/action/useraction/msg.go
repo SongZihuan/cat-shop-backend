@@ -1,4 +1,4 @@
-package action
+package useraction
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
@@ -6,9 +6,5 @@ import (
 )
 
 func SendMsgByUser(msg string, user *model.User) error {
-	return SendMsgByUserID(msg, user.ID)
-}
-
-func SendMsgByUserID(msg string, userID uint) error {
-	return internal.DB().Create(model.NewMsg(userID, msg)).Error
+	return internal.DB().Create(model.NewMsg(user.ID, msg)).Error
 }

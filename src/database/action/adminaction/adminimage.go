@@ -1,4 +1,4 @@
-package action
+package adminaction
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
@@ -6,7 +6,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 )
 
-func NewImage(tp modeltype.ImageType, file []byte) (*model.Image, error, error) {
+func AdminNewImage(tp modeltype.ImageType, file []byte) (*model.Image, error, error) {
 	img, err := model.NewImage(tp, file)
 	if err != nil {
 		return nil, nil, err
@@ -18,8 +18,4 @@ func NewImage(tp modeltype.ImageType, file []byte) (*model.Image, error, error) 
 	}
 
 	return img, nil, nil
-}
-
-func AdminNewImage(tp modeltype.ImageType, file []byte) (*model.Image, error, error) {
-	return NewImage(tp, file)
 }

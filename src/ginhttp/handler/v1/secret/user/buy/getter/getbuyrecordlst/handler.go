@@ -1,7 +1,7 @@
 package getbuyrecordlst
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -38,7 +38,7 @@ func Handler(c *gin.Context) {
 		query.Offset = 0
 	}
 
-	res, err := action.GetBuyRecordListByUser(user, query.Limit, query.Offset)
+	res, err := useraction.GetBuyRecordListByUser(user, query.Limit, query.Offset)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

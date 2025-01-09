@@ -1,7 +1,7 @@
 package adminupdateuserpassword
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -33,7 +33,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminUpdateUserPassword(user, query.NewPassword)
+	err = adminaction.AdminUpdateUserPassword(user, query.NewPassword)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

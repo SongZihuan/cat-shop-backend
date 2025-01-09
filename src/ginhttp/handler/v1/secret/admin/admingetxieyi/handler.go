@@ -1,7 +1,7 @@
 package admingetxieyi
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	res, err := action.AdminGetXieYi(query.Type)
+	res, err := adminaction.AdminGetXieYi(query.Type)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

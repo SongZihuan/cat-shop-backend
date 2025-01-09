@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/database"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/automigrator"
 	"github.com/SongZihuan/cat-shop-backend/src/flagparser"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/httpstop"
@@ -47,20 +47,20 @@ func MainV1() int {
 		time.Sleep(waitsec)
 	}
 
-	err = database.ConnectToMysql()
+	err = database.ConnectToMySQL()
 	if err != nil {
 		exitByError(err)
 		return 1
 	}
-	defer database.CloseMySql()
+	defer database.CloseMySQL()
 
-	err = action.SystemAutoMigrate()
+	err = automigrator.SystemAutoMigrate()
 	if err != nil {
 		exitByError(err)
 		return 1
 	}
 
-	err = action.SystemCreateEmptyClass()
+	err = automigrator.SystemCreateEmptyClass()
 	if err != nil {
 		exitByError(err)
 		return 1

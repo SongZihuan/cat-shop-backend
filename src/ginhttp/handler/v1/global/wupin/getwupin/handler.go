@@ -2,7 +2,8 @@ package getwupin
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -25,8 +26,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	wupin, err := action.GetWupinByID(query.ID)
-	if errors.Is(err, action.ErrNotFound) || wupin == nil || wupin.IsWupinDown() {
+	wupin, err := useraction.GetWupinByID(query.ID)
+	if errors.Is(err, error2.ErrNotFound) || wupin == nil || wupin.IsWupinDown() {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "未找到商品"))
 		return
 	} else if err != nil {

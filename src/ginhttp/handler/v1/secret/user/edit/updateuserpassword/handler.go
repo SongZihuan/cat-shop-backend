@@ -1,7 +1,7 @@
 package updateuserpassword
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -33,7 +33,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateUserPasswordWithCheck(user, query.OldPassword, query.NewPassword)
+	err = useraction.UpdateUserPasswordWithCheck(user, query.OldPassword, query.NewPassword)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

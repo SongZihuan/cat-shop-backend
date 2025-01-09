@@ -1,7 +1,7 @@
 package admingetbag
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -33,13 +33,13 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
-	res, err := action.AdminGetBagListByUser(user, query.Page, query.PageSize)
+	res, err := adminaction.AdminGetBagListByUser(user, query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.AdminGetBagCountByUser(user)
+	maxcount, err := adminaction.AdminGetBagCountByUser(user)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

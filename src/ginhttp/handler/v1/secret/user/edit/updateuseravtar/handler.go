@@ -1,7 +1,7 @@
 package updateuseravtar
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
@@ -71,7 +71,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.NewImage(modeltype.AvatarImage, fileData)
+	img, errDB, errImg := useraction.NewImage(modeltype.AvatarImage, fileData)
 	if errImg != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(errImg))
 		return
@@ -80,7 +80,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateUserAvatar(user, img.GetUrl())
+	err = useraction.UpdateUserAvatar(user, img.GetUrl())
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(errImg))
 		return

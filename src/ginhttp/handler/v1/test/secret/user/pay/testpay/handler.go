@@ -2,7 +2,8 @@ package testpay
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -48,8 +49,8 @@ func Handler(c *gin.Context) {
 		query.FailRate = 100
 	}
 
-	record, err := action.GetBuyRecordByIDAndUser(user, query.ID)
-	if errors.Is(err, action.ErrNotFound) {
+	record, err := useraction.GetBuyRecordByIDAndUser(user, query.ID)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "交易非法", "未找到购物记录"))
 		return
 	} else if err != nil {
@@ -61,7 +62,7 @@ func Handler(c *gin.Context) {
 	}
 
 	if utils.Rand().Intn(100) < query.FailRate { // 10%概率支付失败
-		err := action.SetBuyRecordPayFail(user, record)
+		err := useraction.SetBuyRecordPayFail(user, record)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return
@@ -70,7 +71,7 @@ func Handler(c *gin.Context) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodePayFail, "支付失败", "支付失败"))
 		return
 	} else {
-		err := action.SetBuyRecordPaySuccess(user, record)
+		err := useraction.SetBuyRecordPaySuccess(user, record)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

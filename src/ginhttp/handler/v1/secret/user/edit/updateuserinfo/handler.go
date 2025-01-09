@@ -1,7 +1,7 @@
 package updateuserinfo
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -62,7 +62,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.UpdateUser(user, query.Name, query.Wechat, query.Email, query.Location)
+	err = useraction.UpdateUser(user, query.Name, query.Wechat, query.Email, query.Location)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

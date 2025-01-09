@@ -2,7 +2,9 @@ package register
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/jwttoken"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -30,9 +32,9 @@ func Handler(c *gin.Context) {
 	}
 
 	var user *model.User
-	_, err = action.GetUserByPhone(query.Phone)
-	if errors.Is(err, action.ErrNotFound) {
-		user, err = action.AdminCreateUser(query.Phone, query.Password)
+	_, err = useraction.GetUserByPhone(query.Phone)
+	if errors.Is(err, error2.ErrNotFound) {
+		user, err = adminaction.AdminCreateUser(query.Phone, query.Password)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

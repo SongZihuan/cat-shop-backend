@@ -1,7 +1,7 @@
 package adminaddclass
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -25,7 +25,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminAddClass(query.Name, query.Show, query.Down)
+	err = adminaction.AdminAddClass(query.Name, query.Show, query.Down)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

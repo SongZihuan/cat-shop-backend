@@ -1,4 +1,4 @@
-package action
+package automigrator
 
 import (
 	"errors"
@@ -7,15 +7,6 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"gorm.io/gorm"
 )
-
-func SystemAutoMigrate() error {
-	if !internal.IsReady() {
-		return errors.New("db is not ready")
-	}
-
-	db := internal.DB()
-	return db.AutoMigrate(model.AutoCreateModelList...)
-}
 
 func SystemCreateEmptyClass() error {
 	if !internal.IsReady() {

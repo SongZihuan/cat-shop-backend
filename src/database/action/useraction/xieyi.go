@@ -1,4 +1,4 @@
-package action
+package useraction
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
@@ -20,17 +20,4 @@ func GetXieYi(xieyiType modeltype.XieYiType) (*model.Xieyi, error) {
 	}
 
 	return xieyi, nil
-}
-
-func AdminGetXieYi(xieyiType modeltype.XieYiType) (*model.Xieyi, error) {
-	return GetXieYi(xieyiType)
-}
-
-func AdminUpdateXieYi(xieyiType modeltype.XieYiType, content string) error {
-	if xieyiType == "" {
-		xieyiType = modeltype.XieYiDefault
-	}
-
-	xieyi := model.NewXieyi(xieyiType, content)
-	return internal.DB().Create(xieyi).Error
 }

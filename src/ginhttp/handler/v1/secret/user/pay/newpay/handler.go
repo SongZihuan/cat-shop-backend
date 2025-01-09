@@ -2,7 +2,8 @@ package newpay
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -87,8 +88,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	wupin, err := action.GetWupinByID(query.WupinID)
-	if errors.Is(err, action.ErrNotFound) {
+	wupin, err := useraction.GetWupinByID(query.WupinID)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeWupinNotFound, "商品未找到"))
 		return
 	} else if err != nil {
@@ -99,7 +100,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	record, err := action.NewBuyRecord(user, wupin, query.Num, query.UserName, query.UserPhone, query.UserLocation, query.UserWechat, query.UserEmail, query.UserRemark)
+	record, err := useraction.NewBuyRecord(user, wupin, query.Num, query.UserName, query.UserPhone, query.UserLocation, query.UserWechat, query.UserEmail, query.UserRemark)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

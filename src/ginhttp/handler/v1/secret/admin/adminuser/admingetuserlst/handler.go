@@ -1,7 +1,8 @@
 package admingetuserlst
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/rootaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -35,9 +36,9 @@ func Handler(c *gin.Context) {
 
 	var res []model.User
 	if self.IsRootAdmin() {
-		res, err = action.RootAdminGetUserByPage(query.Page, query.PageSize)
+		res, err = rootaction.RootAdminGetUserByPage(query.Page, query.PageSize)
 	} else {
-		res, err = action.AdminGetUserByPage(query.Page, query.PageSize)
+		res, err = adminaction.AdminGetUserByPage(query.Page, query.PageSize)
 	}
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
@@ -46,9 +47,9 @@ func Handler(c *gin.Context) {
 
 	var maxcount int
 	if self.IsRootAdmin() {
-		maxcount, err = action.RootAdminGetUserCount()
+		maxcount, err = rootaction.RootAdminGetUserCount()
 	} else {
-		maxcount, err = action.AdminGetUserCount()
+		maxcount, err = adminaction.AdminGetUserCount()
 	}
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))

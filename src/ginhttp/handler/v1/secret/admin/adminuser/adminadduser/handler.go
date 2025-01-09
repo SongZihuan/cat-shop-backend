@@ -2,7 +2,8 @@ package adminadduser
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
@@ -28,9 +29,9 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	u, err := action.AdminGetUserByPhone(query.Phone)
-	if errors.Is(err, action.ErrNotFound) || u == nil || u.Status == modeltype.DeleteUserStatus {
-		_, err = action.AdminCreateUser(query.Phone, query.Password)
+	u, err := adminaction.AdminGetUserByPhone(query.Phone)
+	if errors.Is(err, error2.ErrNotFound) || u == nil || u.Status == modeltype.DeleteUserStatus {
+		_, err = adminaction.AdminCreateUser(query.Phone, query.Password)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

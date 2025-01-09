@@ -3,7 +3,9 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/rootaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -36,11 +38,11 @@ func getAdminUser(c *gin.Context, self *model.User) (*model.User, error) {
 
 	var user *model.User
 	if self.IsRootAdmin() {
-		user, err = action.RootAdminGetUserByID(query.UserID)
+		user, err = rootaction.RootAdminGetUserByID(query.UserID)
 	} else {
-		user, err = action.AdminGetUserByID(query.UserID)
+		user, err = adminaction.AdminGetUserByID(query.UserID)
 	}
-	if errors.Is(err, action.ErrNotFound) {
+	if errors.Is(err, error2.ErrNotFound) {
 		return nil, err
 	} else if err != nil {
 		return nil, err
@@ -58,7 +60,7 @@ func AdminHasUserPermission() gin.HandlerFunc {
 		}
 
 		user, err := getAdminUser(c, self)
-		if err == nil || errors.Is(err, action.ErrNotFound) {
+		if err == nil || errors.Is(err, error2.ErrNotFound) {
 			if c.Request.Method == http.MethodGet || user.HasPermission(self) {
 				c.Set(contextkey.AdminUserIDKey, user.ID)
 				c.Set(contextkey.AdminUserKey, user)

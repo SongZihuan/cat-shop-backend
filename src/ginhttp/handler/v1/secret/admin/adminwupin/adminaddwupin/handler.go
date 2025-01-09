@@ -2,7 +2,9 @@ package adminaddwupin
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/useraction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
@@ -70,7 +72,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.NewImage(modeltype.AvatarImage, fileData)
+	img, errDB, errImg := useraction.NewImage(modeltype.AvatarImage, fileData)
 	if errImg != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(errImg))
 		return
@@ -104,8 +106,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	cls, err := action.AdminGetClass(query.ClassID)
-	if errors.Is(err, action.ErrNotFound) {
+	cls, err := adminaction.AdminGetClass(query.ClassID)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeClassNotFound, "类型未找到"))
 		return
 	} else if err != nil {
@@ -113,7 +115,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminAddWupin(query.Name, img.GetUrl(), cls, query.Tag, query.HotPrice.ToPriceNull(), query.RealPrice, query.Info, query.Ren, query.Phone, query.Email, query.Wechat, query.Location, query.Hot, query.Down)
+	err = adminaction.AdminAddWupin(query.Name, img.GetUrl(), cls, query.Tag, query.HotPrice.ToPriceNull(), query.RealPrice, query.Info, query.Ren, query.Phone, query.Email, query.Wechat, query.Location, query.Hot, query.Down)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

@@ -1,7 +1,7 @@
 package admingetbuyrecordbypage
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -25,13 +25,13 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
-	res, err := action.AdminGetBuyRecordListByPage(query.Page, query.PageSize)
+	res, err := adminaction.AdminGetBuyRecordListByPage(query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.AdminGetBuyRecordCountByPage()
+	maxcount, err := adminaction.AdminGetBuyRecordCountByPage()
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return

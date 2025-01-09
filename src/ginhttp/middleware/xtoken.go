@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/middlewareaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/header"
 	"github.com/SongZihuan/cat-shop-backend/src/jwttoken"
@@ -36,7 +36,7 @@ func handlerToken(c *gin.Context) (*jwttoken.Data, *model.User, TokenStatus) {
 		return nil, nil, TokenStatusExpired
 	}
 
-	user, err := action.MiddlewareGetUserByID(tokenData.Userid())
+	user, err := middlewareaction.MiddlewareGetUserByID(tokenData.Userid())
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.Set(contextkey.DebugTokenKey, "用户未找到")
 		return nil, nil, TokenStatusUserNotFound

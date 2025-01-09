@@ -2,7 +2,8 @@ package admintuihuoaccept
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -35,8 +36,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	record, err := action.AdminGetBuyRecordByIDAndUser(user, query.ID)
-	if errors.Is(err, action.ErrNotFound) {
+	record, err := adminaction.AdminGetBuyRecordByID(user, query.ID)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeBuyRecordNotFound, "购买记录未找到"))
 		return
 	} else if err != nil {
@@ -44,8 +45,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminBuyRecordAcceptTuiHuo(user, record, query.Accept)
-	if _, ok := action.IsBuyRecordStatusError(err); ok {
+	err = adminaction.AdminBuyRecordAcceptTuiHuo(user, record, query.Accept)
+	if _, ok := error2.IsBuyRecordStatusError(err); ok {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeStatusError, err.Error()))
 		return
 	} else if err != nil {

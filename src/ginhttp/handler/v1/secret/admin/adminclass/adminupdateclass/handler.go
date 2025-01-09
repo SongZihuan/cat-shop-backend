@@ -2,7 +2,8 @@ package adminupdateclass
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gin-gonic/gin"
@@ -34,8 +35,8 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminUpdateClass(query.ID, query.Name, query.Show, query.Down)
-	if errors.Is(err, action.ErrNotFound) {
+	err = adminaction.AdminUpdateClass(query.ID, query.Name, query.Show, query.Down)
+	if errors.Is(err, error2.ErrNotFound) {
 		c.JSON(http.StatusOK, data.NewCustomError(CodeClassNotFound, "类型未找到"))
 		return
 	} else if err != nil {

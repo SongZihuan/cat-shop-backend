@@ -1,11 +1,14 @@
 package config
 
+import "github.com/SongZihuan/cat-shop-backend/src/utils"
+
 type MySQLConfig struct {
-	UserName string `yaml:"username"`
-	Password string `yaml:"password"`
-	Address  string `yaml:"address"`
-	Port     int    `yaml:"port"`
-	DBName   string `yaml:"dbname"`
+	UserName       string           `yaml:"username"`
+	Password       string           `yaml:"password"`
+	Address        string           `yaml:"address"`
+	Port           int              `yaml:"port"`
+	DBName         string           `yaml:"dbname"`
+	ActiveShutdown utils.StringBool `yaml:"activeshutdown"`
 }
 
 func (m *MySQLConfig) setDefault() {
@@ -16,6 +19,8 @@ func (m *MySQLConfig) setDefault() {
 	if m.Address == "" {
 		m.Address = "127.0.0.1"
 	}
+
+	m.ActiveShutdown.SetDefaultEanble()
 }
 
 func (m *MySQLConfig) check() ConfigError {

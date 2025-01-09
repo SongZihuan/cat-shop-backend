@@ -2,7 +2,8 @@ package adminupdateuserphone
 
 import (
 	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
+	error2 "github.com/SongZihuan/cat-shop-backend/src/database/action/error"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -43,9 +44,9 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	u, err := action.AdminGetUserByPhone(query.NewPhone)
-	if errors.Is(err, action.ErrNotFound) || u == nil || u.Status == modeltype.DeleteUserStatus {
-		err := action.AdminUpdateUserPhone(user, query.NewPhone)
+	u, err := adminaction.AdminGetUserByPhone(query.NewPhone)
+	if errors.Is(err, error2.ErrNotFound) || u == nil || u.Status == modeltype.DeleteUserStatus {
+		err := adminaction.AdminUpdateUserPhone(user, query.NewPhone)
 		if err != nil {
 			c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 			return

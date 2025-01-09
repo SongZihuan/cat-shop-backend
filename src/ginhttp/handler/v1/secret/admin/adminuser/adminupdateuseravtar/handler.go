@@ -1,7 +1,7 @@
 package adminupdateuseravtar
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
@@ -77,7 +77,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	img, errDB, errImg := action.AdminNewImage(modeltype.AvatarImage, fileData)
+	img, errDB, errImg := adminaction.AdminNewImage(modeltype.AvatarImage, fileData)
 	if errImg != nil {
 		c.JSON(http.StatusOK, data.NewSystemUnknownError(errImg))
 		return
@@ -86,7 +86,7 @@ func Handler(c *gin.Context) {
 		return
 	}
 
-	err = action.AdminUpdateUserAvatar(user, img.GetUrl())
+	err = adminaction.AdminUpdateUserAvatar(user, img.GetUrl())
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(errImg))
 		return

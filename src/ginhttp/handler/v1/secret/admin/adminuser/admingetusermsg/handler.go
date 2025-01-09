@@ -1,7 +1,7 @@
 package admingetusermsg
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/database/action/adminaction"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/contextkey"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
@@ -33,13 +33,13 @@ func Handler(c *gin.Context) {
 		query.Page = 1
 	}
 
-	res, err := action.AdminGetMsgByPageAndUser(user, query.Page, query.PageSize)
+	res, err := adminaction.AdminGetMsgByPageAndUser(user, query.Page, query.PageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
 	}
 
-	maxcount, err := action.AdminGetMsgCountWithUser(user)
+	maxcount, err := adminaction.AdminGetMsgCountWithUser(user)
 	if err != nil {
 		c.JSON(http.StatusOK, data.NewSystemDataBaseError(err))
 		return
