@@ -5,6 +5,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/notrouter"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/middleware"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/groupname"
 	v1 "github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/v1"
 )
 
@@ -21,6 +22,6 @@ func v1Router(engine *ginplus.Router) {
 	}
 
 	engine.Use(middleware.AllReady(), middleware.AllowMethod(), middleware.Cors())
-	v1.Api(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ApiPath).Group(Version1))
-	v1.Resource(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ResourcePath).Group(Version1))
+	v1.Api(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ApiPath, groupname.APIName).Group(Version1))
+	v1.Resource(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ResourcePath, groupname.ResourceName).Group(Version1))
 }

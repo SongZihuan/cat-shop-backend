@@ -8,6 +8,9 @@ import (
 	"reflect"
 )
 
+const NameEniger = "eniger"
+const FindGroupURLByNameMaxDeep = 20
+
 type handlerFuncGroup struct {
 	get     gin.HandlerFunc
 	post    gin.HandlerFunc
@@ -118,6 +121,7 @@ func (h *handlerFuncRecordList) FindAll() []*handlerFuncRecord {
 }
 
 type Router struct {
+	name         string
 	father       *Router
 	son          []*Router
 	engine       *gin.Engine
@@ -165,6 +169,7 @@ func NewEngine() (*Router, error) {
 
 	relativePath := utils.ProcessPath("/")
 	return &Router{
+		name:         NameEniger,
 		father:       nil,
 		son:          make([]*Router, 0, defaultRouterSonListSize),
 		engine:       engine,
@@ -176,11 +181,16 @@ func NewEngine() (*Router, error) {
 	}, nil
 }
 
-func newRouter(relativePath string, r gin.IRouter, father *Router) *Router {
+func newRouter(relativePath string, name string, r gin.IRouter, father *Router) *Router {
+	if name == NameEniger {
+		panic("bad router name")
+	}
+
 	relativePath = utils.ProcessPath(relativePath)
 	routerPath := utils.ProcessPath(father.path + relativePath)
 
 	son := &Router{
+		name:         name,
 		father:       father,
 		son:          make([]*Router, 0, defaultRouterSonListSize),
 		engine:       father.engine,
@@ -196,11 +206,17 @@ func newRouter(relativePath string, r gin.IRouter, father *Router) *Router {
 	return son
 }
 
-func (e *Router) Group(relativePath string, handlers ...gin.HandlerFunc) *Router {
+func (e *Router) Group(relativePath string, name ...string) *Router {
 	relativePath = utils.ProcessPath(relativePath)
-	next := e.router.Group(relativePath, handlers...)
+	next := e.router.Group(relativePath)
 
-	return newRouter(relativePath, next, e)
+	if len(name) == 0 {
+		return newRouter(relativePath, "", next, e)
+	} else if len(name) == 1 {
+		return newRouter(relativePath, name[0], next, e)
+	} else {
+		panic("too many name")
+	}
 }
 
 func (e *Router) Use(middleware ...gin.HandlerFunc) {
@@ -270,7 +286,7 @@ func (e *Router) OPTIONS(relativePath string, handler gin.HandlerFunc) {
 	}
 }
 
-func (r *Router) FindURL(handler gin.HandlerFunc, method string) (string, bool) {
+func (r *Router) FindURLByHandler(handler gin.HandlerFunc, method string) (string, bool) {
 	ptr := reflect.ValueOf(handler).Pointer()
 	recordPtr, ok := r.handlerMap[ptr]
 	if !ok || recordPtr == nil {
@@ -283,6 +299,33 @@ func (r *Router) FindURL(handler gin.HandlerFunc, method string) (string, bool) 
 	}
 
 	return record[len(record)-1].GetPath(), true
+}
+
+func (r *Router) FindGroupURLByName(name string) (string, bool) {
+	return r.findGroupURLByName(name, FindGroupURLByNameMaxDeep)
+}
+
+func (r *Router) findGroupURLByName(name string, deep int64) (string, bool) {
+	if name == "" || deep == 0 {
+		return "", false
+	}
+
+	if r.name == name {
+		return r.path, true
+	}
+
+	for _, i := range r.son {
+		if t, ok := i.findGroupURLByName(name, deep-1); ok {
+			return t, true
+		}
+	}
+
+	return "", false
+}
+
+func (r *Router) FindRouter(NotFound gin.HandlerFunc, NotMethod gin.HandlerFunc) {
+	r.engine.NoRoute(NotFound)
+	r.engine.NoMethod(NotMethod)
 }
 
 func (r *Router) ServeHTTP(wri http.ResponseWriter, req *http.Request) {

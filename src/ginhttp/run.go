@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/resourcepath"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/loadpath"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/router"
 	"net/http"
 	"time"
@@ -23,8 +23,10 @@ func InitGin() error {
 		return err
 	}
 	router.InitRouter(_engine)
-	resourcepath.LoadImagePath(_engine)
-	resourcepath.LoadVideoPath(_engine)
+	loadpath.LoadAPIPath(_engine)
+	loadpath.LoadResourcePath(_engine)
+	loadpath.LoadImagePath(_engine)
+	loadpath.LoadVideoPath(_engine)
 	engine = _engine
 	return nil
 }

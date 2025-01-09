@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/resourcepath"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/loadpath"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"gorm.io/gorm"
@@ -61,7 +61,7 @@ func (vid *Video) SavePath() string {
 }
 
 func (vid *Video) GetUrl() string {
-	return resourcepath.GetVideoPath() + "?" + vid.GetQuery()
+	return loadpath.GetVideoPath() + "?" + vid.GetQuery()
 }
 
 func (vid *Video) GetQuery() string {
