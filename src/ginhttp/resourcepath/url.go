@@ -17,7 +17,7 @@ func LoadImagePath(engine *ginplus.Router) {
 
 	path, ok := engine.FindURL(image.Handler, http.MethodGet)
 	if !ok {
-		path = cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
+		path = cfg.BasePath + cfg.ResourcePath + modeltype.ImagePathV1
 	}
 
 	imagePath = path
@@ -29,7 +29,7 @@ func LoadVideoPath(engine *ginplus.Router) {
 
 	path, ok := engine.FindURL(video.Handler, http.MethodGet)
 	if !ok {
-		path = cfg.BaseURL + cfg.ResourceURL + modeltype.VideoPathV1
+		path = cfg.BasePath + cfg.ResourcePath + modeltype.VideoPathV1
 	}
 
 	videosPath = path

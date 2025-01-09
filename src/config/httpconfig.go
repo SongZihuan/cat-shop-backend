@@ -8,9 +8,9 @@ import (
 type HttpConfig struct {
 	Address        string           `yaml:"address"`
 	DebugMsg       utils.StringBool `yaml:"debugmsg"`
-	BaseURL        string           `yaml:"baseurl"`
-	ApiURL         string           `yaml:"apiurl"`
-	ResourceURL    string           `yaml:"resourceurl"`
+	BasePath       string           `yaml:"basepath"`
+	ApiPath        string           `yaml:"apipath"`
+	ResourcePath   string           `yaml:"resourcepath"`
 	EnableTestAPI  string           `yaml:"enabletestapi"`
 	Proxy          ProxyConfig      `yaml:"proxy"`
 	StopSecret     string           `yaml:"stopsecret"`
@@ -25,9 +25,9 @@ func (h *HttpConfig) setDefault() {
 
 	h.DebugMsg.SetDefaultDisable()
 
-	h.BaseURL = utils.ProcessPath(h.BaseURL)
-	h.ApiURL = utils.ProcessPath(h.ApiURL, "/api")
-	h.ResourceURL = utils.ProcessPath(h.ResourceURL, "/resource")
+	h.BasePath = utils.ProcessPath(h.BasePath)
+	h.ApiPath = utils.ProcessPath(h.ApiPath, "/api")
+	h.ResourcePath = utils.ProcessPath(h.ResourcePath, "/resource")
 
 	if h.StopSecret == "" {
 		h.StopSecret = utils.RandStr(8)

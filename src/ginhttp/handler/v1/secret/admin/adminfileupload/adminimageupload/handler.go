@@ -83,5 +83,5 @@ func Handler(c *gin.Context) {
 
 func getImagePath() string {
 	cfg := config.Config().Yaml.Http
-	return cfg.BaseURL + cfg.ResourceURL + modeltype.ImagePathV1
+	return cfg.BasePath + cfg.ResourcePath + modeltype.ImagePathV1
 }

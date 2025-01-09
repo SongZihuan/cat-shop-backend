@@ -21,6 +21,6 @@ func v1Router(engine *ginplus.Router) {
 	}
 
 	engine.Use(middleware.AllReady(), middleware.AllowMethod(), middleware.Cors())
-	v1.Api(engine.Group(config.Config().Yaml.Http.BaseURL).Group(config.Config().Yaml.Http.ApiURL).Group(Version1))
-	v1.Resource(engine.Group(config.Config().Yaml.Http.BaseURL).Group(config.Config().Yaml.Http.ResourceURL).Group(Version1))
+	v1.Api(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ApiPath).Group(Version1))
+	v1.Resource(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ResourcePath).Group(Version1))
 }
