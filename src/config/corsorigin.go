@@ -3,6 +3,7 @@ package config
 import "regexp"
 
 const DefaultOriginListSize = 10
+const AllowAllOrigin = "*"
 
 type CorsOrigin struct {
 	OriginReg    []*regexp.Regexp
@@ -34,8 +35,16 @@ func (c *CorsOrigin) InOriginList(origin string) bool {
 		return true
 	}
 
+	for _, org := range c.OriginString {
+		if org == AllowAllOrigin {
+			return true
+		} else if org == origin {
+			return true
+		}
+	}
+
 	for _, reg := range c.OriginReg {
-		if reg.MatchString(origin) {
+		if reg != nil && reg.MatchString(origin) {
 			return true
 		}
 	}
