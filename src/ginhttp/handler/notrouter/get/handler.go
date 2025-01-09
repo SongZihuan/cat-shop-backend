@@ -3,6 +3,7 @@ package get
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/loadpath"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -42,14 +43,14 @@ func Handler404(c *gin.Context) {
 }
 
 func Handler403(c *gin.Context) {
-	base := config.Config().Yaml.Http.BasePath
-	api := utils.ProcessPath(base + config.Config().Yaml.Http.ApiPath)
-	resource := utils.ProcessPath(base + config.Config().Yaml.Http.ResourcePath)
+	api := loadpath.GetAPIPath()
+	resource := loadpath.GetResourcePath()
+
 	rawpath := utils.ProcessPath(c.Request.URL.Path)
 
-	if strings.HasPrefix(rawpath, api) {
+	if api != "" && strings.HasPrefix(rawpath, api) {
 		HandlerAPI403(c)
-	} else if strings.HasPrefix(rawpath, resource) {
+	} else if resource != "" && strings.HasPrefix(rawpath, resource) {
 		HandlerResource403(c)
 	} else {
 		// 允许使用abort

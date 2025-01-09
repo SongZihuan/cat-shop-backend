@@ -4,6 +4,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/groupname"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 )
 
 var resourcePath = ""
@@ -16,7 +17,7 @@ func LoadResourcePath(engine *ginplus.Router) {
 		path = cfg.BasePath + cfg.ResourcePath
 	}
 
-	videosPath = path
+	resourcePath = utils.ProcessPath(path)
 	engine.DebugMsg("[INFO] resource path: %s", path)
 }
 

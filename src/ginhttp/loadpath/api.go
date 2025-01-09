@@ -4,6 +4,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/router/groupname"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 )
 
 var apiPath = ""
@@ -16,7 +17,7 @@ func LoadAPIPath(engine *ginplus.Router) {
 		path = cfg.BasePath + cfg.ApiPath
 	}
 
-	videosPath = path
+	apiPath = utils.ProcessPath(path)
 	engine.DebugMsg("[INFO] api path: %s", path)
 }
 

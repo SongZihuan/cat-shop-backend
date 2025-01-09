@@ -5,6 +5,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/resource/image"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"net/http"
 )
 
@@ -23,7 +24,7 @@ func LoadImagePath(engine *ginplus.Router) {
 		}
 	}
 
-	imagePath = path
+	imagePath = utils.ProcessPath(path)
 	engine.DebugMsg("[INFO] image path: %s", path)
 }
 

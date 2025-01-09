@@ -43,6 +43,14 @@ func (h *HttpConfig) setDefault() {
 }
 
 func (h *HttpConfig) check(co *CorsOrigin) ConfigError {
+	if len(h.ApiPath) == 0 {
+		return NewConfigError("Api Path is empty")
+	}
+
+	if len(h.ResourcePath) == 0 {
+		return NewConfigError("Resource Path is empty")
+	}
+
 	err := h.Proxy.check()
 	if err != nil && err.IsError() {
 		return err

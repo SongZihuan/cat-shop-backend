@@ -5,6 +5,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/ginplus"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/resource/video"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"net/http"
 )
 
@@ -23,7 +24,7 @@ func LoadVideoPath(engine *ginplus.Router) {
 		}
 	}
 
-	videosPath = path
+	videosPath = utils.ProcessPath(path)
 	engine.DebugMsg("[INFO] video path: %s", path)
 }
 
