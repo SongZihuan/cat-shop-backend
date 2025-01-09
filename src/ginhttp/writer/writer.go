@@ -2,6 +2,7 @@ package writer
 
 import (
 	"fmt"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -38,12 +39,24 @@ func (w *Writer) Status() int {
 }
 
 func (w *Writer) Write(b []byte) (int, error) {
+	if !utils.IsUTF8(b) {
+		return 0, fmt.Errorf("body is not utf8")
+	}
+
+	b = utils.RemoveBOMIfExists(b)
+
 	w.body = append(w.body, b...)
 	return len(b), nil
 }
 
 func (w *Writer) WriteString(s string) (int, error) {
+	if !utils.IsUTF8String(s) {
+		return 0, fmt.Errorf("body is not utf8")
+	}
+
 	b := []byte(s)
+	b = utils.RemoveBOMIfExists([]byte(s))
+
 	w.body = append(w.body, b...)
 	return len(b), nil
 }
@@ -68,6 +81,13 @@ func (w *Writer) WriteToHttp() (int, error) {
 	if w.written {
 		return len(w.body), nil
 	}
+
+	if !utils.IsUTF8(w.body) {
+		return 0, fmt.Errorf("body is not utf8")
+	}
+
+	w.body = utils.RemoveBOMIfExists([]byte(w.body))
+
 	w.written = true
 	return w.ResponseWriter.Write(w.body)
 }
