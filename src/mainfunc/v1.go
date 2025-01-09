@@ -83,6 +83,7 @@ func MainV1() int {
 		return 1
 	}
 
+	logger.Executable()
 	logger.Infof("run mode: %s\n", cfg.Yaml.Global.GetGinMode())
 
 	ginstop := make(chan bool)

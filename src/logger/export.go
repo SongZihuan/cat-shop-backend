@@ -1,5 +1,19 @@
 package logger
 
+func Executablef(format string, args ...interface{}) string {
+	if !IsReady() {
+		return ""
+	}
+	return globalLogger.Executablef(format, args...)
+}
+
+func Executable() string {
+	if !IsReady() {
+		return ""
+	}
+	return globalLogger.Executable()
+}
+
 func Tagf(format string, args ...interface{}) {
 	if !IsReady() {
 		return

@@ -45,6 +45,7 @@ type Logger struct {
 	warnWriter io.Writer
 	errWriter  io.Writer
 	args0      string
+	args0Name  string
 }
 
 var globalLogger *Logger = nil
@@ -61,7 +62,8 @@ func InitLogger() error {
 		logLevel:   logLevel,
 		warnWriter: os.Stdout,
 		errWriter:  os.Stderr,
-		args0:      utils.GetArgs0Name(),
+		args0:      utils.GetArgs0(),
+		args0Name:  utils.GetArgs0Name(),
 	}
 
 	globalLogger = logger
@@ -72,6 +74,20 @@ func IsReady() bool {
 	return globalLogger != nil
 }
 
+func (l *Logger) Executablef(format string, args ...interface{}) string {
+	str := fmt.Sprintf(format, args...)
+	if str == "" {
+		fmt.Fprintf(l.warnWriter, "executable: %s\n", l.args0)
+	} else {
+		fmt.Fprintf(l.warnWriter, "executable[%s]: %s\n", str, l.args0)
+	}
+	return l.args0
+}
+
+func (l *Logger) Executable() string {
+	return l.Executablef("")
+}
+
 func (l *Logger) Tagf(format string, args ...interface{}) {
 	if l.logLevel > levelDebug {
 		return
@@ -80,10 +96,10 @@ func (l *Logger) Tagf(format string, args ...interface{}) {
 	funcName, file, fileName, line := utils.GetCallingFunctionInfo()
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprint(l.warnWriter, "%s: %s\n", l.args0, str)
-	fmt.Fprint(l.warnWriter, "file: %s:%s\n", file, line)
-	fmt.Fprint(l.warnWriter, "filename: %s\n", fileName)
-	fmt.Fprint(l.warnWriter, "funcname: %s\n", funcName)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
+	fmt.Fprintf(l.warnWriter, "file: %s:%s\n", file, line)
+	fmt.Fprintf(l.warnWriter, "filename: %s\n", fileName)
+	fmt.Fprintf(l.warnWriter, "funcname: %s\n", funcName)
 }
 
 func (l *Logger) Debugf(format string, args ...interface{}) {
@@ -92,7 +108,7 @@ func (l *Logger) Debugf(format string, args ...interface{}) {
 	}
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprint(l.warnWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Infof(format string, args ...interface{}) {
@@ -101,7 +117,7 @@ func (l *Logger) Infof(format string, args ...interface{}) {
 	}
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprint(l.warnWriter, "%s: %s", l.args0, str)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Warnf(format string, args ...interface{}) {
@@ -110,7 +126,7 @@ func (l *Logger) Warnf(format string, args ...interface{}) {
 	}
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprint(l.warnWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Errorf(format string, args ...interface{}) {
@@ -119,7 +135,7 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 	}
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprint(l.errWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.errWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Panicf(format string, args ...interface{}) {
@@ -128,7 +144,7 @@ func (l *Logger) Panicf(format string, args ...interface{}) {
 	}
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprint(l.errWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.errWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Tag(args ...interface{}) {
@@ -139,10 +155,10 @@ func (l *Logger) Tag(args ...interface{}) {
 	funcName, file, fileName, line := utils.GetCallingFunctionInfo()
 
 	str := fmt.Sprint(args...)
-	fmt.Fprint(l.warnWriter, "%s: %s\n", l.args0, str)
-	fmt.Fprint(l.warnWriter, "file: %s:%s\n", file, line)
-	fmt.Fprint(l.warnWriter, "filename: %s\n", fileName)
-	fmt.Fprint(l.warnWriter, "funcname: %s\n", funcName)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
+	fmt.Fprintf(l.warnWriter, "file: %s:%s\n", file, line)
+	fmt.Fprintf(l.warnWriter, "filename: %s\n", fileName)
+	fmt.Fprintf(l.warnWriter, "funcname: %s\n", funcName)
 }
 
 func (l *Logger) Debug(args ...interface{}) {
@@ -151,7 +167,7 @@ func (l *Logger) Debug(args ...interface{}) {
 	}
 
 	str := fmt.Sprint(args...)
-	fmt.Fprint(l.warnWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Info(args ...interface{}) {
@@ -160,7 +176,7 @@ func (l *Logger) Info(args ...interface{}) {
 	}
 
 	str := fmt.Sprint(args...)
-	fmt.Fprint(l.warnWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Warn(args ...interface{}) {
@@ -169,7 +185,7 @@ func (l *Logger) Warn(args ...interface{}) {
 	}
 
 	str := fmt.Sprint(args...)
-	fmt.Fprint(l.warnWriter, "%s: %\ns", l.args0, str)
+	fmt.Fprintf(l.warnWriter, "%s: %\ns", l.args0Name, str)
 }
 
 func (l *Logger) Error(args ...interface{}) {
@@ -178,7 +194,7 @@ func (l *Logger) Error(args ...interface{}) {
 	}
 
 	str := fmt.Sprint(args...)
-	fmt.Fprint(l.errWriter, "%s: %s\n", l.args0, str)
+	fmt.Fprintf(l.errWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Panic(args ...interface{}) {
@@ -187,21 +203,5 @@ func (l *Logger) Panic(args ...interface{}) {
 	}
 
 	str := fmt.Sprint(args...)
-	fmt.Fprint(l.errWriter, "%s: %s\n", l.args0, str)
-}
-
-func SayHello(msg ...string) {
-	if len(msg) == 1 {
-		Info(msg[0])
-	} else {
-		Info("start to rim")
-	}
-}
-
-func SayGoodBy(msg ...string) {
-	if len(msg) == 1 {
-		Info(msg[0])
-	} else {
-		Info("stop run")
-	}
+	fmt.Fprintf(l.errWriter, "%s: %s\n", l.args0Name, str)
 }

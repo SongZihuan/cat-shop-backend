@@ -39,14 +39,14 @@ func Exit(code ...int) {
 
 func SayHello(msg ...string) {
 	if len(msg) == 1 {
-		fmt.Printf("%s: %s", GetArgs0Name(), msg[0])
+		fmt.Printf("%s: %s\n", GetArgs0Name(), msg[0])
 	}
-	fmt.Printf("%s: %s", GetArgs0Name(), "start to run")
+	fmt.Printf("%s: %s\n", GetArgs0Name(), "start to run")
 }
 
 func SayGoodBy(msg ...string) {
 	if len(msg) == 1 {
-		fmt.Printf("%s: %s", GetArgs0Name(), msg[0])
+		fmt.Printf("%s: %s\n", GetArgs0Name(), msg[0])
 	}
-	fmt.Printf("%s: %s", GetArgs0Name(), "stop running")
+	fmt.Printf("%s: %s\n", GetArgs0Name(), "stop running")
 }
