@@ -2,6 +2,7 @@ package admingetxieyi
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,7 +12,7 @@ func Handler(c *gin.Context) {
 	query := Query{}
 	err := c.ShouldBindQuery(&query)
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.BadRequestsError(c, err)
 		return
 	}
 

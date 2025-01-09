@@ -2,6 +2,7 @@ package adminvideoupload
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/database/action"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
@@ -16,7 +17,7 @@ const Size10MB = 10 * 1024 * 1024
 
 func Handler(c *gin.Context) {
 	if err := c.Request.ParseMultipartForm(Size12MB); err != nil { // 32MB限制
-		c.AbortWithStatus(http.StatusBadRequest)
+		abort.BadRequestsError(c, err)
 		return
 	}
 
@@ -49,13 +50,13 @@ func Handler(c *gin.Context) {
 
 	file, err := query.File.Open()
 	if err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+		abort.BadRequestsError(c, err)
 		return
 	}
 
 	fileData, err := io.ReadAll(file)
 	if err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+		abort.BadRequestsError(c, err)
 		return
 	}
 

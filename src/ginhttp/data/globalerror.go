@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 func newSystemError(code CodeType, vargs ...interface{}) Data {
 	if code <= 0 {
 		panic("code must more than 0")
@@ -78,6 +80,10 @@ func NewClientNotTestError() Data {
 
 func NewClientBadRequests(err error) Data {
 	return newClientError(GlobalCodeErrorNotTestMode, "错误请求", err)
+}
+
+func NewClientNotAccept(accept string) Data {
+	return newClientError(GlobalCodeErrorNotTestMode, fmt.Sprintf("不接受返回类型：%s", accept))
 }
 
 func NewClientAdminUserNotFound() Data {

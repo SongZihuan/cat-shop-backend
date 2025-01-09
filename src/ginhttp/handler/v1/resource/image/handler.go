@@ -3,6 +3,7 @@ package image
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/abort"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/header"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"github.com/gabriel-vasile/mimetype"
@@ -19,38 +20,38 @@ func Handler(c *gin.Context) {
 	query := Query{}
 	err := c.ShouldBindQuery(&query)
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.BadRequestsError(c, err)
 		return
 	}
 
 	tp, ok := modeltype.NameToImageType[query.Type]
 	if !ok {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.ResourceNotFound(c)
 		return
 	}
 
 	hash := query.Hash
 	if len(hash) != 64 {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.ResourceNotFound(c)
 		return
 	}
 
 	basePath, ok := cfg.File.Image[tp]
 	if !ok {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.ResourceNotFound(c)
 		return
 	}
 
 	ph := path.Join(basePath, query.Time, fmt.Sprintf("%s.dat", hash))
 	dat, err := os.ReadFile(ph)
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.ResourceNotFound(c)
 		return
 	}
 
 	mimeTp := mimetype.Detect(dat).String()
 	if !strings.HasPrefix("image/", mimeTp) {
-		c.AbortWithStatus(http.StatusNotFound)
+		abort.ResourceNotFound(c)
 		return
 	}
 
@@ -59,7 +60,7 @@ func Handler(c *gin.Context) {
 		!strings.Contains(acceptHeader, "*/*") &&
 		!strings.Contains(acceptHeader, "image/*") &&
 		!strings.Contains(acceptHeader, mimeTp) {
-		c.AbortWithStatus(http.StatusNotAcceptable)
+		abort.ResourceNotAccept(c, fmt.Sprintf("*/*,image/*,%s", mimeTp))
 		return
 	}
 

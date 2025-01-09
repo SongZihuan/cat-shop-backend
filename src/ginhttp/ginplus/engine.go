@@ -150,9 +150,9 @@ func NewEngine() (*Router, error) {
 
 	engine := gin.New()
 	if cfg.Yaml.Global.IsDebug() {
-		engine.Use(gin.Logger(), gin.Recovery(), Recover())
+		engine.Use(gin.Logger(), gin.Recovery(), Writer(), Recover())
 	} else {
-		engine.Use(gin.Logger(), Recover())
+		engine.Use(gin.Logger(), Writer(), Recover())
 	}
 
 	if cfg.Yaml.Http.Proxy.Enable() {
