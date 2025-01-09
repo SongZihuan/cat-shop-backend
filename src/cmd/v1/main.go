@@ -1,20 +1,21 @@
 package main
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/cmd"
+	"github.com/SongZihuan/cat-shop-backend/src/cmd/define"
 	"github.com/SongZihuan/cat-shop-backend/src/mainfunc"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 )
 
-var v1Main cmd.MainFunc = mainfunc.MainV1
+var v1Main define.MainFunc = mainfunc.MainV1
 
 func main() {
-	cmd.Exit(_main())
+	utils.Exit(_main())
 }
 
 func _main() int {
-	cmd.SayHello("shop backend server start")
+	utils.SayHello("shop backend server start")
 	defer func() {
-		cmd.SayGoodBy("shop backend server stop")
+		utils.SayGoodBy("shop backend server stop")
 	}()
 	return v1Main()
 }

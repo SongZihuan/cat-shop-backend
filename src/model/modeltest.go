@@ -2,12 +2,14 @@ package model
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"strings"
 )
 
 func modelTestFail(msg string, name string) {
-	fmt.Printf("modelTestFail [%s]: %s\n", name, msg)
+	// logger 还未初始化，只能直接先打印
+	fmt.Fprintf(os.Stderr, "modelTestFail [%s]: %s\n", name, msg)
 	panic("bad database model")
 }
 

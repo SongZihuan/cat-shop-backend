@@ -3,13 +3,13 @@ package mainfunc
 import (
 	"errors"
 	"flag"
-	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/database"
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/automigrator"
 	"github.com/SongZihuan/cat-shop-backend/src/flagparser"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/httpstop"
+	"github.com/SongZihuan/cat-shop-backend/src/logger"
 	"time"
 )
 
@@ -42,6 +42,17 @@ func MainV1() int {
 
 	cfg := config.Config()
 
+	err = logger.InitLogger()
+	if err != nil {
+		exitByError(err)
+		return 1
+	}
+
+	if !logger.IsReady() {
+		exitByMsg("logger unknown error")
+		return 1
+	}
+
 	waitsec := flagparser.WaitSec()
 	if waitsec > 0 {
 		time.Sleep(waitsec)
@@ -72,7 +83,7 @@ func MainV1() int {
 		return 1
 	}
 
-	fmt.Printf("run mode: %s\n", cfg.Yaml.Global.GetGinMode())
+	logger.Infof("run mode: %s\n", cfg.Yaml.Global.GetGinMode())
 
 	ginstop := make(chan bool)
 	ginerror := make(chan error)

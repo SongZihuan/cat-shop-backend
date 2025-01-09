@@ -5,8 +5,20 @@ import (
 	"os"
 )
 
+type LoggerLevel string
+
+var levelMap = map[string]bool{
+	"debug": true,
+	"info":  true,
+	"warn":  true,
+	"error": true,
+	"panic": true,
+	"none":  true,
+}
+
 type GlobalConfig struct {
-	Mode string `json:"mode"`
+	Mode     string `json:"mode"`
+	LogLevel string `json:"loglevel"`
 }
 
 func (g *GlobalConfig) setDefault() {
@@ -19,12 +31,21 @@ func (g *GlobalConfig) setDefault() {
 	}
 
 	_ = os.Setenv(gin.EnvGinMode, g.Mode)
+
+	if g.LogLevel == "" {
+		g.LogLevel = "info"
+	}
+
 	return
 }
 
 func (g *GlobalConfig) check() ConfigError {
 	if g.Mode != gin.DebugMode && g.Mode != gin.ReleaseMode && g.Mode != gin.TestMode {
 		return NewConfigError("bad mode")
+	}
+
+	if _, ok := levelMap[g.LogLevel]; !ok {
+		return NewConfigError("log level error")
 	}
 
 	return nil
