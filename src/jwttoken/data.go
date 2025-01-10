@@ -16,10 +16,9 @@ func (d *Data) ResetMin() time.Duration {
 	return d.resetmin
 }
 
-func (d *Data) ResetTime() time.Time {
-	return d.resettime
-}
-
 func (d *Data) IsNowReset() bool {
-	return time.Now().After(d.resettime)
+	if d.resetmin > 0 {
+		return time.Now().After(d.resettime)
+	}
+	return false
 }

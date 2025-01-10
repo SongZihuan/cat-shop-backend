@@ -35,20 +35,11 @@ func (j *JwtConfig) setDefault() {
 		j.Hour = 2
 	}
 
-	if j.ResetMin*60 > j.Hour {
-		j.ResetMin -= 15
-	}
-
-	if j.ResetMin <= 0 {
-		j.ResetMin = 0
-	}
-
 	if j.Issuer == "" {
-		j.Issuer = "eShopAsTest"
+		j.Issuer = "CatShop"
 	}
 
 	j.Issuer = strings.ReplaceAll(j.Issuer, " ", "")
-	j.Issuer = strings.ToUpper(j.Issuer)
 }
 
 func (j *JwtConfig) check() ConfigError {
@@ -57,6 +48,10 @@ func (j *JwtConfig) check() ConfigError {
 		if err != nil {
 			_ = NewConfigWarning("jwt secret save warning:" + err.Error())
 		}
+	}
+
+	if j.ResetMin > j.Hour*60 {
+		return NewConfigError("jwt secret reset min must less than expire hour")
 	}
 
 	return nil

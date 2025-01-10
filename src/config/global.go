@@ -32,8 +32,10 @@ func (g *GlobalConfig) setDefault() {
 
 	_ = os.Setenv(gin.EnvGinMode, g.Mode)
 
-	if g.LogLevel == "" {
-		g.LogLevel = "info"
+	if g.LogLevel == "" && (g.Mode == gin.DebugMode || g.Mode == gin.TestMode) {
+		g.LogLevel = "debug"
+	} else if g.LogLevel == "" {
+		g.LogLevel = "warn"
 	}
 
 	return

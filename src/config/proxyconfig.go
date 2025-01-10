@@ -10,8 +10,16 @@ type ProxyConfig struct {
 	TrustedIPs []string         `json:"trustedips"`
 }
 
-func (p *ProxyConfig) setDefault() {
-	p.Proxy.SetDefaultDisable()
+func (p *ProxyConfig) setDefault(global *GlobalConfig) {
+	if global.IsDebug() || global.IsTest() {
+		p.Proxy.SetDefaultEanble()
+	} else {
+		p.Proxy.SetDefaultDisable()
+	}
+
+	if p.Proxy.IsEnable() && len(p.TrustedIPs) == 0 {
+		p.TrustedIPs = []string{"127.0.0.0/8", "::1"}
+	}
 }
 
 func (p *ProxyConfig) check() ConfigError {

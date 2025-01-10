@@ -12,7 +12,7 @@ func isDebugging() bool {
 		panic("config is not ready")
 	}
 
-	return config.Config().Yaml.Global.IsDebug()
+	return config.Config().Yaml.GlobalConfig.IsDebug()
 }
 
 func debugPrint(format string, values ...any) {

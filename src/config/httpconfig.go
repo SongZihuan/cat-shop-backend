@@ -18,12 +18,16 @@ type HttpConfig struct {
 	Cors           CorsConfig       `yaml:"cors"`
 }
 
-func (h *HttpConfig) setDefault() {
+func (h *HttpConfig) setDefault(global *GlobalConfig) {
 	if h.Address == "" {
 		h.Address = "localhost:2689"
 	}
 
-	h.DebugMsg.SetDefaultDisable()
+	if global.IsDebug() || global.IsTest() {
+		h.DebugMsg.SetDefaultEanble()
+	} else {
+		h.DebugMsg.SetDefaultDisable()
+	}
 
 	h.BasePath = utils.ProcessPath(h.BasePath)
 	h.ApiPath = utils.ProcessPath(h.ApiPath, "/api")
@@ -38,7 +42,7 @@ func (h *HttpConfig) setDefault() {
 		h.StopWaitSecond = 10
 	}
 
-	h.Proxy.setDefault()
+	h.Proxy.setDefault(global)
 	h.Cors.setDefault()
 }
 

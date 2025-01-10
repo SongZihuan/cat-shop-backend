@@ -51,7 +51,7 @@ type Logger struct {
 var globalLogger *Logger = nil
 
 func InitLogger() error {
-	level := LoggerLevel(config.Config().Yaml.Global.LogLevel)
+	level := LoggerLevel(config.Config().Yaml.GlobalConfig.LogLevel)
 	logLevel, ok := levelMap[level]
 	if !ok {
 		return fmt.Errorf("invalid log level: %s", level)

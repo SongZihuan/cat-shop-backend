@@ -7,13 +7,13 @@ import (
 )
 
 type YamlConfig struct {
-	Global   GlobalConfig   `yaml:"global"`
-	Mysql    MySQLConfig    `yaml:"mysql"`
-	File     FileConfig     `yaml:"file"`
-	Http     HttpConfig     `yaml:"http"`
-	Front    FrontConfig    `yaml:"front"`
-	Jwt      JwtConfig      `yaml:"jwt"`
-	Password PasswordConfig `yaml:"password"`
+	GlobalConfig `yaml:",inline"`
+	Mysql        MySQLConfig    `yaml:"mysql"`
+	File         FileConfig     `yaml:"file"`
+	Http         HttpConfig     `yaml:"http"`
+	Front        FrontConfig    `yaml:"front"`
+	Jwt          JwtConfig      `yaml:"jwt"`
+	Password     PasswordConfig `yaml:"password"`
 }
 
 func (y *YamlConfig) init() error {
@@ -21,17 +21,17 @@ func (y *YamlConfig) init() error {
 }
 
 func (y *YamlConfig) setDefault() {
-	y.Global.setDefault()
+	y.GlobalConfig.setDefault()
 	y.Mysql.setDefault()
 	y.File.setDefault()
-	y.Http.setDefault()
+	y.Http.setDefault(&y.GlobalConfig)
 	y.Front.setDefault()
 	y.Jwt.setDefault()
 	y.Password.setDefault()
 }
 
 func (y *YamlConfig) check(fl *FileLocationConfig, co *CorsOrigin) (err ConfigError) {
-	err = y.Global.check()
+	err = y.GlobalConfig.check()
 	if err != nil && err.IsError() {
 		return err
 	}

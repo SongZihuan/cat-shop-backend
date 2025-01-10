@@ -28,7 +28,7 @@ func Recover() gin.HandlerFunc {
 			if err != nil {
 				abort.ServerError(c, err)
 				debugPrint("[ERROR] Recover: %v", err)
-				if config.Config().Yaml.Global.IsDebug() {
+				if config.Config().Yaml.GlobalConfig.IsDebug() {
 					panic(err)
 				}
 			}

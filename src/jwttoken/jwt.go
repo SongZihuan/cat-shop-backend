@@ -31,7 +31,11 @@ func CreateUserToken(user *model.User) (t string, err error) {
 	sub := fmt.Sprintf("%sUSERTOKEN", strings.ToUpper(iss))
 	exp := jwt.NewNumericDate(now.Add(time.Duration(config.Config().Yaml.Jwt.Hour) * time.Hour))
 	rsm := time.Minute * time.Duration(config.Config().Yaml.Jwt.ResetMin)
-	rst := exp.Add(-rsm)
+	rst := time.Time{}
+
+	if config.Config().Yaml.Jwt.ResetMin > 0 {
+		rst = exp.Add(-rsm)
+	}
 
 	c := Claims{
 		Data: Data{

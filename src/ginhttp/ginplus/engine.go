@@ -149,11 +149,11 @@ func NewEngine() (*Router, error) {
 	}
 	cfg := config.Config()
 
-	gin.SetMode(cfg.Yaml.Global.GetGinMode())
+	gin.SetMode(cfg.Yaml.GlobalConfig.GetGinMode())
 	debugPrintWARNINGDefault()
 
 	engine := gin.New()
-	if cfg.Yaml.Global.IsDebug() {
+	if cfg.Yaml.GlobalConfig.IsDebug() {
 		engine.Use(gin.Logger(), gin.Recovery(), Writer(), Recover())
 	} else {
 		engine.Use(gin.Logger(), Writer(), Recover())
