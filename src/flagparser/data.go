@@ -179,7 +179,7 @@ func (d *flagData) setFlag() {
 	flag.UintVar(&d.WaitData, data.WaitName[0:1], data.WaitData, data.WaitUseage)
 
 	flag.Usage = func() {
-		d.FprintUseage(flag.CommandLine.Output())
+		_, _ = d.PrintUseage()
 	}
 	d.flagSet = true
 }
