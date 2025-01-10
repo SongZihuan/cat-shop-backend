@@ -29,15 +29,15 @@ func InitFlag() (err error) {
 	initData()
 
 	if Version() {
-		FprintVersion(flag.CommandLine.Output())
+		_, _ = FprintVersion(flag.CommandLine.Output())
 	}
 
 	if License() {
-		FprintLicense(flag.CommandLine.Output())
+		_, _ = FprintLicense(flag.CommandLine.Output())
 	}
 
 	if Help() {
-		FprintUseage(flag.CommandLine.Output())
+		_, _ = FprintUseage(flag.CommandLine.Output())
 	}
 
 	if NotRunMode() {
