@@ -119,3 +119,9 @@ func IsValidURLPath(path string) bool {
 	matched, _ := regexp.MatchString(pattern, path)
 	return matched
 }
+
+func IsValidDomain(domain string) bool {
+	pattern := `^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$`
+	matched, _ := regexp.MatchString(pattern, domain)
+	return matched
+}
