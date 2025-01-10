@@ -55,6 +55,26 @@ func (h *HttpConfig) check(co *CorsOrigin) ConfigError {
 		return NewConfigError("Resource Path is empty")
 	}
 
+	if !utils.IsValidURLPath(h.BasePath) {
+		return NewConfigError("http base path is not valid")
+	}
+
+	if !utils.IsValidURLPath(h.ResourcePath) {
+		return NewConfigError("http resource path is not valid")
+	}
+
+	if !utils.IsValidURLPath(h.ApiPath) {
+		return NewConfigError("http api path is not valid")
+	}
+
+	if !utils.IsValidURLPath(h.BasePath + h.ResourcePath) {
+		return NewConfigError("http resource path is not valid")
+	}
+
+	if !utils.IsValidURLPath(h.BasePath + h.ApiPath) {
+		return NewConfigError("http api path is not valid")
+	}
+
 	err := h.Proxy.check()
 	if err != nil && err.IsError() {
 		return err

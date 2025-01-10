@@ -25,7 +25,7 @@ func ConnectToMySQL() error {
 		config.Config().Yaml.Mysql.DBName)
 }
 
-func connectToMySQL(username string, password string, address string, port int, dbname string) error {
+func connectToMySQL(username string, password string, address string, port int64, dbname string) error {
 	if _db != nil {
 		panic("db is connect")
 	}

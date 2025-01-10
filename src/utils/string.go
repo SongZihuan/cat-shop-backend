@@ -102,3 +102,15 @@ func CountSpaceInStringPrefix(str string) int {
 
 	return res
 }
+
+func IsValidURLPath(path string) bool {
+	if path == "" {
+		return true
+	} else if path == "/" {
+		return false
+	}
+
+	pattern := `^\/[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;%=]+$`
+	matched, _ := regexp.MatchString(pattern, path)
+	return matched
+}

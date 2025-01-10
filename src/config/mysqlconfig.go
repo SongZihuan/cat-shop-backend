@@ -6,7 +6,7 @@ type MySQLConfig struct {
 	UserName       string           `yaml:"username"`
 	Password       string           `yaml:"password"`
 	Address        string           `yaml:"address"`
-	Port           int              `yaml:"port"`
+	Port           int64            `yaml:"port"`
 	DBName         string           `yaml:"dbname"`
 	ActiveShutdown utils.StringBool `yaml:"activeshutdown"`
 	FakeData       utils.StringBool `yaml:"fakedata"`
@@ -26,6 +26,10 @@ func (m *MySQLConfig) setDefault() {
 }
 
 func (m *MySQLConfig) check() ConfigError {
+	if m.Port <= 0 || m.Port >= 65536 {
+		return NewConfigError("mysql port must be between 0 and 65535")
+	}
+
 	if m.UserName == "" {
 		return NewConfigError("mysql username must be given")
 	} else if m.UserName == "root" {

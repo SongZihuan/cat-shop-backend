@@ -15,5 +15,25 @@ func (f *FrontConfig) setDefault() {
 }
 
 func (c *FrontConfig) check() ConfigError {
+	if !utils.IsValidURLPath(c.BasePath) {
+		return NewConfigError("front base path is not valid")
+	}
+
+	if !utils.IsValidURLPath(c.TestPath) {
+		return NewConfigError("front test path is not valid")
+	}
+
+	if !utils.IsValidURLPath(c.TestPayPath) {
+		return NewConfigError("front test pay path is not valid")
+	}
+
+	if !utils.IsValidURLPath(c.BasePath + c.TestPath) {
+		return NewConfigError("front test path is not valid")
+	}
+
+	if !utils.IsValidURLPath(c.BasePath + c.TestPath + c.TestPayPath) {
+		return NewConfigError("front test pay path is not valid")
+	}
+
 	return nil
 }
