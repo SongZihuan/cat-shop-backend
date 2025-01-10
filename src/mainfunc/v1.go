@@ -80,13 +80,13 @@ func MainV1() int {
 		logger.Infof("%s", "Backend service sleeps and waits for completion")
 	}
 
+	logger.Executable()
+	logger.Infof("run mode: %s\n", cfg.Yaml.GlobalConfig.GetGinMode())
+
 	err = ginhttp.InitGin()
 	if err != nil {
 		return utils.ExitByError(err)
 	}
-
-	logger.Executable()
-	logger.Infof("run mode: %s\n", cfg.Yaml.GlobalConfig.GetGinMode())
 
 	ginstop := make(chan bool)
 	ginerror := make(chan error)
