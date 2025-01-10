@@ -3,22 +3,23 @@ package utils
 import (
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
-func GetCallingFunctionInfo() (funcName, file string, fileName string, line int) {
-	pc, _, _, ok := runtime.Caller(1)
+func GetCallingFunctionInfo(skip int) (string, string, string, int) {
+	pc, file, line, ok := runtime.Caller(skip + 1)
 	if !ok {
 		return "", "", "", 0
 	}
 
-	// 获取函数名
-	funcName = runtime.FuncForPC(pc).Name()
-
-	// 去除函数地址前缀，得到纯净的函数名
-	funcName = runtime.FuncForPC(pc).Name()
-
-	// 获取文件名和行号
-	_, file, line, _ = runtime.Caller(1)
+	var funcName string
+	tmp := runtime.FuncForPC(pc).Name()
+	tmpLst := strings.Split(tmp, "/")
+	if len(tmpLst) == 0 {
+		funcName = tmp
+	} else {
+		funcName = tmpLst[len(tmpLst)-1]
+	}
 
 	return funcName, file, filepath.Base(file), line
 }

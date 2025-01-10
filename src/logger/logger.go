@@ -89,17 +89,18 @@ func (l *Logger) Executable() string {
 }
 
 func (l *Logger) Tagf(format string, args ...interface{}) {
+	l.TagSkipf(1, format, args...)
+}
+
+func (l *Logger) TagSkipf(skip int, format string, args ...interface{}) {
 	if l.logLevel > levelDebug {
 		return
 	}
 
-	funcName, file, fileName, line := utils.GetCallingFunctionInfo()
+	funcName, file, _, line := utils.GetCallingFunctionInfo(skip + 1)
 
 	str := fmt.Sprintf(format, args...)
-	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
-	fmt.Fprintf(l.warnWriter, "file: %s:%s\n", file, line)
-	fmt.Fprintf(l.warnWriter, "filename: %s\n", fileName)
-	fmt.Fprintf(l.warnWriter, "funcname: %s\n", funcName)
+	fmt.Fprintf(l.warnWriter, "%s: TAG %s %s %s:%d\n", l.args0Name, str, funcName, file, line)
 }
 
 func (l *Logger) Debugf(format string, args ...interface{}) {
@@ -148,17 +149,18 @@ func (l *Logger) Panicf(format string, args ...interface{}) {
 }
 
 func (l *Logger) Tag(args ...interface{}) {
+	l.TagSkip(1, args...)
+}
+
+func (l *Logger) TagSkip(skip int, args ...interface{}) {
 	if l.logLevel > levelDebug {
 		return
 	}
 
-	funcName, file, fileName, line := utils.GetCallingFunctionInfo()
+	funcName, file, _, line := utils.GetCallingFunctionInfo(skip + 1)
 
 	str := fmt.Sprint(args...)
-	fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
-	fmt.Fprintf(l.warnWriter, "file: %s:%s\n", file, line)
-	fmt.Fprintf(l.warnWriter, "filename: %s\n", fileName)
-	fmt.Fprintf(l.warnWriter, "funcname: %s\n", funcName)
+	fmt.Fprintf(l.warnWriter, "%s: TAG %s %s %s:%d\n", l.args0Name, str, funcName, file, line)
 }
 
 func (l *Logger) Debug(args ...interface{}) {

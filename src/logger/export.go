@@ -18,7 +18,7 @@ func Tagf(format string, args ...interface{}) {
 	if !IsReady() {
 		return
 	}
-	globalLogger.Tagf(format, args...)
+	globalLogger.TagSkipf(1, format, args...)
 }
 
 func Debugf(format string, args ...interface{}) {
@@ -60,7 +60,7 @@ func Tag(args ...interface{}) {
 	if !IsReady() {
 		return
 	}
-	globalLogger.Tag(args...)
+	globalLogger.TagSkip(1, args...)
 }
 
 func Debug(args ...interface{}) {
