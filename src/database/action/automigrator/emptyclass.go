@@ -1,19 +1,10 @@
 package automigrator
 
 import (
-	"errors"
-	"github.com/SongZihuan/cat-shop-backend/src/database/action/internal"
 	"github.com/SongZihuan/cat-shop-backend/src/model"
 	"github.com/SongZihuan/cat-shop-backend/src/model/modeltype"
 	"gorm.io/gorm"
 )
-
-func SystemCreateEmptyClass() error {
-	if !internal.IsReady() {
-		return errors.New("db is not ready")
-	}
-	return systemCreateEmptyClass(internal.DB())
-}
 
 func systemCreateEmptyClass(db *gorm.DB) error {
 	cls := model.NewEmptyClass()

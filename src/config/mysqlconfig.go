@@ -9,6 +9,7 @@ type MySQLConfig struct {
 	Port           int              `yaml:"port"`
 	DBName         string           `yaml:"dbname"`
 	ActiveShutdown utils.StringBool `yaml:"activeshutdown"`
+	FakeData       utils.StringBool `yaml:"fakedata"`
 }
 
 func (m *MySQLConfig) setDefault() {
@@ -21,6 +22,7 @@ func (m *MySQLConfig) setDefault() {
 	}
 
 	m.ActiveShutdown.SetDefaultEanble()
+	m.FakeData.SetDefaultDisable()
 }
 
 func (m *MySQLConfig) check() ConfigError {

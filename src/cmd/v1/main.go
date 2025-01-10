@@ -13,9 +13,9 @@ func main() {
 }
 
 func _main() int {
-	utils.SayHellof("%s", "The backend service starts normally, thank you.")
+	utils.SayHellof("%s", "The backend service program starts normally, thank you.")
 	defer func() {
-		utils.SayGoodByef("%s", "The backend service is offline/shutdown normally, thank you.")
+		utils.SayGoodByef("%s", "The backend service program is offline/shutdown normally, thank you.")
 	}()
 	return v1Main()
 }

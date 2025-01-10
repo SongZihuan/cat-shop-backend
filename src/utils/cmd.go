@@ -31,19 +31,23 @@ func GetArgs0Name() string {
 }
 
 func SayHellof(format string, args ...interface{}) {
+	var msg string
 	if len(format) == 0 && len(args) == 0 {
-		fmt.Printf("%s: %s\n", GetArgs0Name(), "Normal startup, thank you.")
+		msg = fmt.Sprintf("%s: %s", GetArgs0Name(), "Normal startup, thank you.")
 	} else {
 		str := fmt.Sprintf(format, args...)
-		fmt.Printf("%s: %s\n", GetArgs0Name(), str)
+		msg = fmt.Sprintf("%s: %s", GetArgs0Name(), str)
 	}
+	fmt.Println(FormatTextToWidth(msg, NormalConsoleWidth))
 }
 
 func SayGoodByef(format string, args ...interface{}) {
+	var msg string
 	if len(format) == 0 && len(args) == 0 {
-		fmt.Printf("%s: %s\n", GetArgs0Name(), "Normal shutdown, thank you.")
+		msg = fmt.Sprintf("%s: %s", GetArgs0Name(), "Normal shutdown, thank you.")
 	} else {
 		str := fmt.Sprintf(format, args...)
-		fmt.Printf("%s: %s\n", GetArgs0Name(), str)
+		msg = fmt.Sprintf("%s: %s", GetArgs0Name(), str)
 	}
+	fmt.Println(FormatTextToWidth(msg, NormalConsoleWidth))
 }

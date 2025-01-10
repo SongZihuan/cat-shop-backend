@@ -1,6 +1,9 @@
 package config
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
+)
 
 type ConfigError interface {
 	error
@@ -12,12 +15,12 @@ type ConfigError interface {
 }
 
 func NewConfigError(msg string) ConfigError {
-	fmt.Printf("config error: %s\n", msg)
+	fmt.Println(utils.FormatTextToWidth(fmt.Sprintf("config error: %s", msg), utils.NormalConsoleWidth))
 	return &configError{msg: msg, isError: true}
 }
 
 func NewConfigWarning(msg string) ConfigError {
-	fmt.Printf("config warning: %s\n", msg)
+	fmt.Println(utils.FormatTextToWidth(fmt.Sprintf("config warning: %s", msg), utils.NormalConsoleWidth))
 	return &configError{msg: msg, isError: false}
 }
 

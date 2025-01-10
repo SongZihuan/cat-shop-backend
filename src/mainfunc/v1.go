@@ -2,7 +2,6 @@ package mainfunc
 
 import (
 	"errors"
-	"flag"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/database"
 	"github.com/SongZihuan/cat-shop-backend/src/database/action/automigrator"
@@ -17,8 +16,9 @@ import (
 func MainV1() int {
 	var err error
 
-	err = flagparser.Flag()
-	if errors.Is(err, flag.ErrHelp) {
+	err = flagparser.InitFlag()
+	if errors.Is(err, flagparser.StopFlag) {
+		utils.SayGoodByef("The backend service will not run because you set a specific option[%s].", flagparser.NotRunModeOption())
 		return 0
 	} else if err != nil {
 		return utils.ExitByError(err)
@@ -48,11 +48,6 @@ func MainV1() int {
 		return utils.ExitByErrorMsg("logger unknown error")
 	}
 
-	waitsec := flagparser.WaitSec()
-	if waitsec > 0 {
-		time.Sleep(waitsec)
-	}
-
 	err = database.ConnectToMySQL()
 	if err != nil {
 		return utils.ExitByError(err)
@@ -64,9 +59,21 @@ func MainV1() int {
 		return utils.ExitByError(err)
 	}
 
-	err = automigrator.SystemCreateEmptyClass()
+	err = automigrator.SystemMustCreateData()
 	if err != nil {
 		return utils.ExitByError(err)
+	}
+
+	err = automigrator.SystemCreateData()
+	if err != nil {
+		return utils.ExitByError(err)
+	}
+
+	waitsec := flagparser.WaitSec()
+	if waitsec > 0 {
+		logger.Infof("The backend service process is sleeping and waiting for %d seconds.", waitsec)
+		time.Sleep(waitsec)
+		logger.Infof("%s", "Backend service sleeps and waits for completion")
 	}
 
 	err = ginhttp.InitGin()

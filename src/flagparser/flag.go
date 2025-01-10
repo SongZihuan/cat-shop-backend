@@ -12,9 +12,9 @@ func IsReady() bool {
 	return data.isReady() && isReady
 }
 
-var ErrHelp = fmt.Errorf("help")
+var StopFlag = fmt.Errorf("stop")
 
-func Flag() (err error) {
+func InitFlag() (err error) {
 	if isReady {
 		return nil
 	}
@@ -26,18 +26,22 @@ func Flag() (err error) {
 		}
 	}()
 
-	data = newFlagData()
+	initData()
 
-	flag.BoolVar(&data.help, "help", false, "this help")
-	flag.StringVar(&data.configFile, "config", "config.yaml", "the config file path")
-	flag.UintVar(&data.wait, "wait", MinWaitSec, "wait second to start")
+	if Version() {
+		FprintVersion(flag.CommandLine.Output())
+	}
 
-	flag.Parse()
-	data.ready()
+	if License() {
+		FprintLicense(flag.CommandLine.Output())
+	}
 
 	if Help() {
-		flag.Usage()
-		return ErrHelp
+		FprintUseage(flag.CommandLine.Output())
+	}
+
+	if NotRunMode() {
+		return StopFlag
 	}
 
 	err = checkFlag()
