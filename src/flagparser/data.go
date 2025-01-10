@@ -31,6 +31,9 @@ type flagData struct {
 	LicenseData      bool
 	LicenseName      string
 	LicenseUseage    string
+	ReportData       bool
+	ReportName       string
+	ReportUseage     string
 	ConfigFileData   string
 	ConfigFileName   string
 	ConfigFileUseage string
@@ -55,7 +58,10 @@ func initData() {
 		VersionUseage:    fmt.Sprintf("Show version of %s. If this option is set, the backend service will not run.", utils.GetArgs0Name()),
 		LicenseData:      false,
 		LicenseName:      "license",
-		LicenseUseage:    fmt.Sprintf("Show version of %s. If this option is set, the backend service will not run.", utils.GetArgs0Name()),
+		LicenseUseage:    fmt.Sprintf("Show license of %s. If this option is set, the backend service will not run.", utils.GetArgs0Name()),
+		ReportData:       false,
+		ReportName:       "report",
+		ReportUseage:     fmt.Sprintf("Show how to report questions/errors of %s. If this option is set, the backend service will not run.", utils.GetArgs0Name()),
 		ConfigFileData:   "config.yaml",
 		ConfigFileName:   "config",
 		ConfigFileUseage: fmt.Sprintf("%s", "The location of the running configuration file of the backend service. The option is a string, the default value is config.yaml in the running directory."),
@@ -113,21 +119,27 @@ func (d *flagData) writeUseAge() {
 				panic("bool option can not be true")
 			}
 
-			title = fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(optionName, utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title1 := fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(optionName, utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title2 := fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(optionName[0:1], utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title = fmt.Sprintf("%s\n%s", title1, title2)
 		} else if field.Type.Kind() == reflect.String {
 			optionData, ok := val.FieldByName(option + "Data").Interface().(string)
 			if !ok {
 				panic("can not get option data")
 			}
 
-			title = fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(fmt.Sprintf("%s string, default: '%s'", optionName, optionData), utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title1 := fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(fmt.Sprintf("%s string, default: '%s'", optionName, optionData), utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title2 := fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(fmt.Sprintf("%s string, default: '%s'", optionName[0:1], optionData), utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title = fmt.Sprintf("%s\n%s", title1, title2)
 		} else if field.Type.Kind() == reflect.Uint {
 			optionData, ok := val.FieldByName(option + "Data").Interface().(uint)
 			if !ok {
 				panic("can not get option data")
 			}
 
-			title = fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(fmt.Sprintf("%s number, default: %d", optionName, optionData), utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title1 := fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(fmt.Sprintf("%s number, default: %d", optionName, optionData), utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title2 := fmt.Sprintf("%s%s%s", OptionIdent, OptionPrefix, utils.FormatTextToWidth(fmt.Sprintf("%s number, default: %d", optionName[0:1], optionData), utils.NormalConsoleWidth-len(OptionIdent)-len(OptionPrefix)))
+			title = fmt.Sprintf("%s\n%s", title1, title2)
 		} else {
 			panic("error flag type")
 		}
@@ -140,7 +152,7 @@ func (d *flagData) writeUseAge() {
 		result.WriteString("\n\n")
 	}
 
-	d.Useage = strings.TrimSuffix(result.String(), "\n\n")
+	d.Useage = strings.TrimRight(result.String(), "\n")
 }
 
 func (d *flagData) setFlag() {
@@ -149,10 +161,26 @@ func (d *flagData) setFlag() {
 	}
 
 	flag.BoolVar(&d.HelpData, data.HelpName, data.HelpData, data.HelpUseage)
+	flag.BoolVar(&d.HelpData, data.HelpName[0:1], data.HelpData, data.HelpUseage)
+
 	flag.BoolVar(&d.VersionData, data.VersionName, data.VersionData, data.VersionUseage)
+	flag.BoolVar(&d.VersionData, data.VersionName[0:1], data.VersionData, data.VersionUseage)
+
 	flag.BoolVar(&d.LicenseData, data.LicenseName, data.LicenseData, data.LicenseUseage)
+	flag.BoolVar(&d.LicenseData, data.LicenseName[0:1], data.LicenseData, data.LicenseUseage)
+
+	flag.BoolVar(&d.ReportData, data.ReportName, data.ReportData, data.ReportUseage)
+	flag.BoolVar(&d.ReportData, data.ReportName[0:1], data.ReportData, data.ReportUseage)
+
 	flag.StringVar(&d.ConfigFileData, data.ConfigFileName, data.ConfigFileData, data.ConfigFileUseage)
+	flag.StringVar(&d.ConfigFileData, data.ConfigFileName[0:1], data.ConfigFileData, data.ConfigFileUseage)
+
 	flag.UintVar(&d.WaitData, data.WaitName, data.WaitData, data.WaitUseage)
+	flag.UintVar(&d.WaitData, data.WaitName[0:1], data.WaitData, data.WaitUseage)
+
+	flag.Usage = func() {
+		d.FprintUseage(flag.CommandLine.Output())
+	}
 	d.flagSet = true
 }
 
@@ -201,11 +229,11 @@ func (d *flagData) Help() bool {
 }
 
 func (d *flagData) FprintUseage(writer io.Writer) (int, error) {
-	return fmt.Fprintf(writer, "%s\n\n", d.Useage)
+	return fmt.Fprintf(writer, "%s\n", d.Useage)
 }
 
 func (d *flagData) PrintUseage() (int, error) {
-	return fmt.Fprintf(os.Stdout, "%s\n\n", d.Useage)
+	return d.FprintUseage(flag.CommandLine.Output())
 }
 
 func (d *flagData) Version() bool {
@@ -218,21 +246,39 @@ func (d *flagData) Version() bool {
 
 func (d *flagData) FprintVersion(writer io.Writer) (int, error) {
 	version := utils.FormatTextToWidth(fmt.Sprintf("Version of %s: %s", utils.GetArgs0Name(), resource.Version), utils.NormalConsoleWidth)
-	return fmt.Fprintf(writer, "%s\n\n", version)
+	return fmt.Fprintf(writer, "%s\n", version)
 }
 
 func (d *flagData) PrintVersion() (int, error) {
-	return d.FprintVersion(os.Stdout)
+	return d.FprintVersion(flag.CommandLine.Output())
 }
 
 func (d *flagData) FprintLicense(writer io.Writer) (int, error) {
 	title := utils.FormatTextToWidth(fmt.Sprintf("License of %s:", utils.GetArgs0Name()), utils.NormalConsoleWidth)
 	license := utils.FormatTextToWidth(resource.License, utils.NormalConsoleWidth)
-	return fmt.Fprintf(writer, "%s\n%s\n\n", title, license)
+	return fmt.Fprintf(writer, "%s\n%s\n", title, license)
 }
 
 func (d *flagData) PrintLicense() (int, error) {
-	return d.FprintLicense(os.Stdout)
+	return d.FprintLicense(flag.CommandLine.Output())
+}
+
+func (d *flagData) FprintReport(writer io.Writer) (int, error) {
+	// 不需要title
+	report := utils.FormatTextToWidth(resource.Report, utils.NormalConsoleWidth)
+	return fmt.Fprintf(os.Stderr, "%s\n", report)
+}
+
+func (d *flagData) PrintReport() (int, error) {
+	return d.FprintReport(flag.CommandLine.Output())
+}
+
+func (d *flagData) FprintLF(writer io.Writer) (int, error) {
+	return fmt.Fprintf(os.Stderr, "\n")
+}
+
+func (d *flagData) PrintLF() (int, error) {
+	return d.FprintLF(flag.CommandLine.Output())
 }
 
 func (d *flagData) License() bool {
@@ -241,6 +287,14 @@ func (d *flagData) License() bool {
 	}
 
 	return d.LicenseData
+}
+
+func (d *flagData) Report() bool {
+	if !d.isReady() {
+		panic("flag not ready")
+	}
+
+	return d.ReportData
 }
 
 func (d *flagData) ConfigFile() string {
@@ -263,4 +317,8 @@ func (d *flagData) Wait() uint {
 	} else {
 		return d.WaitData
 	}
+}
+
+func (d *flagData) SetOutput(writer io.Writer) {
+	flag.CommandLine.SetOutput(writer)
 }

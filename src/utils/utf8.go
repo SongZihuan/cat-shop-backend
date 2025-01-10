@@ -1,6 +1,10 @@
 package utils
 
-import "unicode/utf8"
+import (
+	"fmt"
+	"unicode"
+	"unicode/utf8"
+)
 
 func IsUTF8(b []byte) bool {
 	return utf8.Valid(b)
@@ -22,4 +26,25 @@ func RemoveBOMIfExists(data []byte) []byte {
 		return data[3:]
 	}
 	return data
+}
+
+func HasInvisibleByteSlice(data []byte) bool {
+	for i := 0; i < len(data); {
+		runeValue, size := utf8.DecodeRune(data[i:])
+		if !unicode.IsPrint(runeValue) {
+			return true
+		}
+		i += size
+	}
+	return false
+}
+
+func HasInvisibleString(str string) bool {
+	for _, runeValue := range str {
+		if !unicode.IsPrint(runeValue) {
+			fmt.Printf("%d\n", runeValue)
+			return true
+		}
+	}
+	return false
 }

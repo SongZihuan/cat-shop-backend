@@ -1,9 +1,9 @@
 package flagparser
 
 import (
-	"flag"
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
+	"os"
 )
 
 var isReady = false
@@ -28,16 +28,36 @@ func InitFlag() (err error) {
 
 	initData()
 
+	SetOutput(os.Stdout)
+
+	var hasPrint = false
+
 	if Version() {
-		_, _ = FprintVersion(flag.CommandLine.Output())
+		_, _ = PrintVersion()
+		hasPrint = true
 	}
 
 	if License() {
-		_, _ = FprintLicense(flag.CommandLine.Output())
+		if hasPrint {
+			PrintLF()
+		}
+		_, _ = PrintLicense()
+		hasPrint = true
+	}
+
+	if Report() {
+		if hasPrint {
+			PrintLF()
+		}
+		_, _ = PrintReport()
 	}
 
 	if Help() {
-		_, _ = FprintUseage(flag.CommandLine.Output())
+		if hasPrint {
+			PrintLF()
+		}
+		_, _ = PrintUseage()
+		hasPrint = true
 	}
 
 	if NotRunMode() {

@@ -37,6 +37,22 @@ func PrintLicense() (int, error) {
 	return data.PrintLicense()
 }
 
+func FprintReport(writer io.Writer) (int, error) {
+	return data.FprintReport(writer)
+}
+
+func PrintReport() (int, error) {
+	return data.PrintReport()
+}
+
+func FprintLF(writer io.Writer) (int, error) {
+	return data.FprintLF(writer)
+}
+
+func PrintLF() (int, error) {
+	return data.PrintLF()
+}
+
 func Version() bool {
 	return data.Version()
 }
@@ -45,8 +61,12 @@ func License() bool {
 	return data.License()
 }
 
+func Report() bool {
+	return data.Report()
+}
+
 func NotRunMode() bool {
-	return Help() || Version() || License()
+	return Help() || Version() || License() || Report()
 }
 
 func NotRunModeOption() string {
@@ -56,16 +76,20 @@ func NotRunModeOption() string {
 
 	var result strings.Builder
 
-	if data.HelpData {
+	if data.Help() {
 		result.WriteString(fmt.Sprintf("%s%s, ", OptionPrefix, data.HelpName))
 	}
 
-	if data.VersionData {
+	if data.Version() {
 		result.WriteString(fmt.Sprintf("%s%s, ", OptionPrefix, data.VersionName))
 	}
 
-	if data.LicenseData {
+	if data.License() {
 		result.WriteString(fmt.Sprintf("%s%s, ", OptionPrefix, data.LicenseName))
+	}
+
+	if data.Report() {
+		result.WriteString(fmt.Sprintf("%s%s, ", OptionPrefix, data.ReportName))
 	}
 
 	return strings.TrimSuffix(result.String(), ", ")
@@ -77,4 +101,8 @@ func ConfigFile() string {
 
 func WaitSec() time.Duration {
 	return time.Second * time.Duration(data.Wait())
+}
+
+func SetOutput(writer io.Writer) {
+	data.SetOutput(writer)
 }

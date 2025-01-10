@@ -52,10 +52,15 @@ func FormatTextToWidthAndPrefix(text string, prefixWidth int, overallWidth int) 
 		panic("bad width")
 	}
 
-	text = strings.Replace(text, "\n\r", "\n", 0)
+	text = strings.ReplaceAll(text, "\r\n", "\n")
 
 	for _, line := range strings.Split(text, "\n") {
 		result.WriteString(strings.Repeat(" ", prefixWidth))
+
+		if line == "" {
+			result.WriteString("\n")
+			continue
+		}
 
 		spaceCount := CountSpaceInStringPrefix(line) % width
 		newLineLength := 0
@@ -87,7 +92,7 @@ func FormatTextToWidthAndPrefix(text string, prefixWidth int, overallWidth int) 
 		}
 	}
 
-	return strings.TrimSuffix(result.String(), "\n")
+	return strings.TrimRight(result.String(), "\n")
 }
 
 func CountSpaceInStringPrefix(str string) int {

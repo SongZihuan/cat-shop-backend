@@ -18,7 +18,6 @@ func MainV1() int {
 
 	err = flagparser.InitFlag()
 	if errors.Is(err, flagparser.StopFlag) {
-		utils.SayGoodByef("The backend service will not run because you set a specific option[%s].", flagparser.NotRunModeOption())
 		return 0
 	} else if err != nil {
 		return utils.ExitByError(err)
@@ -27,6 +26,11 @@ func MainV1() int {
 	if !flagparser.IsReady() {
 		return utils.ExitByErrorMsg("flag parser unknown error")
 	}
+
+	utils.SayHellof("%s", "The backend service program starts normally, thank you.")
+	defer func() {
+		utils.SayGoodByef("%s", "The backend service program is offline/shutdown normally, thank you.")
+	}()
 
 	err = config.InitConfig()
 	if err != nil {
