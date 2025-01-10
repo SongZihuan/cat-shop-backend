@@ -2,18 +2,22 @@ package utils
 
 import "strings"
 
-func ProcessPath(url string, defaultUrl ...string) string {
-	if len(url) == 0 && len(defaultUrl) == 1 {
-		url = defaultUrl[0]
+func ProcessPath(path string, defaultUrl ...string) string {
+	if len(path) == 0 && len(defaultUrl) == 1 {
+		path = defaultUrl[0]
 	}
 
-	url = strings.TrimSpace(url)
+	path = strings.TrimSpace(path)
 
-	if !strings.HasPrefix(url, "/") {
-		url = "/" + url
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
 	}
 
-	url = strings.TrimRight(url, "/")
+	path = strings.TrimRight(path, "/")
 
-	return url
+	if !IsValidURLPath(path) {
+		panic("A serious error occurred in 'ProcessPath', and the generated Path does not conform to the 'IsValidURLPath' validation logic.")
+	}
+
+	return path
 }
