@@ -10,6 +10,7 @@ import (
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/httpstop"
 	"github.com/SongZihuan/cat-shop-backend/src/logger"
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"time"
 )
 
@@ -20,37 +21,31 @@ func MainV1() int {
 	if errors.Is(err, flag.ErrHelp) {
 		return 0
 	} else if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	if !flagparser.IsReady() {
-		exitByMsg("flag parser unknown error")
-		return 1
+		return utils.ExitByErrorMsg("flag parser unknown error")
 	}
 
 	err = config.InitConfig()
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	if !config.IsReady() {
-		exitByMsg("config parser unknown error")
-		return 1
+		return utils.ExitByErrorMsg("config parser unknown error")
 	}
 
 	cfg := config.Config()
 
 	err = logger.InitLogger()
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	if !logger.IsReady() {
-		exitByMsg("logger unknown error")
-		return 1
+		return utils.ExitByErrorMsg("logger unknown error")
 	}
 
 	waitsec := flagparser.WaitSec()
@@ -60,27 +55,23 @@ func MainV1() int {
 
 	err = database.ConnectToMySQL()
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 	defer database.CloseMySQL()
 
 	err = automigrator.SystemAutoMigrate()
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	err = automigrator.SystemCreateEmptyClass()
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	err = ginhttp.InitGin()
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	logger.Executable()
@@ -106,16 +97,14 @@ func MainV1() int {
 	case <-httpstop.GetStopChan():
 		break
 	case err := <-ginerror:
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	case <-ginstop:
 		break
 	}
 
 	err = ginhttp.Stop(time.Duration(cfg.Yaml.Http.StopWaitSecond) * time.Second)
 	if err != nil {
-		exitByError(err)
-		return 1
+		return utils.ExitByError(err)
 	}
 
 	return 0

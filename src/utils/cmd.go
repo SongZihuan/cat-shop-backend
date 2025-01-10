@@ -30,23 +30,20 @@ func GetArgs0Name() string {
 	return filepath.Base(_args0)
 }
 
-func Exit(code ...int) {
-	if len(code) == 1 {
-		os.Exit(code[0])
+func SayHellof(format string, args ...interface{}) {
+	if len(format) == 0 && len(args) == 0 {
+		fmt.Printf("%s: %s\n", GetArgs0Name(), "Normal startup, thank you.")
+	} else {
+		str := fmt.Sprintf(format, args...)
+		fmt.Printf("%s: %s\n", GetArgs0Name(), str)
 	}
-	os.Exit(0)
 }
 
-func SayHello(msg ...string) {
-	if len(msg) == 1 {
-		fmt.Printf("%s: %s\n", GetArgs0Name(), msg[0])
+func SayGoodByef(format string, args ...interface{}) {
+	if len(format) == 0 && len(args) == 0 {
+		fmt.Printf("%s: %s\n", GetArgs0Name(), "Normal shutdown, thank you.")
+	} else {
+		str := fmt.Sprintf(format, args...)
+		fmt.Printf("%s: %s\n", GetArgs0Name(), str)
 	}
-	fmt.Printf("%s: %s\n", GetArgs0Name(), "start to run")
-}
-
-func SayGoodBy(msg ...string) {
-	if len(msg) == 1 {
-		fmt.Printf("%s: %s\n", GetArgs0Name(), msg[0])
-	}
-	fmt.Printf("%s: %s\n", GetArgs0Name(), "stop running")
 }

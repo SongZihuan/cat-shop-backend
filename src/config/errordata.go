@@ -12,12 +12,12 @@ type ConfigError interface {
 }
 
 func NewConfigError(msg string) ConfigError {
-	fmt.Println("config error: ", msg)
+	fmt.Printf("config error: %s\n", msg)
 	return &configError{msg: msg, isError: true}
 }
 
 func NewConfigWarning(msg string) ConfigError {
-	fmt.Println("config warning: ", msg)
+	fmt.Printf("config warning: %s\n", msg)
 	return &configError{msg: msg, isError: false}
 }
 
