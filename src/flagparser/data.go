@@ -226,7 +226,7 @@ func (d *flagData) PrintVersion() (int, error) {
 }
 
 func (d *flagData) FprintLicense(writer io.Writer) (int, error) {
-	title := utils.FormatTextToWidth(fmt.Sprintf("License of %s:", utils.GetArgs0Name(), resource.License), utils.NormalConsoleWidth)
+	title := utils.FormatTextToWidth(fmt.Sprintf("License of %s:", utils.GetArgs0Name()), utils.NormalConsoleWidth)
 	license := utils.FormatTextToWidth(resource.License, utils.NormalConsoleWidth)
 	return fmt.Fprintf(writer, "%s\n%s\n\n", title, license)
 }
