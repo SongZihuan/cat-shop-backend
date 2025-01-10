@@ -12,9 +12,9 @@ type ProxyConfig struct {
 
 func (p *ProxyConfig) setDefault(global *GlobalConfig) {
 	if global.IsDebug() || global.IsTest() {
-		p.Proxy.SetDefaultEanble()
-	} else {
 		p.Proxy.SetDefaultDisable()
+	} else {
+		p.Proxy.SetDefaultEanble()
 	}
 
 	if p.Proxy.IsEnable() && len(p.TrustedIPs) == 0 {

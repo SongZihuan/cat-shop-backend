@@ -98,7 +98,7 @@ func MainV1() int {
 		} else if err != nil {
 			ginerror <- err
 		} else {
-			ginstop <- true
+			ginstop <- false
 		}
 	}()
 

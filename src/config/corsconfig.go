@@ -28,7 +28,10 @@ func (c *CorsConfig) check(co *CorsOrigin) ConfigError {
 			return NewConfigError(fmt.Sprintf("cors maxagesec %d is invalid", c.MaxAgeSec))
 		}
 
-		co.SetString(c.AllowOrigin)
+		err := co.SetString(c.AllowOrigin)
+		if err != nil {
+			return NewConfigError("cors allowcors is invalid")
+		}
 
 		for _, r := range c.AllowOriginReg {
 			_ = co.ApplyReg(r)

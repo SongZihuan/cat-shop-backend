@@ -2,7 +2,6 @@ package options
 
 import (
 	"github.com/SongZihuan/cat-shop-backend/src/config"
-	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/handler/v1/cors"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/loadpath"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
@@ -11,44 +10,45 @@ import (
 	"strings"
 )
 
-func HandlerAPI(c *gin.Context) {
-	if config.Config().Yaml.Http.Cors.Enable() {
-		c.AbortWithStatusJSON(http.StatusMethodNotAllowed, data.NewClientCorsError("系统未启动Cors跨域模式"))
-		return
+func HandlerAPI(c *gin.Context) bool {
+	if config.Config().Yaml.Http.Cors.Disable() {
+		return true
 	}
 
 	if !cors.Handler(c) {
-		return
+		return false
 	}
 
 	c.Status(http.StatusNoContent)
+	return true
 }
 
-func HandlerResource(c *gin.Context) {
-	if config.Config().Yaml.Http.Cors.Enable() {
-		c.AbortWithStatus(http.StatusMethodNotAllowed)
-		return
+func HandlerResource(c *gin.Context) bool {
+	if config.Config().Yaml.Http.Cors.Disable() {
+		return true
 	}
 
 	if !cors.Handler(c) {
-		return
+		return false
 	}
 
 	c.Status(http.StatusNoContent)
+	return true
 }
 
-func Handler(c *gin.Context) {
+func Handler(c *gin.Context) bool {
 	api := loadpath.GetAPIPath()
 	resource := loadpath.GetResourcePath()
 
 	rawpath := utils.ProcessPath(c.Request.URL.Path)
 
 	if api != "" && strings.HasPrefix(rawpath, api) {
-		HandlerAPI(c)
+		return HandlerAPI(c)
 	} else if resource != "" && strings.HasPrefix(rawpath, resource) {
-		HandlerResource(c)
+		return HandlerResource(c)
 	} else {
 		// 允许使用abort
 		c.AbortWithStatus(http.StatusNotFound)
+		return false
 	}
 }
