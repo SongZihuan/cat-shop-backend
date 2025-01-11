@@ -24,7 +24,7 @@ func (h *HttpConfig) setDefault(global *GlobalConfig) {
 	}
 
 	if global.IsDebug() || global.IsTest() {
-		h.DebugMsg.SetDefaultEanble()
+		h.DebugMsg.SetDefaultEnable()
 	} else {
 		h.DebugMsg.SetDefaultDisable()
 	}

@@ -29,7 +29,7 @@ func (j *JwtConfig) setDefault() {
 		}
 	}
 
-	j.SaveSecret.SetDefaultEanble()
+	j.SaveSecret.SetDefaultEnable()
 
 	if j.Hour <= 0 {
 		j.Hour = 2

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/SongZihuan/cat-shop-backend/src/utils"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -17,8 +18,9 @@ var levelMap = map[string]bool{
 }
 
 type GlobalConfig struct {
-	Mode     string `json:"mode"`
-	LogLevel string `json:"loglevel"`
+	Mode     string           `json:"mode"`
+	LogLevel string           `json:"loglevel"`
+	LogTag   utils.StringBool `json:"logtag"`
 }
 
 func (g *GlobalConfig) setDefault() {
@@ -36,6 +38,12 @@ func (g *GlobalConfig) setDefault() {
 		g.LogLevel = "debug"
 	} else if g.LogLevel == "" {
 		g.LogLevel = "warn"
+	}
+
+	if g.Mode == gin.DebugMode || g.Mode == gin.TestMode {
+		g.LogTag.SetDefaultEnable()
+	} else if g.LogLevel == "" {
+		g.LogTag.SetDefaultDisable()
 	}
 
 	return

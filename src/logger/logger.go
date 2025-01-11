@@ -42,6 +42,7 @@ var levelMap = map[LoggerLevel]loggerLevel{
 type Logger struct {
 	level      LoggerLevel
 	logLevel   loggerLevel
+	logTag     bool
 	warnWriter io.Writer
 	errWriter  io.Writer
 	args0      string
@@ -51,6 +52,10 @@ type Logger struct {
 var globalLogger *Logger = nil
 
 func InitLogger() error {
+	if !config.IsReady() {
+		panic("config is not ready")
+	}
+
 	level := LoggerLevel(config.Config().Yaml.GlobalConfig.LogLevel)
 	logLevel, ok := levelMap[level]
 	if !ok {
@@ -60,6 +65,7 @@ func InitLogger() error {
 	logger := &Logger{
 		level:      level,
 		logLevel:   logLevel,
+		logTag:     config.Config().Yaml.LogTag.ToBool(true),
 		warnWriter: os.Stdout,
 		errWriter:  os.Stderr,
 		args0:      utils.GetArgs0(),
@@ -93,7 +99,7 @@ func (l *Logger) Tagf(format string, args ...interface{}) {
 }
 
 func (l *Logger) TagSkipf(skip int, format string, args ...interface{}) {
-	if l.logLevel > levelDebug {
+	if !l.logTag {
 		return
 	}
 
@@ -153,7 +159,7 @@ func (l *Logger) Tag(args ...interface{}) {
 }
 
 func (l *Logger) TagSkip(skip int, args ...interface{}) {
-	if l.logLevel > levelDebug {
+	if !l.logTag {
 		return
 	}
 

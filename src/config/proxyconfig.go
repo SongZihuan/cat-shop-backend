@@ -14,7 +14,7 @@ func (p *ProxyConfig) setDefault(global *GlobalConfig) {
 	if global.IsDebug() || global.IsTest() {
 		p.Proxy.SetDefaultDisable()
 	} else {
-		p.Proxy.SetDefaultEanble()
+		p.Proxy.SetDefaultEnable()
 	}
 
 	if p.Proxy.IsEnable() && len(p.TrustedIPs) == 0 {

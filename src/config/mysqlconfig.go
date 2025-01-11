@@ -21,7 +21,7 @@ func (m *MySQLConfig) setDefault() {
 		m.Address = "127.0.0.1"
 	}
 
-	m.ActiveShutdown.SetDefaultEanble()
+	m.ActiveShutdown.SetDefaultEnable()
 	m.FakeData.SetDefaultDisable()
 }
 
