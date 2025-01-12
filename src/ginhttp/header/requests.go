@@ -1,11 +1,15 @@
 package header
 
 const (
-	RequestsXTokenHeader  = "X-Token"
-	RequestsAccept        = "Accept"
-	RequestsContentType   = "Centent-Type"
-	RequestsContentLength = "Content-Length"
-	RequestsOrigin        = "Origin"
+	RequestsXTokenHeader    = "X-Token"
+	RequestsAccept          = "Accept"
+	RequestsContentType     = "Centent-Type"
+	RequestsContentLength   = "Content-Length"
+	RequestsOrigin          = "Origin"
+	RequestsForwarded       = "Forwarded"
+	RequestsXForwardedFor   = "X-Forwarded-For"
+	RequestsXForwardedHost  = "X-Forwarded-Host"
+	RequestsXForwardedProto = "X-Forwarded-Proto"
 )
 
 var RequestsHeaderList = []string{
@@ -14,4 +18,8 @@ var RequestsHeaderList = []string{
 	RequestsContentType,
 	RequestsContentLength,
 	RequestsOrigin,
+	RequestsForwarded,
+	RequestsXForwardedFor,
+	RequestsXForwardedHost,
+	RequestsXForwardedProto,
 }

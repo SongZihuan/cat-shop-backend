@@ -22,6 +22,7 @@ func v1Router(engine *ginplus.Router) {
 	}
 
 	engine.Use(middleware.AllReady(), middleware.AllowMethod(), middleware.Cors())
+	v1.Ping(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.PingPath, groupname.PingName).Group(Version1))
 	v1.Api(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ApiPath, groupname.APIName).Group(Version1))
 	v1.Resource(engine.Group(config.Config().Yaml.Http.BasePath).Group(config.Config().Yaml.Http.ResourcePath, groupname.ResourceName).Group(Version1))
 }

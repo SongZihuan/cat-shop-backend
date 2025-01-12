@@ -138,7 +138,7 @@ func debugPrintWARNINGDefault() {
 		panic(err)
 	}
 
-	if major <= MinSupportGoMajor || minor <= MinSupportGoMinor {
+	if major < MinSupportGoMajor || minor < MinSupportGoMinor {
 		debugPrint("[WARNING] Now Gin requires Go %d.%d+.", MinSupportGoMajor, MinSupportGoMinor)
 	}
 }
@@ -154,9 +154,9 @@ func NewEngine() (*Router, error) {
 
 	engine := gin.New()
 	if cfg.Yaml.GlobalConfig.IsDebug() {
-		engine.Use(gin.Logger(), gin.Recovery(), Writer(), Recover())
+		engine.Use(gin.Logger(), gin.Recovery(), Forwarded(), Writer(), Recover())
 	} else {
-		engine.Use(gin.Logger(), Writer(), Recover())
+		engine.Use(gin.Logger(), Forwarded(), Writer(), Recover())
 	}
 
 	if cfg.Yaml.Http.Proxy.Enable() {

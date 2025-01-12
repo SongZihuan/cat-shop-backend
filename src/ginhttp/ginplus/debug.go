@@ -3,6 +3,7 @@ package ginplus
 import (
 	"fmt"
 	"github.com/SongZihuan/cat-shop-backend/src/config"
+	"github.com/SongZihuan/cat-shop-backend/src/logger"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -25,9 +26,7 @@ func debugPrint(format string, values ...any) {
 		return
 	}
 
-	if !strings.HasSuffix(format, "\n") {
-		format += "\n"
-	}
-
-	_, _ = fmt.Fprintf(gin.DefaultWriter, "[GIN-PLUS-debug] "+format, values...)
+	res := fmt.Sprintf(format, values...)
+	res = strings.TrimRight(res, "\n")
+	logger.Debugf("[GIN-PLUS-debug] %s", res)
 }

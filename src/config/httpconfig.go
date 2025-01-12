@@ -10,6 +10,7 @@ type HttpConfig struct {
 	DebugMsg       utils.StringBool `yaml:"debugmsg"`
 	BasePath       string           `yaml:"basepath"`
 	ApiPath        string           `yaml:"apipath"`
+	PingPath       string           `yaml:"pingpath"`
 	ResourcePath   string           `yaml:"resourcepath"`
 	EnableTestAPI  string           `yaml:"enabletestapi"`
 	Proxy          ProxyConfig      `yaml:"proxy"`
@@ -31,6 +32,7 @@ func (h *HttpConfig) setDefault(global *GlobalConfig) {
 
 	h.BasePath = utils.ProcessPath(h.BasePath)
 	h.ApiPath = utils.ProcessPath(h.ApiPath, "/api")
+	h.PingPath = utils.ProcessPath(h.PingPath, "/ping")
 	h.ResourcePath = utils.ProcessPath(h.ResourcePath, "/resource")
 
 	if h.StopSecret == "" {
@@ -52,6 +54,10 @@ func (h *HttpConfig) check(co *CorsOrigin) ConfigError {
 	}
 
 	if len(h.ResourcePath) == 0 {
+		return NewConfigError("Resource Path is empty")
+	}
+
+	if len(h.PingPath) == 0 {
 		return NewConfigError("Resource Path is empty")
 	}
 

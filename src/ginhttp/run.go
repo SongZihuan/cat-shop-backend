@@ -23,8 +23,10 @@ func InitGin() error {
 		return err
 	}
 	router.InitRouter(_engine)
+	loadpath.LoadPingPath(_engine)
 	loadpath.LoadAPIPath(_engine)
 	loadpath.LoadResourcePath(_engine)
+	loadpath.LoadPingHelloPath(_engine)
 	loadpath.LoadImagePath(_engine)
 	loadpath.LoadVideoPath(_engine)
 	engine = _engine
@@ -45,6 +47,7 @@ func Run() error {
 		Handler: engine,
 	}
 
+	engine.DebugMsg("server start at %s", config.Config().Yaml.Http.Address)
 	err := server.ListenAndServe()
 	if err != nil {
 		if errors.Is(err, http.ErrServerClosed) {

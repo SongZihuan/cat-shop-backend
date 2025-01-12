@@ -11,6 +11,14 @@ import (
 )
 
 func Handler(c *gin.Context) bool {
+	if !config.IsReady() {
+		panic("config is not ready")
+	}
+
+	if !config.Config().Yaml.Http.Cors.Enable() {
+		return true
+	}
+
 	origin := c.GetHeader(header.RequestsOrigin)
 	if origin == "" {
 		c.JSON(http.StatusMethodNotAllowed, data.NewClientCorsError("没用Origin头部"))

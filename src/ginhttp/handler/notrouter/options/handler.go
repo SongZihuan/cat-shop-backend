@@ -11,6 +11,10 @@ import (
 )
 
 func HandlerAPI(c *gin.Context) bool {
+	if config.IsReady() {
+		panic("config is not reaady")
+	}
+
 	if config.Config().Yaml.Http.Cors.Disable() {
 		return true
 	}
@@ -24,6 +28,10 @@ func HandlerAPI(c *gin.Context) bool {
 }
 
 func HandlerResource(c *gin.Context) bool {
+	if config.IsReady() {
+		panic("config is not reaady")
+	}
+
 	if config.Config().Yaml.Http.Cors.Disable() {
 		return true
 	}

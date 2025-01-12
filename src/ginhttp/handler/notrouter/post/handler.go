@@ -1,7 +1,6 @@
 package post
 
 import (
-	"github.com/SongZihuan/cat-shop-backend/src/config"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/data"
 	"github.com/SongZihuan/cat-shop-backend/src/ginhttp/loadpath"
 	"github.com/SongZihuan/cat-shop-backend/src/utils"
@@ -16,6 +15,7 @@ func HandlerAPI403(c *gin.Context) {
 
 func HandlerResource403(c *gin.Context) {
 	c.AbortWithStatus(http.StatusMethodNotAllowed)
+	_, _ = c.Writer.Write([]byte("Method Not Allowed"))
 }
 
 func HandlerAPI404(c *gin.Context) {
@@ -23,13 +23,13 @@ func HandlerAPI404(c *gin.Context) {
 }
 
 func HandlerResource404(c *gin.Context) {
-	c.AbortWithStatus(http.StatusNotFound)
+	HandlerResource403(c)
 }
 
 func Handler404(c *gin.Context) {
-	base := config.Config().Yaml.Http.BasePath
-	api := utils.ProcessPath(base + config.Config().Yaml.Http.ApiPath)
-	resource := utils.ProcessPath(base + config.Config().Yaml.Http.ResourcePath)
+	api := loadpath.GetAPIPath()
+	resource := loadpath.GetResourcePath()
+
 	rawpath := utils.ProcessPath(c.Request.URL.Path)
 
 	if strings.HasPrefix(rawpath, api) {
