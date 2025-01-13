@@ -10,6 +10,8 @@ const (
 	RequestsXForwardedFor   = "X-Forwarded-For"
 	RequestsXForwardedHost  = "X-Forwarded-Host"
 	RequestsXForwardedProto = "X-Forwarded-Proto"
+	RequestsXMessage        = "X-Message"
+	RequestsXVia            = "Via"
 )
 
 var RequestsHeaderList = []string{
@@ -22,4 +24,6 @@ var RequestsHeaderList = []string{
 	RequestsXForwardedFor,
 	RequestsXForwardedHost,
 	RequestsXForwardedProto,
+	RequestsXMessage,
+	RequestsXVia,
 }
