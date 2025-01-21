@@ -193,7 +193,7 @@ func (l *Logger) Warn(args ...interface{}) {
 	}
 
 	str := fmt.Sprint(args...)
-	_, _ = fmt.Fprintf(l.warnWriter, "%s: %\ns", l.args0Name, str)
+	_, _ = fmt.Fprintf(l.warnWriter, "%s: %s\n", l.args0Name, str)
 }
 
 func (l *Logger) Error(args ...interface{}) {

@@ -50,10 +50,10 @@ jwt:
 
 ```shell
 # 显示把昂住信息
-go run github.com/SongZihuan/cat-shop-backend/src/cmd/v1 -help
+go run github.com/SongZihuan/cat-shop-backend/src/cmd/version1 -help
 
 # 运行服务并指定配置文件
-go run github.com/SongZihuan/cat-shop-backend/src/cmd/v1 -config ./etc/config.yaml
+go run github.com/SongZihuan/cat-shop-backend/src/cmd/version1 -config ./etc/config.yaml
 ```
 
 ### 实际运行
@@ -71,7 +71,7 @@ go run github.com/SongZihuan/cat-shop-backend/src/cmd/v1 -config ./etc/config.ya
 可以使用`go build`进行构建。
 
 ```shell
-go build github.com/SongZihuan/cat-shop-backend/src/cmd/v1
+go build github.com/SongZihuan/cat-shop-backend/src/cmd/version1
 ```
 
 ## 鸣谢
