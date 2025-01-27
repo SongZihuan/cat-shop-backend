@@ -52,13 +52,11 @@ func CloseMySQL() {
 		panic("config is not ready")
 	}
 
-	if config.Config().Yaml.Mysql.ActiveShutdown.IsEnable() {
+	if config.Config().Yaml.Mysql.ActiveShutdown.IsEnable(false) {
 		// https://github.com/go-gorm/gorm/issues/3145
-		sqlDB, err := _db.DB()
-		if err != nil {
-			panic(err)
+		if sqlDB, err := _db.DB(); err == nil {
+			_ = sqlDB.Close()
 		}
-		sqlDB.Close()
 	}
 }
 
